@@ -1,9 +1,11 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Common.Log;
+using Lykke.Service.FeeCalculator.Controllers;
 using Lykke.Service.FeeCalculator.Core.Services;
 using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
 using Lykke.Service.FeeCalculator.Services;
+using Lykke.Service.FeeCalculator.Services.DummySettingsHolder;
 using Lykke.SettingsReader;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -46,7 +48,9 @@ namespace Lykke.Service.FeeCalculator.Modules
             builder.RegisterType<ShutdownManager>()
                 .As<IShutdownManager>();
 
-            // TODO: Add your dependencies here
+            builder.RegisterInstance(new DummySettingsHolder(_settings.CurrentValue.Trade))
+                .As<IDummySettingsHolder>()
+                .SingleInstance();
 
             builder.Populate(_services);
         }

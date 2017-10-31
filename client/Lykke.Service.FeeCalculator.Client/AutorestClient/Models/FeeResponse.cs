@@ -7,27 +7,24 @@
 namespace Lykke.Service.FeeCalculator.Client.AutorestClient.Models
 {
     using Newtonsoft.Json;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Linq;
 
-    public partial class ErrorResponse
+    public partial class FeeResponse
     {
         /// <summary>
-        /// Initializes a new instance of the ErrorResponse class.
+        /// Initializes a new instance of the FeeResponse class.
         /// </summary>
-        public ErrorResponse()
+        public FeeResponse()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the ErrorResponse class.
+        /// Initializes a new instance of the FeeResponse class.
         /// </summary>
-        public ErrorResponse(string errorMessage = default(string), IDictionary<string, IList<string>> modelErrors = default(IDictionary<string, IList<string>>))
+        public FeeResponse(double value)
         {
-            ErrorMessage = errorMessage;
-            ModelErrors = modelErrors;
+            Value = value;
             CustomInit();
         }
 
@@ -38,13 +35,18 @@ namespace Lykke.Service.FeeCalculator.Client.AutorestClient.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "ErrorMessage")]
-        public string ErrorMessage { get; private set; }
+        [JsonProperty(PropertyName = "Value")]
+        public double Value { get; set; }
 
         /// <summary>
+        /// Validate the object.
         /// </summary>
-        [JsonProperty(PropertyName = "ModelErrors")]
-        public IDictionary<string, IList<string>> ModelErrors { get; private set; }
-
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown if validation fails
+        /// </exception>
+        public virtual void Validate()
+        {
+            //Nothing to validate
+        }
     }
 }

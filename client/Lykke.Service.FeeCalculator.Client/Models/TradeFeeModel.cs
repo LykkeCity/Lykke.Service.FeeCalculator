@@ -2,6 +2,6 @@
 {
     public class TradeFeeModel
     {
-        public decimal Fee { get; set; }
+        public decimal Value { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace Lykke.Service.FeeCalculator.Client.Models
         {
             return new TradeFeeModel
             {
-                Fee = (decimal) model.Value
+                Value = (decimal) model.Value
             };
         }
     }

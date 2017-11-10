@@ -4,7 +4,7 @@
 // regenerated.
 // </auto-generated>
 
-namespace Lykke.Service.FeeCalculator.Client.AutorestClient.Models
+namespace Lykke.Service.FeeCalculator.AutorestClient.Models
 {
     using Newtonsoft.Json;
     using System.Collections;

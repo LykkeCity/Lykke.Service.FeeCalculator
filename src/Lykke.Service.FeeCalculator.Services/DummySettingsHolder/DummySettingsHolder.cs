@@ -4,16 +4,23 @@ namespace Lykke.Service.FeeCalculator.Services.DummySettingsHolder
 {
     public class DummySettingsHolder : IDummySettingsHolder
     {
-        private readonly TradeSettings _tradeSettings;
+        private readonly MarketOrderSettings _marketOrderSettings;
+        private readonly LimitOrderSettings _limitOrderSettings;
 
-        public DummySettingsHolder(TradeSettings tradeSettings)
+        public DummySettingsHolder(MarketOrderSettings marketOrderSettings, LimitOrderSettings limitOrderSettings)
         {
-            _tradeSettings = tradeSettings;
+            _marketOrderSettings = marketOrderSettings;
+            _limitOrderSettings = limitOrderSettings;
         }
 
-        public TradeSettings GetTradeSettings()
+        public LimitOrderSettings GetLimitOrderSettings()
         {
-            return _tradeSettings;
+            return _limitOrderSettings;
+        }
+
+        public MarketOrderSettings GetMarkerOrderSettings()
+        {
+            return _marketOrderSettings;
         }
     }
 }

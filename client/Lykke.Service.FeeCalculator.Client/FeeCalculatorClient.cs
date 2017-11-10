@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Common.Log;
-using Lykke.Service.FeeCalculator.Client.AutorestClient;
-using Lykke.Service.FeeCalculator.Client.AutorestClient.Models;
 using Lykke.Service.FeeCalculator.Client.Models;
+using Lykke.Service.FeeCalculator.AutorestClient;
+using Lykke.Service.FeeCalculator.AutorestClient.Models;
 
 namespace Lykke.Service.FeeCalculator.Client
 {
@@ -11,6 +11,8 @@ namespace Lykke.Service.FeeCalculator.Client
     {
         private readonly ILog _log;
         private IFeeCalculatorAPI _service;
+
+        private const string ApiError = "ApiError";
 
         public FeeCalculatorClient(string serviceUrl, ILog log)
         {
@@ -26,24 +28,51 @@ namespace Lykke.Service.FeeCalculator.Client
             _service = null;
         }
 
-        public async Task<TradeFeeModel> GetTradeFees(string clientId, string assetPair, string assetId, OrderAction orderAction)
+        public async Task<LimitOrderFeeModel> GetLimitOrderFees(string clientId, string assetPair, string assetId, OrderAction orderAction)
         {
-            var response = await _service.GetTradeFeeWithHttpMessagesAsync(clientId, assetPair, assetId, orderAction);
+            var response = await _service.GetLimitOrderFeeAsync(clientId, assetPair, assetId, orderAction);
 
-            var error = response.Body as ErrorResponse;
-
-            if (response.Body is FeeResponse result)
+            if (response is ErrorResponse error)
             {
-                return result.FromApiModel();
-            }
-
-            if (error != null)
-            {
-                await _log.WriteErrorAsync(GetType().Name, "GetTradeFee",
+                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetLimitOrderFees),
                     $"clientId = {clientId}, assetPair = {assetPair}, assetId = {assetId}, orderAction = {orderAction}, error = {error.ErrorMessage}", null);
+
+                throw new Exception(error.ErrorMessage);
             }
 
-            return null;
+            if (response is LimitOrderFeeResponseModel result)
+            {
+                return new LimitOrderFeeModel
+                {
+                    TakerFeeSize = (decimal) result.TakerFeeSize,
+                    MakerFeeSize = (decimal) result.MakerFeeSize
+                };
+            }
+
+            throw new Exception(ApiError);
+        }
+
+        public async Task<MarketOrderFeeModel> GetMarkerOrderFees(string clientId, string assetPair, string assetId, OrderAction orderAction)
+        {
+            var response = await _service.GetMarketOrderFeeAsync(clientId, assetPair, assetId, orderAction);
+
+            if (response is ErrorResponse error)
+            {
+                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetMarkerOrderFees),
+                    $"clientId = {clientId}, assetPair = {assetPair}, assetId = {assetId}, orderAction = {orderAction}, error = {error.ErrorMessage}", null);
+
+                throw new Exception(error.ErrorMessage);
+            }
+
+            if (response is MarketOrderFeeResponseModel result)
+            {
+                return new MarketOrderFeeModel
+                {
+                    DefaultFeeSize = (decimal) result.DefaultFeeSize
+                };
+            }
+
+            throw new Exception(ApiError);
         }
     }
 }

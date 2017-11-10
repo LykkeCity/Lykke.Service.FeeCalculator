@@ -4,7 +4,7 @@
 // regenerated.
 // </auto-generated>
 
-namespace Lykke.Service.FeeCalculator.Client.AutorestClient
+namespace Lykke.Service.FeeCalculator.AutorestClient
 {
     using Microsoft.Rest;
     using Models;
@@ -60,7 +60,24 @@ namespace Lykke.Service.FeeCalculator.Client.AutorestClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> GetTradeFeeWithHttpMessagesAsync(string clientId = default(string), string assetPair = default(string), string assetId = default(string), OrderAction? orderAction = default(OrderAction?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> GetMarketOrderFeeWithHttpMessagesAsync(string clientId = default(string), string assetPair = default(string), string assetId = default(string), OrderAction? orderAction = default(OrderAction?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <param name='clientId'>
+        /// </param>
+        /// <param name='assetPair'>
+        /// </param>
+        /// <param name='assetId'>
+        /// </param>
+        /// <param name='orderAction'>
+        /// Possible values include: 'Buy', 'Sell'
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<object>> GetLimitOrderFeeWithHttpMessagesAsync(string clientId = default(string), string assetPair = default(string), string assetId = default(string), OrderAction? orderAction = default(OrderAction?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }

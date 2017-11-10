@@ -7,27 +7,26 @@
 namespace Lykke.Service.FeeCalculator.AutorestClient.Models
 {
     using Newtonsoft.Json;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Linq;
 
-    public partial class ErrorResponse
+    public partial class MarketOrderFeeResponseModel
     {
         /// <summary>
-        /// Initializes a new instance of the ErrorResponse class.
+        /// Initializes a new instance of the MarketOrderFeeResponseModel
+        /// class.
         /// </summary>
-        public ErrorResponse()
+        public MarketOrderFeeResponseModel()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the ErrorResponse class.
+        /// Initializes a new instance of the MarketOrderFeeResponseModel
+        /// class.
         /// </summary>
-        public ErrorResponse(string errorMessage = default(string), IDictionary<string, IList<string>> modelErrors = default(IDictionary<string, IList<string>>))
+        public MarketOrderFeeResponseModel(double defaultFeeSize)
         {
-            ErrorMessage = errorMessage;
-            ModelErrors = modelErrors;
+            DefaultFeeSize = defaultFeeSize;
             CustomInit();
         }
 
@@ -38,13 +37,18 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "ErrorMessage")]
-        public string ErrorMessage { get; private set; }
+        [JsonProperty(PropertyName = "DefaultFeeSize")]
+        public double DefaultFeeSize { get; set; }
 
         /// <summary>
+        /// Validate the object.
         /// </summary>
-        [JsonProperty(PropertyName = "ModelErrors")]
-        public IDictionary<string, IList<string>> ModelErrors { get; private set; }
-
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown if validation fails
+        /// </exception>
+        public virtual void Validate()
+        {
+            //Nothing to validate
+        }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Common.Log;
-using Lykke.Service.FeeCalculator.Controllers;
 using Lykke.Service.FeeCalculator.Core.Services;
 using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
 using Lykke.Service.FeeCalculator.Services;
@@ -28,12 +27,6 @@ namespace Lykke.Service.FeeCalculator.Modules
 
         protected override void Load(ContainerBuilder builder)
         {
-            // TODO: Do not register entire settings in container, pass necessary settings to services which requires them
-            // ex:
-            //  builder.RegisterType<QuotesPublisher>()
-            //      .As<IQuotesPublisher>()
-            //      .WithParameter(TypedParameter.From(_settings.CurrentValue.QuotesPublication))
-
             builder.RegisterInstance(_log)
                 .As<ILog>()
                 .SingleInstance();
@@ -48,7 +41,7 @@ namespace Lykke.Service.FeeCalculator.Modules
             builder.RegisterType<ShutdownManager>()
                 .As<IShutdownManager>();
 
-            builder.RegisterInstance(new DummySettingsHolder(_settings.CurrentValue.Trade))
+            builder.RegisterInstance(new DummySettingsHolder(_settings.CurrentValue.MarketOrder, _settings.CurrentValue.LimitOrder))
                 .As<IDummySettingsHolder>()
                 .SingleInstance();
 

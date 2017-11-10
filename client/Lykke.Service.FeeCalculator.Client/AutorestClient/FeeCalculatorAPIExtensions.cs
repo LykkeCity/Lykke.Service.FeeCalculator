@@ -4,7 +4,7 @@
 // regenerated.
 // </auto-generated>
 
-namespace Lykke.Service.FeeCalculator.Client.AutorestClient
+namespace Lykke.Service.FeeCalculator.AutorestClient
 {
     using Models;
     using System.Threading;
@@ -55,9 +55,9 @@ namespace Lykke.Service.FeeCalculator.Client.AutorestClient
             /// <param name='orderAction'>
             /// Possible values include: 'Buy', 'Sell'
             /// </param>
-            public static object GetTradeFee(this IFeeCalculatorAPI operations, string clientId = default(string), string assetPair = default(string), string assetId = default(string), OrderAction? orderAction = default(OrderAction?))
+            public static object GetMarketOrderFee(this IFeeCalculatorAPI operations, string clientId = default(string), string assetPair = default(string), string assetId = default(string), OrderAction? orderAction = default(OrderAction?))
             {
-                return operations.GetTradeFeeAsync(clientId, assetPair, assetId, orderAction).GetAwaiter().GetResult();
+                return operations.GetMarketOrderFeeAsync(clientId, assetPair, assetId, orderAction).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
@@ -75,9 +75,49 @@ namespace Lykke.Service.FeeCalculator.Client.AutorestClient
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> GetTradeFeeAsync(this IFeeCalculatorAPI operations, string clientId = default(string), string assetPair = default(string), string assetId = default(string), OrderAction? orderAction = default(OrderAction?), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> GetMarketOrderFeeAsync(this IFeeCalculatorAPI operations, string clientId = default(string), string assetPair = default(string), string assetId = default(string), OrderAction? orderAction = default(OrderAction?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetTradeFeeWithHttpMessagesAsync(clientId, assetPair, assetId, orderAction, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetMarketOrderFeeWithHttpMessagesAsync(clientId, assetPair, assetId, orderAction, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='clientId'>
+            /// </param>
+            /// <param name='assetPair'>
+            /// </param>
+            /// <param name='assetId'>
+            /// </param>
+            /// <param name='orderAction'>
+            /// Possible values include: 'Buy', 'Sell'
+            /// </param>
+            public static object GetLimitOrderFee(this IFeeCalculatorAPI operations, string clientId = default(string), string assetPair = default(string), string assetId = default(string), OrderAction? orderAction = default(OrderAction?))
+            {
+                return operations.GetLimitOrderFeeAsync(clientId, assetPair, assetId, orderAction).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='clientId'>
+            /// </param>
+            /// <param name='assetPair'>
+            /// </param>
+            /// <param name='assetId'>
+            /// </param>
+            /// <param name='orderAction'>
+            /// Possible values include: 'Buy', 'Sell'
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<object> GetLimitOrderFeeAsync(this IFeeCalculatorAPI operations, string clientId = default(string), string assetPair = default(string), string assetId = default(string), OrderAction? orderAction = default(OrderAction?), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetLimitOrderFeeWithHttpMessagesAsync(clientId, assetPair, assetId, orderAction, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

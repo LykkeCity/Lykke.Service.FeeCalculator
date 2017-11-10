@@ -52,13 +52,13 @@ namespace Lykke.Service.FeeCalculator.Client
             throw new Exception(ApiError);
         }
 
-        public async Task<MarketOrderFeeModel> GetMarkerOrderFees(string clientId, string assetPair, string assetId, OrderAction orderAction)
+        public async Task<MarketOrderFeeModel> GetMarketOrderFees(string clientId, string assetPair, string assetId, OrderAction orderAction)
         {
             var response = await _service.GetMarketOrderFeeAsync(clientId, assetPair, assetId, orderAction);
 
             if (response is ErrorResponse error)
             {
-                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetMarkerOrderFees),
+                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetMarketOrderFees),
                     $"clientId = {clientId}, assetPair = {assetPair}, assetId = {assetId}, orderAction = {orderAction}, error = {error.ErrorMessage}", null);
 
                 throw new Exception(error.ErrorMessage);

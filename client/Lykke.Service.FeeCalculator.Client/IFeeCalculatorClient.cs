@@ -6,7 +6,7 @@ namespace Lykke.Service.FeeCalculator.Client
 {
     public interface IFeeCalculatorClient
     {
-        Task<MarketOrderFeeModel> GetMarkerOrderFees(string clientId, string assetPair, string assetId,
+        Task<MarketOrderFeeModel> GetMarketOrderFees(string clientId, string assetPair, string assetId,
             OrderAction orderAction);
 
         Task<LimitOrderFeeModel> GetLimitOrderFees(string clientId, string assetPair, string assetId,

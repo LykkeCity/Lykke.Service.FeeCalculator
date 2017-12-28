@@ -4,6 +4,7 @@ using Common.Log;
 using Lykke.Service.FeeCalculator.Client.Models;
 using Lykke.Service.FeeCalculator.AutorestClient;
 using Lykke.Service.FeeCalculator.AutorestClient.Models;
+using System.Collections.Generic;
 
 namespace Lykke.Service.FeeCalculator.Client
 {
@@ -70,6 +71,26 @@ namespace Lykke.Service.FeeCalculator.Client
                 {
                     DefaultFeeSize = (decimal) result.DefaultFeeSize
                 };
+            }
+
+            throw new Exception(ApiError);
+        }
+
+        public async Task<List<CashoutFee>> GetCashoutFeesAsync(string assetId = null)
+        {
+            var response = await _service.GetCashoutFeesAsync(assetId);
+
+            if (response is ErrorResponse error)
+            {
+                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetMarketOrderFees),
+                    $"assetId = {assetId}, error = {error.ErrorMessage}", null);
+
+                throw new Exception(error.ErrorMessage);
+            }
+
+            if (response is List<CashoutFee> result)
+            {
+                return result as List<CashoutFee>;
             }
 
             throw new Exception(ApiError);

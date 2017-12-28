@@ -15,6 +15,32 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
     /// </summary>
     public static partial class FeeCalculatorAPIExtensions
     {
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='assetId'>
+            /// </param>
+            public static object GetCashoutFees(this IFeeCalculatorAPI operations, string assetId = default(string))
+            {
+                return operations.GetCashoutFeesAsync(assetId).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='assetId'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<object> GetCashoutFeesAsync(this IFeeCalculatorAPI operations, string assetId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetCashoutFeesWithHttpMessagesAsync(assetId, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
             /// <summary>
             /// Checks service is alive
             /// </summary>

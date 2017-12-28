@@ -1,4 +1,5 @@
 ﻿using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
+using System.Collections.Generic;
 
 namespace Lykke.Service.FeeCalculator.Services.DummySettingsHolder
 {
@@ -6,11 +7,13 @@ namespace Lykke.Service.FeeCalculator.Services.DummySettingsHolder
     {
         private readonly MarketOrderSettings _marketOrderSettings;
         private readonly LimitOrderSettings _limitOrderSettings;
+        private readonly List<CashoutFee> _cashoutFees;
 
-        public DummySettingsHolder(MarketOrderSettings marketOrderSettings, LimitOrderSettings limitOrderSettings)
+        public DummySettingsHolder(MarketOrderSettings marketOrderSettings, LimitOrderSettings limitOrderSettings, List<CashoutFee> cashoutFees)
         {
             _marketOrderSettings = marketOrderSettings;
             _limitOrderSettings = limitOrderSettings;
+            _cashoutFees = cashoutFees;
         }
 
         public LimitOrderSettings GetLimitOrderSettings()
@@ -21,6 +24,11 @@ namespace Lykke.Service.FeeCalculator.Services.DummySettingsHolder
         public MarketOrderSettings GetMarkerOrderSettings()
         {
             return _marketOrderSettings;
+        }
+
+        public List<CashoutFee> GetCashoutFees()
+        {
+            return _cashoutFees;
         }
     }
 }

@@ -22,11 +22,10 @@ namespace Lykke.Service.FeeCalculator.Controllers
         }
         
         [HttpGet]
-        [HttpGet("/CashoutFees/{assetId}")]
         [SwaggerOperation("GetCashoutFees")]
         [ProducesResponseType(typeof(List<CashoutFee>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.InternalServerError)]
-        public IActionResult GetCashoutFees(string assetId)
+        public IActionResult GetCashoutFees([FromQuery] string assetId = null)
         {
             if (string.IsNullOrWhiteSpace(assetId))
                 return Ok(_dummySettingsHolder.GetCashoutFees());

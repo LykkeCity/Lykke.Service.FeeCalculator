@@ -34,7 +34,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
             var fees = _dummySettingsHolder.GetCashoutFees().Where(fee => fee.AssetId == assetId).ToList();
 
             if (fees.Count == 0)
-                return NotFound(assetId);
+                fees = new List<CashoutFee>() { new CashoutFee() { AssetId = assetId, Size = 0, Type = FeeType.Absolute } };
 
             return Ok(fees);
         }

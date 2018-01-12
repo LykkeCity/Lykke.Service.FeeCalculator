@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Lykke.Service.FeeCalculator.Client.Models;
 using Lykke.Service.FeeCalculator.AutorestClient.Models;
+using System.Collections.Generic;
 
 namespace Lykke.Service.FeeCalculator.Client
 {
@@ -11,5 +12,7 @@ namespace Lykke.Service.FeeCalculator.Client
 
         Task<LimitOrderFeeModel> GetLimitOrderFees(string clientId, string assetPair, string assetId,
             OrderAction orderAction);
+
+        Task<List<CashoutFee>> GetCashoutFeesAsync(string assetId = null);
     }
 }

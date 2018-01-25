@@ -14,5 +14,7 @@ namespace Lykke.Service.FeeCalculator.Client
             OrderAction orderAction);
 
         Task<List<CashoutFee>> GetCashoutFeesAsync(string assetId = null);
+
+        Task<BankCardsFeeModel> GetBankCardFees();
     }
 }

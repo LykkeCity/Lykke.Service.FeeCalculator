@@ -41,7 +41,11 @@ namespace Lykke.Service.FeeCalculator.Modules
             builder.RegisterType<ShutdownManager>()
                 .As<IShutdownManager>();
 
-            builder.RegisterInstance(new DummySettingsHolder(_settings.CurrentValue.MarketOrder, _settings.CurrentValue.LimitOrder, _settings.CurrentValue.CashoutFees))
+            builder.RegisterType<DummySettingsHolder>()
+                .WithParameter(TypedParameter.From(_settings.CurrentValue.MarketOrder))
+                .WithParameter(TypedParameter.From(_settings.CurrentValue.LimitOrder))
+                .WithParameter(TypedParameter.From(_settings.CurrentValue.CashoutFees))
+                .WithParameter(TypedParameter.From(_settings.CurrentValue.BankCard))
                 .As<IDummySettingsHolder>()
                 .SingleInstance();
 

@@ -3,7 +3,7 @@ using System.Net;
 using Lykke.Service.FeeCalculator.Models;
 using Lykke.Service.FeeCalculator.Services.DummySettingsHolder;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.SwaggerGen.Annotations;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Lykke.Service.FeeCalculator.Controllers
 {

@@ -30,9 +30,8 @@ namespace Lykke.Service.FeeCalculator.Controllers
             if (string.IsNullOrWhiteSpace(assetId))
                 return Ok(_dummySettingsHolder.GetCashoutFees());
 
-            var assetIdUpper = assetId.ToUpper();
-            var fees = _dummySettingsHolder.GetCashoutFees().Where(fee => fee.AssetId.ToUpper() == assetIdUpper)
-                .ToList();
+            var fees = _dummySettingsHolder.GetCashoutFees()
+                .Where(fee => fee.AssetId.Equals(assetId, StringComparison.InvariantCultureIgnoreCase)).ToList();
 
             if (fees.Count == 0)
                 fees = new List<CashoutFee>

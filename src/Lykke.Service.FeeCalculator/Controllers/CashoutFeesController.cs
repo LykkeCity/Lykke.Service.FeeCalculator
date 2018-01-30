@@ -20,21 +20,29 @@ namespace Lykke.Service.FeeCalculator.Controllers
         {
             _dummySettingsHolder = dummySettingsHolder;
         }
-        
+
         [HttpGet]
         [SwaggerOperation("GetCashoutFees")]
-        [ProducesResponseType(typeof(List<CashoutFee>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(List<CashoutFee>), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.InternalServerError)]
         public IActionResult GetCashoutFees([FromQuery] string assetId = null)
         {
             if (string.IsNullOrWhiteSpace(assetId))
                 return Ok(_dummySettingsHolder.GetCashoutFees());
 
-            assetId = assetId.ToUpper();
-            var fees = _dummySettingsHolder.GetCashoutFees().Where(fee => fee.AssetId == assetId).ToList();
+            var fees = _dummySettingsHolder.GetCashoutFees()
+                .Where(fee => fee.AssetId.Equals(assetId, StringComparison.InvariantCultureIgnoreCase)).ToList();
 
             if (fees.Count == 0)
-                fees = new List<CashoutFee>() { new CashoutFee() { AssetId = assetId, Size = 0, Type = FeeType.Absolute } };
+                fees = new List<CashoutFee>
+                {
+                    new CashoutFee
+                    {
+                        AssetId = assetId,
+                        Size = 0,
+                        Type = FeeType.Absolute
+                    }
+                };
 
             return Ok(fees);
         }

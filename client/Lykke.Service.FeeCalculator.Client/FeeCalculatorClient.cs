@@ -5,6 +5,7 @@ using Lykke.Service.FeeCalculator.Client.Models;
 using Lykke.Service.FeeCalculator.AutorestClient;
 using Lykke.Service.FeeCalculator.AutorestClient.Models;
 using System.Collections.Generic;
+using Common;
 
 namespace Lykke.Service.FeeCalculator.Client
 {
@@ -91,6 +92,25 @@ namespace Lykke.Service.FeeCalculator.Client
             if (response is List<CashoutFee> result)
             {
                 return result as List<CashoutFee>;
+            }
+
+            throw new Exception(ApiError);
+        }
+
+        public async Task<BankCardsFeeModel> GetBankCardFees()
+        {
+            var response = await _service.GetPercentageAsync();
+
+            if (response is ErrorResponse error)
+            {
+                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetBankCardFees), error.ToJson(), null);
+
+                throw new Exception(error.ErrorMessage);
+            }
+
+            if (response is BankCardsFeeResponseModel result)
+            {
+                return new BankCardsFeeModel {Percentage = result.Percentage};
             }
 
             throw new Exception(ApiError);

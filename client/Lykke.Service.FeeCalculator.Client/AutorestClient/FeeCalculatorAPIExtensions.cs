@@ -18,6 +18,28 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
+            public static object GetPercentage(this IFeeCalculatorAPI operations)
+            {
+                return operations.GetPercentageAsync().GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<object> GetPercentageAsync(this IFeeCalculatorAPI operations, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetPercentageWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
             /// <param name='assetId'>
             /// </param>
             public static object GetCashoutFees(this IFeeCalculatorAPI operations, string assetId = default(string))

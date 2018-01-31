@@ -1,4 +1,5 @@
-﻿using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
+﻿using System;
+using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
 using Lykke.Service.FeeCalculator.Models;
 using Lykke.Service.FeeCalculator.Services.DummySettingsHolder;
 using Microsoft.AspNetCore.Mvc;

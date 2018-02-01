@@ -4,6 +4,8 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AzureStorage.Tables;
 using Common.Log;
+using Lykke.AzureStorage.Tables.Entity.Metamodel;
+using Lykke.AzureStorage.Tables.Entity.Metamodel.Providers;
 using Lykke.Common.ApiLibrary.Middleware;
 using Lykke.Common.ApiLibrary.Swagger;
 using Lykke.Logs;
@@ -21,6 +23,9 @@ namespace Lykke.Service.FeeCalculator
 {
     public class Startup
     {
+        private const string ApiVersion = "v1";
+        private const string ApiTitle = "FeeCalculator API";
+        
         public IHostingEnvironment Environment { get; }
         public IContainer ApplicationContainer { get; private set; }
         public IConfigurationRoot Configuration { get; }
@@ -49,16 +54,19 @@ namespace Lykke.Service.FeeCalculator
 
                 services.AddSwaggerGen(options =>
                 {
-                    options.DefaultLykkeConfiguration("v1", "FeeCalculator API");
+                    options.DefaultLykkeConfiguration(ApiVersion, ApiTitle);
                 });
 
                 var builder = new ContainerBuilder();
                 var appSettings = Configuration.LoadSettings<AppSettings>();
                 Log = CreateLogWithSlack(services, appSettings);
 
-                builder.RegisterModule(new ServiceModule(appSettings.Nested(x => x.FeeCalculatorService), Log));
+                builder.RegisterModule(new ServiceModule(appSettings, Log));
                 builder.Populate(services);
                 ApplicationContainer = builder.Build();
+
+                var provider = new AnnotationsBasedMetamodelProvider();
+                EntityMetamodel.Configure(provider);
 
                 return new AutofacServiceProvider(ApplicationContainer);
             }
@@ -82,7 +90,11 @@ namespace Lykke.Service.FeeCalculator
 
                 app.UseMvc();
                 app.UseSwagger();
-                app.UseSwaggerUi();
+                app.UseSwaggerUI(x =>
+                {
+                    x.RoutePrefix = "swagger/ui";
+                    x.SwaggerEndpoint("/swagger/v1/swagger.json", ApiVersion);
+                });
                 app.UseStaticFiles();
 
                 appLifetime.ApplicationStarted.Register(() => StartApplication().Wait());

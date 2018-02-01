@@ -2,12 +2,11 @@
 using Lykke.Service.FeeCalculator.Models;
 using Lykke.Service.FeeCalculator.Services.DummySettingsHolder;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.SwaggerGen.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Lykke.Service.FeeCalculator.Controllers
 {

@@ -1,18 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>Lykke.Service.FeeCalculator.Core</AssemblyName>
     <RootNamespace>Lykke.Service.FeeCalculator.Core</RootNamespace>
     <Version>1.0.0</Version>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Lykke.Common" Version="4.2.0" />
-  </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Services\" />
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="Lykke.Common" Version="4.3.0" />
+    <PackageReference Include="Microsoft.NETCore.App" Version="2.0.5" />
+    <PackageReference Include="Lykke.Service.Assets.Client" Version="3.3.0.0" />
+  </ItemGroup>
 </Project>

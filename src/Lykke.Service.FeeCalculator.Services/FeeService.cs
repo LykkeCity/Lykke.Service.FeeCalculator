@@ -16,23 +16,32 @@ namespace Lykke.Service.FeeCalculator.Services
         private readonly ITradeVolumesCacheService _tradeVolumesCacheService;
         private readonly ITradeVolumesClient _tradeVolumesClient;
         private readonly CachedDataDictionary<decimal, IFee> _feesCache;
+        private readonly CachedDataDictionary<string, IStaticFee> _feesStaticCache;
         private readonly ILog _log;
 
         public FeeService(
             ITradeVolumesCacheService tradeVolumesCacheService,
             ITradeVolumesClient tradeVolumesClient,
             CachedDataDictionary<decimal, IFee> feesCache,
+            CachedDataDictionary<string, IStaticFee> feesStaticCache,
             ILog log
             )
         {
             _tradeVolumesCacheService = tradeVolumesCacheService;
             _tradeVolumesClient = tradeVolumesClient;
             _feesCache = feesCache;
+            _feesStaticCache = feesStaticCache;
             _log = log;
         }
         
-        public async Task<IFee> GetFeeAsync(string clientId, string assetPairId, string assetId)
+        public async Task<IBaseFee> GetFeeAsync(string clientId, string assetPairId, string assetId)
         {
+            var staticFees = await _feesStaticCache.Values();
+            var fee = staticFees.FirstOrDefault(item => item.AssetPair == assetPairId);
+            
+            if (fee != null)
+                return fee;
+            
             AssetPairTradeVolumeResponse clientVolume = null;
             
             try
@@ -59,7 +68,7 @@ namespace Lykke.Service.FeeCalculator.Services
             return await GetFeeByPercentageAsync(percentage);
         }
 
-        public async Task<IFee> GetFeeByPercentageAsync(double percentage)
+        public async Task<IBaseFee> GetFeeByPercentageAsync(double percentage)
         {
             var value = Convert.ToDecimal(percentage);
             var fees = (await _feesCache.Values()).OrderByDescending(item => item.Volume).ToList();

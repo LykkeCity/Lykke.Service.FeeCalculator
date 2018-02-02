@@ -1,9 +1,7 @@
 ﻿namespace Lykke.Service.FeeCalculator.Core.Domain.Fees
 {
-    public interface IFee
+    public interface IFee : IBaseFee
     {
         decimal Volume { get; }
-        decimal TakerFee { get; }
-        decimal MakerFee { get; }
     }
 }

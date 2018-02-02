@@ -59,7 +59,7 @@ namespace Lykke.Service.FeeCalculator.Modules
                 .As<IStartable>()
                 .AsSelf()
                 .AutoActivate()
-                .WithParameter(TypedParameter.From(feeSettings.CacheUpdateInterval))
+                .WithParameter(TypedParameter.From(feeSettings.Cache.TradeVolumesUpdateInterval))
                 .SingleInstance();
             
             builder.RegisterType<TradeVolumesCacheService>()
@@ -79,14 +79,27 @@ namespace Lykke.Service.FeeCalculator.Modules
             {
                 var ctx = x.Resolve<IComponentContext>();
                 return new CachedDataDictionary<decimal, IFee>(
-                    async () => (await ctx.Resolve<IFeeRepository>().GetFeesAsync()).ToDictionary(itm => itm.Volume), feeSettings.CacheUpdateInterval);
+                    async () => (await ctx.Resolve<IFeeRepository>().GetFeesAsync()).ToDictionary(itm => itm.Volume), feeSettings.Cache.FeesUpdateInterval);
+            }).SingleInstance();
+            
+            
+            builder.RegisterInstance<IStaticFeeRepository>(
+                new StaticFeeRepository(AzureTableStorage<StaticFeeEntity>.Create(
+                    _settings.ConnectionString(x => x.FeeCalculatorService.Db.DataConnString), "StaticFees", _log))
+            ).SingleInstance();
+            
+            builder.Register(x =>
+            {
+                var ctx = x.Resolve<IComponentContext>();
+                return new CachedDataDictionary<string, IStaticFee>(
+                    async () => (await ctx.Resolve<IStaticFeeRepository>().GetFeesAsync()).ToDictionary(itm => itm.AssetPair), feeSettings.Cache.FeesUpdateInterval);
             }).SingleInstance();
             
             builder.RegisterTradeVolumesClient(_settings.CurrentValue.TradeVolumesServiceClient.ServiceUrl, _log);
             
             _services.RegisterAssetsClient(AssetServiceSettings.Create(
                 new Uri(_settings.CurrentValue.AssetsServiceClient.ServiceUrl),
-                _settings.CurrentValue.FeeCalculatorService.CacheUpdateInterval));
+                feeSettings.Cache.AssetsUpdateInterval));
 
             builder.Populate(_services);
             
@@ -94,7 +107,7 @@ namespace Lykke.Service.FeeCalculator.Modules
             {
                 var ctx = x.Resolve<IComponentContext>();
                 return new CachedDataDictionary<string, AssetPair>(
-                    async () => (await ctx.Resolve<IAssetsServiceWithCache>().GetAllAssetPairsAsync()).ToDictionary(itm => itm.Id), feeSettings.CacheUpdateInterval);
+                    async () => (await ctx.Resolve<IAssetsServiceWithCache>().GetAllAssetPairsAsync()).ToDictionary(itm => itm.Id), feeSettings.Cache.AssetsUpdateInterval);
             }).SingleInstance();
         }
     }

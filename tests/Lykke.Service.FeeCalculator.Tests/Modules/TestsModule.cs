@@ -36,11 +36,22 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
                 GetFeeRepository()  
             ).As<IFeeRepository>().SingleInstance();
             
+            builder.RegisterInstance(
+                GetStaticFeeRepository()  
+            ).As<IStaticFeeRepository>().SingleInstance();
+            
             builder.Register(x =>
             {
                 var ctx = x.Resolve<IComponentContext>();
                 return new CachedDataDictionary<decimal, IFee>(
                     async () => (await ctx.Resolve<IFeeRepository>().GetFeesAsync()).ToDictionary(itm => itm.Volume));
+            }).SingleInstance();
+            
+            builder.Register(x =>
+            {
+                var ctx = x.Resolve<IComponentContext>();
+                return new CachedDataDictionary<string, IStaticFee>(
+                    async () => (await ctx.Resolve<IStaticFeeRepository>().GetFeesAsync()).ToDictionary(itm => itm.AssetPair));
             }).SingleInstance();
             
             builder.RegisterType<FeeService>()
@@ -58,6 +69,15 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
             repository.AddFeeAsync(new Fee{Volume = 5M, MakerFee = 0.07M, TakerFee = 0.16M}).Wait();
             repository.AddFeeAsync(new Fee{Volume = 10M, MakerFee = 0.06M, TakerFee = 0.15M}).Wait();
             repository.AddFeeAsync(new Fee{Volume = 20M, MakerFee = 0.05M, TakerFee = 0.14M}).Wait();
+
+            return repository;
+        }
+        
+        private IStaticFeeRepository GetStaticFeeRepository()
+        {
+            var repository = new StaticFeeRepository(new NoSqlTableInMemory<StaticFeeEntity>());
+            
+            repository.AddFeeAsync(new StaticFee{AssetPair = "BTCCHF", MakerFee = 0.03M, TakerFee = 0.03M}).Wait();
 
             return repository;
         }

@@ -44,6 +44,15 @@ namespace Lykke.Service.FeeCalculator.Tests
         }
         
         [Fact]
+        public async Task FeeService_IsCorrectStaticFee()
+        {
+            var fee = await _service.GetFeeAsync("1", "BTCCHF", "BTC");
+            
+            Assert.Equal(0.03M, fee.TakerFee);
+            Assert.Equal(0.03M, fee.MakerFee);
+        }
+        
+        [Fact]
         public async Task FeeService_IsCorrectFee()
         {
             const string assetPair = "BTCUSD";

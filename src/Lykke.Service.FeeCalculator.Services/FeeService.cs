@@ -58,14 +58,16 @@ namespace Lykke.Service.FeeCalculator.Services
 
             double percentage = 0;
             
-            if (clientVolume != null && assetPairVolume != null)
+            if (clientVolume != null && assetPairVolume != null && assetPairVolume.BaseVolume > 0 && assetPairVolume.QuotingVolume > 0)
             {
                 percentage = (assetPairVolume.BaseAssetId == assetId
                     ? clientVolume.BaseVolume / assetPairVolume.BaseVolume
                     : clientVolume.QuotingVolume / assetPairVolume.QuotingVolume) * 100;
             }
 
-            return await GetFeeByPercentageAsync(percentage);
+            var result = await GetFeeByPercentageAsync(percentage);
+
+            return result ?? new BaseFee();
         }
 
         public async Task<IBaseFee> GetFeeByPercentageAsync(double percentage)

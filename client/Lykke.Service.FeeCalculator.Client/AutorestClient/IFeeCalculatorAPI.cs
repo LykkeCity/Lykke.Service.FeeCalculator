@@ -44,6 +44,62 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
         /// </param>
         Task<HttpOperationResponse<object>> GetCashoutFeesWithHttpMessagesAsync(string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
+        /// <param name='model'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<object>> AddFeeWithHttpMessagesAsync(FeeModel model = default(FeeModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<object>> GetFeesWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <param name='volume'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<object>> DeleteFeeWithHttpMessagesAsync(decimal volume, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <param name='model'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<object>> AddStaticFeeWithHttpMessagesAsync(StaticFeeModel model = default(StaticFeeModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<object>> GetStaticFeesWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <param name='assetPair'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<object>> DeleteStaticFeeWithHttpMessagesAsync(string assetPair, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
         /// <summary>
         /// Checks service is alive
         /// </summary>
@@ -55,14 +111,14 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
         /// </param>
         Task<HttpOperationResponse<object>> IsAliveWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
+        /// <param name='orderAction'>
+        /// Possible values include: 'Buy', 'Sell'
+        /// </param>
         /// <param name='clientId'>
         /// </param>
         /// <param name='assetPair'>
         /// </param>
         /// <param name='assetId'>
-        /// </param>
-        /// <param name='orderAction'>
-        /// Possible values include: 'Buy', 'Sell'
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -70,16 +126,16 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> GetMarketOrderFeeWithHttpMessagesAsync(string clientId = default(string), string assetPair = default(string), string assetId = default(string), OrderAction? orderAction = default(OrderAction?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> GetMarketOrderFeeWithHttpMessagesAsync(OrderAction orderAction, string clientId = default(string), string assetPair = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
+        /// <param name='orderAction'>
+        /// Possible values include: 'Buy', 'Sell'
+        /// </param>
         /// <param name='clientId'>
         /// </param>
         /// <param name='assetPair'>
         /// </param>
         /// <param name='assetId'>
-        /// </param>
-        /// <param name='orderAction'>
-        /// Possible values include: 'Buy', 'Sell'
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -87,7 +143,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> GetLimitOrderFeeWithHttpMessagesAsync(string clientId = default(string), string assetPair = default(string), string assetId = default(string), OrderAction? orderAction = default(OrderAction?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> GetLimitOrderFeeWithHttpMessagesAsync(OrderAction orderAction, string clientId = default(string), string assetPair = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Lykke.Service.FeeCalculator.Client.Models;
-using Lykke.Service.FeeCalculator.AutorestClient.Models;
 using System.Collections.Generic;
+using Lykke.Service.FeeCalculator.AutorestClient.Models;
 
 namespace Lykke.Service.FeeCalculator.Client
 {
@@ -14,5 +14,13 @@ namespace Lykke.Service.FeeCalculator.Client
             OrderAction orderAction);
 
         Task<List<CashoutFee>> GetCashoutFeesAsync(string assetId = null);
+
+        Task AddFeeAsync(FeeModel fee);
+        Task<List<Fee>> GetFeesAsync();
+        Task DeleteFeeAsync(decimal volume);
+        
+        Task AddStaticFeeAsync(StaticFeeModel fee);
+        Task<List<StaticFee>> GetStaticFeesAsync();
+        Task DeleteStaticFeeAsync(string assetPair);
     }
 }

@@ -2,9 +2,11 @@
 using System.Threading.Tasks;
 using Common.Log;
 using Lykke.Service.FeeCalculator.Client.Models;
+using System.Collections.Generic;
+using System.Globalization;
+using Common;
 using Lykke.Service.FeeCalculator.AutorestClient;
 using Lykke.Service.FeeCalculator.AutorestClient.Models;
-using System.Collections.Generic;
 
 namespace Lykke.Service.FeeCalculator.Client
 {
@@ -31,7 +33,7 @@ namespace Lykke.Service.FeeCalculator.Client
 
         public async Task<LimitOrderFeeModel> GetLimitOrderFees(string clientId, string assetPair, string assetId, OrderAction orderAction)
         {
-            var response = await _service.GetLimitOrderFeeAsync(clientId, assetPair, assetId, orderAction);
+            var response = await _service.GetLimitOrderFeeAsync(orderAction, clientId, assetPair, assetId);
 
             if (response is ErrorResponse error)
             {
@@ -45,8 +47,8 @@ namespace Lykke.Service.FeeCalculator.Client
             {
                 return new LimitOrderFeeModel
                 {
-                    TakerFeeSize = (decimal) result.TakerFeeSize,
-                    MakerFeeSize = (decimal) result.MakerFeeSize
+                    TakerFeeSize = result.TakerFeeSize,
+                    MakerFeeSize = result.MakerFeeSize
                 };
             }
 
@@ -55,7 +57,7 @@ namespace Lykke.Service.FeeCalculator.Client
 
         public async Task<MarketOrderFeeModel> GetMarketOrderFees(string clientId, string assetPair, string assetId, OrderAction orderAction)
         {
-            var response = await _service.GetMarketOrderFeeAsync(clientId, assetPair, assetId, orderAction);
+            var response = await _service.GetMarketOrderFeeAsync(orderAction, clientId, assetPair, assetId);
 
             if (response is ErrorResponse error)
             {
@@ -69,7 +71,7 @@ namespace Lykke.Service.FeeCalculator.Client
             {
                 return new MarketOrderFeeModel
                 {
-                    DefaultFeeSize = (decimal) result.DefaultFeeSize
+                    DefaultFeeSize = result.DefaultFeeSize
                 };
             }
 
@@ -89,9 +91,113 @@ namespace Lykke.Service.FeeCalculator.Client
             }
 
             if (response is List<CashoutFee> result)
+                return result;
+
+            throw new Exception(ApiError);
+        }
+
+        public async Task AddFeeAsync(FeeModel fee)
+        {
+            var response = await _service.AddFeeAsync(fee);
+
+            if (response is ErrorResponse error)
             {
-                return result as List<CashoutFee>;
+                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(AddFeeAsync),
+                      fee?.ToJson(), null);
+
+                throw new Exception(error.ErrorMessage);
             }
+
+            if (response is bool)
+                return;
+
+            throw new Exception(ApiError);
+        }
+
+        public async Task<List<Fee>> GetFeesAsync()
+        {
+            var response = await _service.GetFeesAsync();
+
+            if (response is ErrorResponse error)
+            {
+                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetFeesAsync), null, null);
+
+                throw new Exception(error.ErrorMessage);
+            }
+
+            if (response is List<Fee> fees)
+                return fees;
+
+            throw new Exception(ApiError);
+        }
+
+        public async Task DeleteFeeAsync(decimal volume)
+        {
+            var response = await _service.DeleteFeeAsync(volume);
+
+            if (response is ErrorResponse error)
+            {
+                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(DeleteFeeAsync),
+                    volume.ToString(CultureInfo.InvariantCulture), null);
+
+                throw new Exception(error.ErrorMessage);
+            }
+
+            if (response is bool)
+                return;
+
+            throw new Exception(ApiError);
+        }
+
+        public async Task AddStaticFeeAsync(StaticFeeModel fee)
+        {
+            var response = await _service.AddStaticFeeAsync(fee);
+
+            if (response is ErrorResponse error)
+            {
+                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(AddStaticFeeAsync),
+                    fee?.ToJson(), null);
+
+                throw new Exception(error.ErrorMessage);
+            }
+
+            if (response is bool)
+                return;
+
+            throw new Exception(ApiError);
+        }
+
+        public async Task<List<StaticFee>> GetStaticFeesAsync()
+        {
+            var response = await _service.GetStaticFeesAsync();
+
+            if (response is ErrorResponse error)
+            {
+                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetStaticFeesAsync), null, null);
+
+                throw new Exception(error.ErrorMessage);
+            }
+
+            if (response is List<StaticFee> fees)
+                return fees;
+
+            throw new Exception(ApiError);
+        }
+
+        public async Task DeleteStaticFeeAsync(string assetPair)
+        {
+            var response = await _service.DeleteStaticFeeAsync(assetPair);
+
+            if (response is ErrorResponse error)
+            {
+                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(DeleteStaticFeeAsync),
+                    assetPair, null);
+
+                throw new Exception(error.ErrorMessage);
+            }
+
+            if (response is bool)
+                return;
 
             throw new Exception(ApiError);
         }

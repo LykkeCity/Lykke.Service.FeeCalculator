@@ -23,5 +23,10 @@ namespace Lykke.Service.FeeCalculator.AzureRepositories.Fees
         {
             return await _tableStorage.GetDataAsync(StaticFeeEntity.GeneratePartitionKey());
         }
+
+        public async Task DeleteFeeAsync(string assetPair)
+        {
+            await _tableStorage.DeleteIfExistAsync(StaticFeeEntity.GeneratePartitionKey(), StaticFeeEntity.GenerateRowKey(assetPair));
+        }
     }
 }

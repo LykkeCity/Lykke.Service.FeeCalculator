@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Lykke.Service.FeeCalculator
 {
@@ -55,6 +56,11 @@ namespace Lykke.Service.FeeCalculator
                 services.AddSwaggerGen(options =>
                 {
                     options.DefaultLykkeConfiguration(ApiVersion, ApiTitle);
+                    options.MapType<decimal>(() => new Schema
+                    {
+                        Type = "number",
+                        Format = "decimal"
+                    });
                 });
 
                 var builder = new ContainerBuilder();

@@ -7,5 +7,6 @@ namespace Lykke.Service.FeeCalculator.Core.Domain.Fees
     {
         Task AddFeeAsync(IStaticFee fee);
         Task<IEnumerable<IStaticFee>> GetFeesAsync();
+        Task DeleteFeeAsync(string assetPair);
     }
 }

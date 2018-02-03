@@ -9,24 +9,24 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class MarketOrderFeeResponseModel
+    public partial class StaticFee
     {
         /// <summary>
-        /// Initializes a new instance of the MarketOrderFeeResponseModel
-        /// class.
+        /// Initializes a new instance of the StaticFee class.
         /// </summary>
-        public MarketOrderFeeResponseModel()
+        public StaticFee()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the MarketOrderFeeResponseModel
-        /// class.
+        /// Initializes a new instance of the StaticFee class.
         /// </summary>
-        public MarketOrderFeeResponseModel(decimal defaultFeeSize)
+        public StaticFee(decimal takerFee, decimal makerFee, string assetPair = default(string))
         {
-            DefaultFeeSize = defaultFeeSize;
+            AssetPair = assetPair;
+            TakerFee = takerFee;
+            MakerFee = makerFee;
             CustomInit();
         }
 
@@ -37,8 +37,18 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "DefaultFeeSize")]
-        public decimal DefaultFeeSize { get; set; }
+        [JsonProperty(PropertyName = "AssetPair")]
+        public string AssetPair { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "TakerFee")]
+        public decimal TakerFee { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "MakerFee")]
+        public decimal MakerFee { get; set; }
 
         /// <summary>
         /// Validate the object.

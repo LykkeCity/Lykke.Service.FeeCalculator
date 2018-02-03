@@ -9,7 +9,7 @@
     <ProjectReference Include="..\Lykke.Service.FeeCalculator.Core\Lykke.Service.FeeCalculator.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Lykke.Common" Version="4.3.0" />
+    <PackageReference Include="Lykke.Common" Version="4.4.0" />
     <PackageReference Include="Lykke.Service.Assets.Client" Version="3.3.0.0" />
     <PackageReference Include="Lykke.Service.TradeVolumes.Client" Version="1.0.3.0" />
   </ItemGroup>

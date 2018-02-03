@@ -95,7 +95,7 @@ namespace Lykke.Service.FeeCalculator.Client
 
             throw new Exception(ApiError);
         }
-
+        
         public async Task<BankCardsFeeModel> GetBankCardFees()
         {
             var response = await _service.GetPercentageAsync();

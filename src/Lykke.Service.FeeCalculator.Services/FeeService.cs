@@ -36,8 +36,7 @@ namespace Lykke.Service.FeeCalculator.Services
         
         public async Task<IBaseFee> GetFeeAsync(string clientId, string assetPairId, string assetId)
         {
-            var staticFees = await _feesStaticCache.Values();
-            var fee = staticFees.FirstOrDefault(item => item.AssetPair == assetPairId);
+            var fee = await _feesStaticCache.GetItemAsync(assetPairId);
             
             if (fee != null)
                 return fee;
@@ -81,7 +80,7 @@ namespace Lykke.Service.FeeCalculator.Services
                     return fee;
             }
 
-            return fees.Last();
+            return fees.LastOrDefault();
         }
     }
 }

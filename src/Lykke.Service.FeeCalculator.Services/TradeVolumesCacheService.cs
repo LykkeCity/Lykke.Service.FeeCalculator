@@ -22,7 +22,7 @@ namespace Lykke.Service.FeeCalculator.Services
 
         public AssetPairTradeVolume GetTradeVolume(string assetPair)
         {
-            return _cache.ContainsKey(assetPair)
+                return !string.IsNullOrEmpty(assetPair) && _cache.ContainsKey(assetPair)
                 ? _cache[assetPair]
                 : null;
         }

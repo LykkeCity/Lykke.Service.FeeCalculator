@@ -58,13 +58,13 @@ namespace Lykke.Service.FeeCalculator.Controllers
             return Ok(fees);
         }
         
-        [HttpPost("delete/{volume}")]
+        [HttpPost("delete/{id}")]
         [SwaggerOperation("DeleteFee")]
         [ProducesResponseType(typeof(bool), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> DeleteFee([FromRoute]decimal volume)
+        public async Task<IActionResult> DeleteFee([FromRoute]string id)
         {
-            await _feeRepository.DeleteFeeAsync(volume);
+            await _feeRepository.DeleteFeeAsync(id);
             _feesCache.Invalidate();
             return Ok(true);
         }

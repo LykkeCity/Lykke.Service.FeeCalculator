@@ -70,7 +70,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
         /// </param>
         Task<HttpOperationResponse<object>> GetFeesWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
-        /// <param name='volume'>
+        /// <param name='id'>
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -78,7 +78,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> DeleteFeeWithHttpMessagesAsync(decimal volume, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> DeleteFeeWithHttpMessagesAsync(string id, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='model'>
         /// </param>

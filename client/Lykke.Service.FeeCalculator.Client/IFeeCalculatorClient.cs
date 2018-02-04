@@ -19,7 +19,7 @@ namespace Lykke.Service.FeeCalculator.Client
 
         Task AddFeeAsync(FeeModel fee);
         Task<List<Fee>> GetFeesAsync();
-        Task DeleteFeeAsync(decimal volume);
+        Task DeleteFeeAsync(string id);
         
         Task AddStaticFeeAsync(StaticFeeModel fee);
         Task<List<StaticFee>> GetStaticFeesAsync();

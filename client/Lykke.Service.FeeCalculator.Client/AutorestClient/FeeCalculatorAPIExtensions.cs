@@ -114,24 +114,24 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='volume'>
+            /// <param name='id'>
             /// </param>
-            public static object DeleteFee(this IFeeCalculatorAPI operations, decimal volume)
+            public static object DeleteFee(this IFeeCalculatorAPI operations, string id)
             {
-                return operations.DeleteFeeAsync(volume).GetAwaiter().GetResult();
+                return operations.DeleteFeeAsync(id).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='volume'>
+            /// <param name='id'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> DeleteFeeAsync(this IFeeCalculatorAPI operations, decimal volume, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> DeleteFeeAsync(this IFeeCalculatorAPI operations, string id, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.DeleteFeeWithHttpMessagesAsync(volume, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.DeleteFeeWithHttpMessagesAsync(id, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

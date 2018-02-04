@@ -150,14 +150,13 @@ namespace Lykke.Service.FeeCalculator.Client
             throw new Exception(ApiError);
         }
 
-        public async Task DeleteFeeAsync(decimal volume)
+        public async Task DeleteFeeAsync(string id)
         {
-            var response = await _service.DeleteFeeAsync(volume);
+            var response = await _service.DeleteFeeAsync(id);
 
             if (response is ErrorResponse error)
             {
-                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(DeleteFeeAsync),
-                    volume.ToString(CultureInfo.InvariantCulture), null);
+                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(DeleteFeeAsync), id, null);
 
                 throw new Exception(error.ErrorMessage);
             }

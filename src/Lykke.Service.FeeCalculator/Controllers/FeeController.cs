@@ -38,6 +38,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
         {
             await _feeRepository.AddFeeAsync(new Fee
             {
+                Id = model.Id,
                 Volume = model.Volume,
                 MakerFee = model.MakerFee,
                 TakerFee = model.TakerFee

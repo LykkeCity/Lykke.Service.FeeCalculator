@@ -706,7 +706,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             return _result;
         }
 
-        /// <param name='volume'>
+        /// <param name='id'>
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -720,11 +720,21 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
         /// <exception cref="SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
+        /// <exception cref="ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when a required parameter is null
+        /// </exception>
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> DeleteFeeWithHttpMessagesAsync(decimal volume, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> DeleteFeeWithHttpMessagesAsync(string id, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
+            if (id == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "id");
+            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -732,14 +742,14 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("volume", volume);
+                tracingParameters.Add("id", id);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "DeleteFee", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/Fee/delete/{volume}").ToString();
-            _url = _url.Replace("{volume}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(volume, SerializationSettings).Trim('"')));
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/Fee/delete/{id}").ToString();
+            _url = _url.Replace("{id}", System.Uri.EscapeDataString(id));
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
             HttpResponseMessage _httpResponse = null;

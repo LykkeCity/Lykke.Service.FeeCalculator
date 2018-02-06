@@ -17,6 +17,7 @@ namespace Lykke.Service.FeeCalculator.Services
         private readonly ITradeVolumesClient _tradeVolumesClient;
         private readonly CachedDataDictionary<decimal, IFee> _feesCache;
         private readonly CachedDataDictionary<string, IStaticFee> _feesStaticCache;
+        private readonly IClientIdCacheService _clientIdCacheService;
         private readonly ILog _log;
 
         public FeeService(
@@ -24,6 +25,7 @@ namespace Lykke.Service.FeeCalculator.Services
             ITradeVolumesClient tradeVolumesClient,
             CachedDataDictionary<decimal, IFee> feesCache,
             CachedDataDictionary<string, IStaticFee> feesStaticCache,
+            IClientIdCacheService clientIdCacheService,
             ILog log
             )
         {
@@ -31,6 +33,7 @@ namespace Lykke.Service.FeeCalculator.Services
             _tradeVolumesClient = tradeVolumesClient;
             _feesCache = feesCache;
             _feesStaticCache = feesStaticCache;
+            _clientIdCacheService = clientIdCacheService;
             _log = log;
         }
         
@@ -40,17 +43,19 @@ namespace Lykke.Service.FeeCalculator.Services
             
             if (fee != null)
                 return fee;
+
+            var id = await _clientIdCacheService.GetClientId(clientId);
             
             AssetPairTradeVolumeResponse clientVolume = null;
             
             try
             {
-                clientVolume = await _tradeVolumesClient.GetClientAssetPairTradeVolumeAsync(assetPairId, clientId,
+                clientVolume = await _tradeVolumesClient.GetClientAssetPairTradeVolumeAsync(assetPairId, id,
                     DateTime.UtcNow.AddDays(-30).Date, DateTime.UtcNow.Date);
             }
             catch (Exception ex)
             {
-                _log.WriteWarning(nameof(GetFeeAsync), new {ClientId = clientId, AssetPairId = assetPairId}, "can't get client volume", ex);
+                _log.WriteWarning(nameof(GetFeeAsync), new {ClientId = id, AssetPairId = assetPairId}, "can't get client volume", ex);
             }
              
             AssetPairTradeVolume assetPairVolume = _tradeVolumesCacheService.GetTradeVolume(assetPairId);

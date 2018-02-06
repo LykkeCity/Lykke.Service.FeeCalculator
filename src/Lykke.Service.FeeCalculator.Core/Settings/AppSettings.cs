@@ -10,5 +10,6 @@ namespace Lykke.Service.FeeCalculator.Core.Settings
         public SlackNotificationsSettings SlackNotifications { get; set; }
         public AssetsServiceSettings AssetsServiceClient { get; set; }
         public TradeVolumesServiceSettings TradeVolumesServiceClient { get; set; }
+        public ClientAccountServiceSettings ClientAccountClient { get; set; }
     }
 }

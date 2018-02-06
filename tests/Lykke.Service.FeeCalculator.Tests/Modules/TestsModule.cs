@@ -3,6 +3,7 @@ using Autofac;
 using AzureStorage.Tables;
 using Common;
 using Common.Log;
+using Lykke.Service.ClientAccount.Client;
 using Lykke.Service.FeeCalculator.AzureRepositories.Fees;
 using Lykke.Service.FeeCalculator.Core.Domain.Fees;
 using Lykke.Service.FeeCalculator.Core.Services;
@@ -56,6 +57,14 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
             
             builder.RegisterType<FeeService>()
                 .As<IFeeService>()
+                .SingleInstance();
+            
+            builder.RegisterInstance(Mock.Of<IClientAccountClient>())
+                .As<IClientAccountClient>()
+                .SingleInstance();
+            
+            builder.RegisterType<ClientIdCacheService>()
+                .As<IClientIdCacheService>()
                 .SingleInstance();
         }
         

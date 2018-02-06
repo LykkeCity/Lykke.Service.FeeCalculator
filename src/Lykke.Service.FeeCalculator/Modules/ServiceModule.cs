@@ -7,6 +7,7 @@ using Common;
 using Common.Log;
 using Lykke.Service.Assets.Client;
 using Lykke.Service.Assets.Client.Models;
+using Lykke.Service.ClientAccount.Client;
 using Lykke.Service.FeeCalculator.AzureRepositories.Fees;
 using Lykke.Service.FeeCalculator.Core.Domain.Fees;
 using Lykke.Service.FeeCalculator.Core.Services;
@@ -109,6 +110,12 @@ namespace Lykke.Service.FeeCalculator.Modules
                 return new CachedDataDictionary<string, AssetPair>(
                     async () => (await ctx.Resolve<IAssetsServiceWithCache>().GetAllAssetPairsAsync()).ToDictionary(itm => itm.Id), feeSettings.Cache.AssetsUpdateInterval);
             }).SingleInstance();
+            
+            builder.RegisterLykkeServiceClient(_settings.CurrentValue.ClientAccountClient.ServiceUrl);
+            
+            builder.RegisterType<ClientIdCacheService>()
+                .As<IClientIdCacheService>()
+                .SingleInstance();
         }
     }
 }

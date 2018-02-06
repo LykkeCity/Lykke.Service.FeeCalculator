@@ -9,7 +9,7 @@
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Lykke.Common" Version="4.4.0" />
-    <PackageReference Include="Lykke.Service.Assets.Client" Version="3.3.0.0" />
+    <PackageReference Include="Lykke.Common" Version="4.4.1" />
+    <PackageReference Include="Lykke.Service.Assets.Client" Version="3.3.1" />
   </ItemGroup>
 </Project>

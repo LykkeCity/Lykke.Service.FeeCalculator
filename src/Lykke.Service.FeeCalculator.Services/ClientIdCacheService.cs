@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Lykke.Service.ClientAccount.Client;
 using Lykke.Service.ClientAccount.Client.AutorestClient.Models;
@@ -21,25 +22,36 @@ namespace Lykke.Service.FeeCalculator.Services
             if (_cache.ContainsKey(id))
                 return _cache[id];
 
-            var client = await _clientAccountClient.GetByIdAsync(id);
-
-            if (client != null)
+            try
             {
-                _cache[id] = client.Id;
-                return client.Id;
+                var client = await _clientAccountClient.GetByIdAsync(id);
+
+                if (client != null)
+                {
+                    _cache[id] = client.Id;
+                    return client.Id;
+                }
             }
+            catch{}
 
-            var wallet = await _clientAccountClient.GetWalletAsync(id);
+            try
+            {
+                var wallet = await _clientAccountClient.GetWalletAsync(id);
 
-            if (wallet == null) 
+                if (wallet == null)
+                    return id;
+
+                string clientId = wallet.Type == WalletType.Trading.ToString()
+                    ? wallet.ClientId
+                    : wallet.Id;
+
+                _cache[id] = clientId;
+                return clientId;
+            }
+            catch
+            {
                 return id;
-            
-            string clientId = wallet.Type == WalletType.Trading.ToString()
-                ? wallet.ClientId
-                : wallet.Id;
-
-            _cache[id] = clientId;
-            return clientId;
+            }
         }
     }
 }

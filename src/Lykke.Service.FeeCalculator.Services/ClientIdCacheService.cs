@@ -41,12 +41,8 @@ namespace Lykke.Service.FeeCalculator.Services
                 if (wallet == null)
                     return id;
 
-                string clientId = wallet.Type == WalletType.Trading.ToString()
-                    ? wallet.ClientId
-                    : wallet.Id;
-
-                _cache[id] = clientId;
-                return clientId;
+                _cache[id] = wallet.ClientId;
+                return wallet.ClientId;
             }
             catch
             {

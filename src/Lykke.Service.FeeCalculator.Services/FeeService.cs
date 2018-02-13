@@ -6,6 +6,7 @@ using Common.Log;
 using Lykke.Service.FeeCalculator.Core.Domain;
 using Lykke.Service.FeeCalculator.Core.Domain.Fees;
 using Lykke.Service.FeeCalculator.Core.Services;
+using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
 using Lykke.Service.TradeVolumes.Client;
 using Lykke.Service.TradeVolumes.Client.Models;
 
@@ -19,6 +20,7 @@ namespace Lykke.Service.FeeCalculator.Services
         private readonly CachedDataDictionary<string, IStaticFee> _feesStaticCache;
         private readonly IClientIdCacheService _clientIdCacheService;
         private readonly int _tradeVolumeToGetInDays;
+        private readonly MarketOrderFee[] _marketOrderFees;
         private readonly ILog _log;
 
         public FeeService(
@@ -28,6 +30,7 @@ namespace Lykke.Service.FeeCalculator.Services
             CachedDataDictionary<string, IStaticFee> feesStaticCache,
             IClientIdCacheService clientIdCacheService,
             int tradeVolumeToGetInDays,
+            MarketOrderFee[] marketOrderFees,
             ILog log
             )
         {
@@ -37,9 +40,28 @@ namespace Lykke.Service.FeeCalculator.Services
             _feesStaticCache = feesStaticCache;
             _clientIdCacheService = clientIdCacheService;
             _tradeVolumeToGetInDays = tradeVolumeToGetInDays;
+            _marketOrderFees = marketOrderFees;
             _log = log;
         }
-        
+
+        public async Task<MarketOrderFee> GetMarketOrderFeeAsync(string clientId, string assetPairId, string assetId)
+        {
+            var marketOrderFee = _marketOrderFees.FirstOrDefault(item => item.AssetId == assetId);
+
+            if (marketOrderFee != null)
+                return marketOrderFee;
+
+            var fee = await GetFeeAsync(clientId, assetPairId, assetId);
+            
+            return new MarketOrderFee
+            {
+                Amount = fee.TakerFee,
+                AssetId = assetId,
+                Type = FeeType.Absolute,
+                TargetAssetId = assetId
+            };
+        }
+
         public async Task<IBaseFee> GetFeeAsync(string clientId, string assetPairId, string assetId)
         {
             var fee = await _feesStaticCache.GetItemAsync(assetPairId);

@@ -1,10 +1,10 @@
-﻿using Lykke.Service.FeeCalculator.AutorestClient.Models;
+﻿using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Lykke.Service.FeeCalculator.Client.Models
+namespace Lykke.Service.FeeCalculator.Core.Domain.Fees
 {
-    public class MarketOrderFeeModel
+    public class MarketOrderFee
     {
         public decimal Amount { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]

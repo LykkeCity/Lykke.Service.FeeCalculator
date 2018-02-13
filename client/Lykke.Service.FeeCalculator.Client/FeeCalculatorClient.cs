@@ -66,11 +66,15 @@ namespace Lykke.Service.FeeCalculator.Client
                 throw new Exception(error.ErrorMessage);
             }
 
-            if (response is MarketOrderFeeResponseModel result)
+            if (response is MarketOrderFee result)
             {
                 return new MarketOrderFeeModel
                 {
-                    DefaultFeeSize = result.DefaultFeeSize
+                    Amount = result.Amount,
+                    AssetId = result.AssetId,
+                    TargetAssetId = result.TargetAssetId,
+                    TargetWalletId = result.TargetWalletId,
+                    Type = result.Type
                 };
             }
 

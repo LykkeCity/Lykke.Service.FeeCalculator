@@ -1554,7 +1554,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<MarketOrderFeeResponseModel>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<MarketOrderFee>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {

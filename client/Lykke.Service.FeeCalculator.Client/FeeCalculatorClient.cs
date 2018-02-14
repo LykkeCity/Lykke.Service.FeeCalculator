@@ -53,7 +53,7 @@ namespace Lykke.Service.FeeCalculator.Client
 
             throw new Exception(ApiError);
         }
-
+        
         public async Task<MarketOrderFeeModel> GetMarketOrderFees(string clientId, string assetPair, string assetId, OrderAction orderAction)
         {
             var response = await _service.GetMarketOrderFeeAsync(orderAction, clientId, assetPair, assetId);
@@ -66,9 +66,32 @@ namespace Lykke.Service.FeeCalculator.Client
                 throw new Exception(error.ErrorMessage);
             }
 
-            if (response is MarketOrderFee result)
+            if (response is MarketOrderFeeResponseModel result)
             {
                 return new MarketOrderFeeModel
+                {
+                    DefaultFeeSize = result.DefaultFeeSize
+                };
+            }
+
+            throw new Exception(ApiError);
+        }
+
+        public async Task<MarketOrderAssetFeeModel> GetMarketOrderAssetFee(string clientId, string assetPair, string assetId, OrderAction orderAction)
+        {
+            var response = await _service.GetMarketOrderAssetFeeAsync(orderAction, clientId, assetPair, assetId);
+
+            if (response is ErrorResponse error)
+            {
+                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetMarketOrderAssetFee),
+                    $"clientId = {clientId}, assetPair = {assetPair}, assetId = {assetId}, orderAction = {orderAction}, error = {error.ErrorMessage}", null);
+
+                throw new Exception(error.ErrorMessage);
+            }
+
+            if (response is MarketOrderFee result)
+            {
+                return new MarketOrderAssetFeeModel
                 {
                     Amount = result.Amount,
                     AssetId = result.AssetId,

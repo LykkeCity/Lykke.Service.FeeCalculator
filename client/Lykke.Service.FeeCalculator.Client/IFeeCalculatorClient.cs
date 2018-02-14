@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Lykke.Service.FeeCalculator.Client.Models;
 using System.Collections.Generic;
 using Lykke.Service.FeeCalculator.AutorestClient.Models;
@@ -7,7 +8,11 @@ namespace Lykke.Service.FeeCalculator.Client
 {
     public interface IFeeCalculatorClient
     {
+        [Obsolete("Use MarketOrderAssetFee method")]
         Task<MarketOrderFeeModel> GetMarketOrderFees(string clientId, string assetPair, string assetId,
+            OrderAction orderAction);
+        
+        Task<MarketOrderAssetFeeModel> GetMarketOrderAssetFee(string clientId, string assetPair, string assetId, 
             OrderAction orderAction);
 
         Task<LimitOrderFeeModel> GetLimitOrderFees(string clientId, string assetPair, string assetId,

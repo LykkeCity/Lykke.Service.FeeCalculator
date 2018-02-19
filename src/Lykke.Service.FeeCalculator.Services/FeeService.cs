@@ -55,7 +55,7 @@ namespace Lykke.Service.FeeCalculator.Services
                 Amount = fee.TakerFee,
                 AssetId = assetId,
                 Type = FeeType.Relative,
-                TargetAssetId = assetId
+                TargetAssetId = null
             };
         }
 

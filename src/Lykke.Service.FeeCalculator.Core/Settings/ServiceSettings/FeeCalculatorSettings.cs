@@ -7,6 +7,7 @@ namespace Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings
 {
     public class FeeCalculatorSettings
     {
+        public int TradeVolumeToGetInDays { get; set; }
         public CacheSettings Cache { get; set; }
         public DbSettings Db { get; set; }
         [Optional] 

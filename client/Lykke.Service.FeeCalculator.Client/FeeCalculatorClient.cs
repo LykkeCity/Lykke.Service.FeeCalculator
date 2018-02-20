@@ -104,7 +104,7 @@ namespace Lykke.Service.FeeCalculator.Client
             throw new Exception(ApiError);
         }
 
-        public async Task<List<CashoutFee>> GetCashoutFeesAsync(string assetId = null)
+        public async Task<IReadOnlyCollection<CashoutFee>> GetCashoutFeesAsync(string assetId = null)
         {
             var response = await _service.GetCashoutFeesAsync(assetId);
 
@@ -146,12 +146,7 @@ namespace Lykke.Service.FeeCalculator.Client
             var response = await _service.AddFeeAsync(fee);
 
             if (response is ErrorResponse error)
-            {
-                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(AddFeeAsync),
-                      fee?.ToJson(), null);
-
                 throw new Exception(error.ErrorMessage);
-            }
 
             if (response is bool)
                 return;
@@ -159,16 +154,12 @@ namespace Lykke.Service.FeeCalculator.Client
             throw new Exception(ApiError);
         }
 
-        public async Task<List<Fee>> GetFeesAsync()
+        public async Task<IReadOnlyCollection<Fee>> GetFeesAsync()
         {
             var response = await _service.GetFeesAsync();
 
             if (response is ErrorResponse error)
-            {
-                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetFeesAsync), null, null);
-
                 throw new Exception(error.ErrorMessage);
-            }
 
             if (response is List<Fee> fees)
                 return fees;
@@ -181,11 +172,7 @@ namespace Lykke.Service.FeeCalculator.Client
             var response = await _service.DeleteFeeAsync(id);
 
             if (response is ErrorResponse error)
-            {
-                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(DeleteFeeAsync), id, null);
-
                 throw new Exception(error.ErrorMessage);
-            }
 
             if (response is bool)
                 return;
@@ -198,12 +185,7 @@ namespace Lykke.Service.FeeCalculator.Client
             var response = await _service.AddStaticFeeAsync(fee);
 
             if (response is ErrorResponse error)
-            {
-                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(AddStaticFeeAsync),
-                    fee?.ToJson(), null);
-
                 throw new Exception(error.ErrorMessage);
-            }
 
             if (response is bool)
                 return;
@@ -211,16 +193,12 @@ namespace Lykke.Service.FeeCalculator.Client
             throw new Exception(ApiError);
         }
 
-        public async Task<List<StaticFee>> GetStaticFeesAsync()
+        public async Task<IReadOnlyCollection<StaticFee>> GetStaticFeesAsync()
         {
             var response = await _service.GetStaticFeesAsync();
 
             if (response is ErrorResponse error)
-            {
-                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetStaticFeesAsync), null, null);
-
                 throw new Exception(error.ErrorMessage);
-            }
 
             if (response is List<StaticFee> fees)
                 return fees;
@@ -233,12 +211,7 @@ namespace Lykke.Service.FeeCalculator.Client
             var response = await _service.DeleteStaticFeeAsync(assetPair);
 
             if (response is ErrorResponse error)
-            {
-                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(DeleteStaticFeeAsync),
-                    assetPair, null);
-
                 throw new Exception(error.ErrorMessage);
-            }
 
             if (response is bool)
                 return;

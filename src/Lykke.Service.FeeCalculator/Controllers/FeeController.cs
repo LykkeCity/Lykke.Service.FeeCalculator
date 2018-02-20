@@ -30,6 +30,11 @@ namespace Lykke.Service.FeeCalculator.Controllers
             _feesStaticCache = feesStaticCache;
         }
 
+        /// <summary>
+        /// Adds a dynamic fee
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("add")]
         [SwaggerOperation("AddFee")]
         [ProducesResponseType(typeof(bool), (int) HttpStatusCode.OK)]
@@ -49,6 +54,10 @@ namespace Lykke.Service.FeeCalculator.Controllers
             return Ok(true);
         }
         
+        /// <summary>
+        /// Gets all the dynamic fees
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("get")]
         [SwaggerOperation("GetFees")]
         [ProducesResponseType(typeof(List<Fee>), (int) HttpStatusCode.OK)]
@@ -59,6 +68,11 @@ namespace Lykke.Service.FeeCalculator.Controllers
             return Ok(fees);
         }
         
+        /// <summary>
+        /// Deletes the dynamic fee by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost("delete/{id}")]
         [SwaggerOperation("DeleteFee")]
         [ProducesResponseType(typeof(bool), (int) HttpStatusCode.OK)]
@@ -70,6 +84,11 @@ namespace Lykke.Service.FeeCalculator.Controllers
             return Ok(true);
         }
         
+        /// <summary>
+        /// Adds a static fee
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("staticfee/add")]
         [SwaggerOperation("AddStaticFee")]
         [ProducesResponseType(typeof(bool), (int) HttpStatusCode.OK)]
@@ -88,6 +107,10 @@ namespace Lykke.Service.FeeCalculator.Controllers
             return Ok(true);
         }
         
+        /// <summary>
+        /// Gets all the static fees
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("staticfee/get")]
         [SwaggerOperation("GetStaticFees")]
         [ProducesResponseType(typeof(List<StaticFee>), (int) HttpStatusCode.OK)]
@@ -98,6 +121,11 @@ namespace Lykke.Service.FeeCalculator.Controllers
             return Ok(fees);
         }
         
+        /// <summary>
+        /// Deletes the static fee by asset pair
+        /// </summary>
+        /// <param name="assetPair"></param>
+        /// <returns></returns>
         [HttpPost("staticfee/delete/{assetPair}")]
         [SwaggerOperation("DeleteStaticFee")]
         [ProducesResponseType(typeof(bool), (int) HttpStatusCode.OK)]

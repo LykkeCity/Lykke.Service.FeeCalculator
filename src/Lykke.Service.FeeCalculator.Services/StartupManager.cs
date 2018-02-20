@@ -30,6 +30,7 @@ namespace Lykke.Service.FeeCalculator.Services
             _log.WriteInfo(nameof(StartAsync), null, "Filling trade volumes cache for all asset pairs...");
 
             await _cacheUpdater.FillCache();
+            _cacheUpdater.Start();
 
             _log.WriteInfo(nameof(StartAsync), null, "Trade volumes cache is initialized");
         }

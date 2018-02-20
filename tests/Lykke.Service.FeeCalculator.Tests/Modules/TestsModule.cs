@@ -72,12 +72,12 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
         {
             var repository = new FeeRepository(new NoSqlTableInMemory<FeeEntity>());
             
-            repository.AddFeeAsync(new Fee{Volume = 0.1M, MakerFee = 0.1M, TakerFee = 0.19M}).Wait();
-            repository.AddFeeAsync(new Fee{Volume = 1M, MakerFee = 0.09M, TakerFee = 0.18M}).Wait();
-            repository.AddFeeAsync(new Fee{Volume = 2.5M, MakerFee = 0.08M, TakerFee = 0.17M}).Wait();
-            repository.AddFeeAsync(new Fee{Volume = 5M, MakerFee = 0.07M, TakerFee = 0.16M}).Wait();
-            repository.AddFeeAsync(new Fee{Volume = 10M, MakerFee = 0.06M, TakerFee = 0.15M}).Wait();
-            repository.AddFeeAsync(new Fee{Volume = 20M, MakerFee = 0.05M, TakerFee = 0.14M}).Wait();
+            repository.AddFeeAsync(new Fee{Volume = 0.1M, MakerFee = 0.1M, TakerFee = 0.19M}).GetAwaiter().GetResult();
+            repository.AddFeeAsync(new Fee{Volume = 1M, MakerFee = 0.09M, TakerFee = 0.18M}).GetAwaiter().GetResult();
+            repository.AddFeeAsync(new Fee{Volume = 2.5M, MakerFee = 0.08M, TakerFee = 0.17M}).GetAwaiter().GetResult();
+            repository.AddFeeAsync(new Fee{Volume = 5M, MakerFee = 0.07M, TakerFee = 0.16M}).GetAwaiter().GetResult();
+            repository.AddFeeAsync(new Fee{Volume = 10M, MakerFee = 0.06M, TakerFee = 0.15M}).GetAwaiter().GetResult();
+            repository.AddFeeAsync(new Fee{Volume = 20M, MakerFee = 0.05M, TakerFee = 0.14M}).GetAwaiter().GetResult();
 
             return repository;
         }
@@ -86,7 +86,7 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
         {
             var repository = new StaticFeeRepository(new NoSqlTableInMemory<StaticFeeEntity>());
             
-            repository.AddFeeAsync(new StaticFee{AssetPair = "BTCCHF", MakerFee = 0.03M, TakerFee = 0.03M}).Wait();
+            repository.AddFeeAsync(new StaticFee{AssetPair = "BTCCHF", MakerFee = 0.03M, TakerFee = 0.03M}).GetAwaiter().GetResult();
 
             return repository;
         }

@@ -14,9 +14,9 @@ namespace Lykke.Service.FeeCalculator.AzureRepositories.Fees
             _tableStorage = tableStorage;
         }
         
-        public async Task AddFeeAsync(IStaticFee fee)
+        public Task AddFeeAsync(IStaticFee fee)
         {
-            await _tableStorage.InsertOrMergeAsync(StaticFeeEntity.Create(fee));
+            return _tableStorage.InsertOrMergeAsync(StaticFeeEntity.Create(fee));
         }
 
         public async Task<IEnumerable<IStaticFee>> GetFeesAsync()

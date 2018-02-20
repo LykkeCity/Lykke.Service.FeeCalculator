@@ -57,10 +57,9 @@ namespace Lykke.Service.FeeCalculator.Modules
                 .SingleInstance();
             
             builder.RegisterType<CacheUpdaterHandler>()
-                .As<IStartable>()
                 .AsSelf()
-                .AutoActivate()
                 .WithParameter(TypedParameter.From(feeSettings.Cache.TradeVolumesUpdateInterval))
+                .WithParameter(TypedParameter.From(feeSettings.TradeVolumeToGetInDays))
                 .SingleInstance();
             
             builder.RegisterType<TradeVolumesCacheService>()
@@ -69,6 +68,7 @@ namespace Lykke.Service.FeeCalculator.Modules
             
             builder.RegisterType<FeeService>()
                 .As<IFeeService>()
+                .WithParameter(TypedParameter.From(feeSettings.TradeVolumeToGetInDays))
                 .SingleInstance();
             
             builder.RegisterInstance<IFeeRepository>(

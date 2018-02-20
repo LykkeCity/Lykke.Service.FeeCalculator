@@ -20,6 +20,14 @@ namespace Lykke.Service.FeeCalculator.Controllers
             _feeService = feeService;
         }
 
+        /// <summary>
+        /// Returns fee for the market order
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <param name="assetPair"></param>
+        /// <param name="assetId"></param>
+        /// <param name="orderAction"></param>
+        /// <returns></returns>
         [HttpGet("market")]
         [SwaggerOperation("GetMarketOrderFee")]
         [ProducesResponseType(typeof(MarketOrderFeeResponseModel), (int) HttpStatusCode.OK)]
@@ -36,6 +44,14 @@ namespace Lykke.Service.FeeCalculator.Controllers
             });
         }
 
+        /// <summary>
+        /// Returns fee for the limit order
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <param name="assetPair"></param>
+        /// <param name="assetId"></param>
+        /// <param name="orderAction"></param>
+        /// <returns></returns>
         [HttpGet("limit")]
         [SwaggerOperation("GetLimitOrderFee")]
         [ProducesResponseType(typeof(LimitOrderFeeResponseModel), (int)HttpStatusCode.OK)]

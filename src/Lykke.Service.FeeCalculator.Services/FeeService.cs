@@ -18,6 +18,7 @@ namespace Lykke.Service.FeeCalculator.Services
         private readonly CachedDataDictionary<decimal, IFee> _feesCache;
         private readonly CachedDataDictionary<string, IStaticFee> _feesStaticCache;
         private readonly IClientIdCacheService _clientIdCacheService;
+        private readonly int _tradeVolumeToGetInDays;
         private readonly ILog _log;
 
         public FeeService(
@@ -26,6 +27,7 @@ namespace Lykke.Service.FeeCalculator.Services
             CachedDataDictionary<decimal, IFee> feesCache,
             CachedDataDictionary<string, IStaticFee> feesStaticCache,
             IClientIdCacheService clientIdCacheService,
+            int tradeVolumeToGetInDays,
             ILog log
             )
         {
@@ -34,6 +36,7 @@ namespace Lykke.Service.FeeCalculator.Services
             _feesCache = feesCache;
             _feesStaticCache = feesStaticCache;
             _clientIdCacheService = clientIdCacheService;
+            _tradeVolumeToGetInDays = tradeVolumeToGetInDays;
             _log = log;
         }
         
@@ -51,7 +54,7 @@ namespace Lykke.Service.FeeCalculator.Services
             try
             {
                 clientVolume = await _tradeVolumesClient.GetClientAssetPairTradeVolumeAsync(assetPairId, id,
-                    DateTime.UtcNow.AddDays(-30).Date, DateTime.UtcNow.Date);
+                    DateTime.UtcNow.AddDays(-_tradeVolumeToGetInDays).Date, DateTime.UtcNow.Date);
             }
             catch (Exception ex)
             {

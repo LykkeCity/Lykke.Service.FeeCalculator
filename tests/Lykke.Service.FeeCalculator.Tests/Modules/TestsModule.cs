@@ -17,6 +17,7 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
     {
         protected override void Load(ContainerBuilder builder)
         {
+            const int tradeVolumeToGetInDays = 30;
             builder.RegisterInstance(Mock.Of<ILog>())
                 .As<ILog>()
                 .SingleInstance();
@@ -57,6 +58,7 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
             
             builder.RegisterType<FeeService>()
                 .As<IFeeService>()
+                .WithParameter(TypedParameter.From(tradeVolumeToGetInDays))
                 .SingleInstance();
             
             builder.RegisterInstance(Mock.Of<IClientAccountClient>())

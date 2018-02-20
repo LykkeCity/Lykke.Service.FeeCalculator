@@ -22,7 +22,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
             _feeService = feeService;
         }
         
-`        /// <summary>
+        /// <summary>
         /// Returns fee for the market order
         /// </summary>
         /// <param name="clientId"></param>

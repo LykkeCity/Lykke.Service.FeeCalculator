@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Common.Log;
 using Lykke.Service.FeeCalculator.Core.Services;
+using Lykke.Service.FeeCalculator.Services.PeriodicalHandlers;
 
 namespace Lykke.Service.FeeCalculator.Services
 {
@@ -13,18 +14,25 @@ namespace Lykke.Service.FeeCalculator.Services
 
     public class StartupManager : IStartupManager
     {
+        private readonly CacheUpdaterHandler _cacheUpdater;
         private readonly ILog _log;
 
-        public StartupManager(ILog log)
+        public StartupManager(
+            CacheUpdaterHandler cacheUpdater,
+            ILog log)
         {
+            _cacheUpdater = cacheUpdater;
             _log = log;
         }
 
         public async Task StartAsync()
         {
-            // TODO: Implement your startup logic here. Good idea is to log every step
+            _log.WriteInfo(nameof(StartAsync), null, "Filling trade volumes cache for all asset pairs...");
 
-            await Task.CompletedTask;
+            await _cacheUpdater.FillCache();
+            _cacheUpdater.Start();
+
+            _log.WriteInfo(nameof(StartAsync), null, "Trade volumes cache is initialized");
         }
     }
 }

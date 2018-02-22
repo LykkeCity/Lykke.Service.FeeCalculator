@@ -1,12 +1,12 @@
-﻿using System;
-using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
+﻿using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
 using Lykke.Service.FeeCalculator.Models;
 using Lykke.Service.FeeCalculator.Services.DummySettingsHolder;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Lykke.Service.FeeCalculator.Controllers
 {

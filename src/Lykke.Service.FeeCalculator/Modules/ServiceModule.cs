@@ -1,10 +1,21 @@
-﻿using Autofac;
+﻿using System;
+using System.Linq;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AzureStorage.Tables;
+using Common;
 using Common.Log;
+using Lykke.Service.Assets.Client;
+using Lykke.Service.Assets.Client.Models;
+using Lykke.Service.ClientAccount.Client;
+using Lykke.Service.FeeCalculator.AzureRepositories.Fees;
+using Lykke.Service.FeeCalculator.Core.Domain.Fees;
 using Lykke.Service.FeeCalculator.Core.Services;
-using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
+using Lykke.Service.FeeCalculator.Core.Settings;
 using Lykke.Service.FeeCalculator.Services;
 using Lykke.Service.FeeCalculator.Services.DummySettingsHolder;
+using Lykke.Service.FeeCalculator.Services.PeriodicalHandlers;
+using Lykke.Service.TradeVolumes.Client;
 using Lykke.SettingsReader;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,21 +23,21 @@ namespace Lykke.Service.FeeCalculator.Modules
 {
     public class ServiceModule : Module
     {
-        private readonly IReloadingManager<FeeCalculatorSettings> _settings;
+        private readonly IReloadingManager<AppSettings> _settings;
         private readonly ILog _log;
-        // NOTE: you can remove it if you don't need to use IServiceCollection extensions to register service specific dependencies
-        private readonly IServiceCollection _services;
+        private readonly ServiceCollection _services;
 
-        public ServiceModule(IReloadingManager<FeeCalculatorSettings> settings, ILog log)
+        public ServiceModule(IReloadingManager<AppSettings> settings, ILog log)
         {
             _settings = settings;
             _log = log;
-
             _services = new ServiceCollection();
         }
 
         protected override void Load(ContainerBuilder builder)
         {
+            var feeSettings = _settings.CurrentValue.FeeCalculatorService;
+            
             builder.RegisterInstance(_log)
                 .As<ILog>()
                 .SingleInstance();
@@ -41,15 +52,70 @@ namespace Lykke.Service.FeeCalculator.Modules
             builder.RegisterType<ShutdownManager>()
                 .As<IShutdownManager>();
 
-            builder.RegisterType<DummySettingsHolder>()
-                .WithParameter(TypedParameter.From(_settings.CurrentValue.MarketOrder))
-                .WithParameter(TypedParameter.From(_settings.CurrentValue.LimitOrder))
-                .WithParameter(TypedParameter.From(_settings.CurrentValue.CashoutFees))
-                .WithParameter(TypedParameter.From(_settings.CurrentValue.BankCard))
+            builder.RegisterInstance(new DummySettingsHolder(feeSettings.MarketOrder, feeSettings.LimitOrder, feeSettings.CashoutFees, feeSettings.BankCard))
                 .As<IDummySettingsHolder>()
                 .SingleInstance();
+            
+            builder.RegisterType<CacheUpdaterHandler>()
+                .AsSelf()
+                .WithParameter(TypedParameter.From(feeSettings.Cache.TradeVolumesUpdateInterval))
+                .WithParameter(TypedParameter.From(feeSettings.TradeVolumeToGetInDays))
+                .SingleInstance();
+            
+            builder.RegisterType<TradeVolumesCacheService>()
+                .As<ITradeVolumesCacheService>()
+                .SingleInstance();
+            
+            builder.RegisterType<FeeService>()
+                .As<IFeeService>()
+                .WithParameter(TypedParameter.From(feeSettings.TradeVolumeToGetInDays))
+                .SingleInstance();
+            
+            builder.RegisterInstance<IFeeRepository>(
+                new FeeRepository(AzureTableStorage<FeeEntity>.Create(
+                    _settings.ConnectionString(x => x.FeeCalculatorService.Db.DataConnString), "VolumeFees", _log))
+            ).SingleInstance();
+            
+            builder.Register(x =>
+            {
+                var ctx = x.Resolve<IComponentContext>();
+                return new CachedDataDictionary<decimal, IFee>(
+                    async () => (await ctx.Resolve<IFeeRepository>().GetFeesAsync()).ToDictionary(itm => itm.Volume), feeSettings.Cache.FeesUpdateInterval);
+            }).SingleInstance();
+            
+            
+            builder.RegisterInstance<IStaticFeeRepository>(
+                new StaticFeeRepository(AzureTableStorage<StaticFeeEntity>.Create(
+                    _settings.ConnectionString(x => x.FeeCalculatorService.Db.DataConnString), "StaticFees", _log))
+            ).SingleInstance();
+            
+            builder.Register(x =>
+            {
+                var ctx = x.Resolve<IComponentContext>();
+                return new CachedDataDictionary<string, IStaticFee>(
+                    async () => (await ctx.Resolve<IStaticFeeRepository>().GetFeesAsync()).ToDictionary(itm => itm.AssetPair), feeSettings.Cache.FeesUpdateInterval);
+            }).SingleInstance();
+            
+            builder.RegisterTradeVolumesClient(_settings.CurrentValue.TradeVolumesServiceClient.ServiceUrl, _log);
+            
+            _services.RegisterAssetsClient(AssetServiceSettings.Create(
+                new Uri(_settings.CurrentValue.AssetsServiceClient.ServiceUrl),
+                feeSettings.Cache.AssetsUpdateInterval));
 
             builder.Populate(_services);
+            
+            builder.Register(x =>
+            {
+                var ctx = x.Resolve<IComponentContext>();
+                return new CachedDataDictionary<string, AssetPair>(
+                    async () => (await ctx.Resolve<IAssetsServiceWithCache>().GetAllAssetPairsAsync()).ToDictionary(itm => itm.Id), feeSettings.Cache.AssetsUpdateInterval);
+            }).SingleInstance();
+            
+            builder.RegisterLykkeServiceClient(_settings.CurrentValue.ClientAccountClient.ServiceUrl);
+            
+            builder.RegisterType<ClientIdCacheService>()
+                .As<IClientIdCacheService>()
+                .SingleInstance();
         }
     }
 }

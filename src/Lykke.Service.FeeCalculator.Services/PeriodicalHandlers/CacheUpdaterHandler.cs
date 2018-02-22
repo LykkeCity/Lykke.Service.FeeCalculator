@@ -49,16 +49,14 @@ namespace Lykke.Service.FeeCalculator.Services.PeriodicalHandlers
 
         public async Task FillCache()
         {
-            HashSet<AssetPair> assetPairs = (await _assetPairCache.Values()).ToHashSet();
+            Dictionary<string, AssetPair> assetPairs = (await _assetPairCache.Values()).ToDictionary(item => item.Id);
 
-            List<AssetPairTradeVolumeResponse> tradeVolumes = await _tradeVolumesClient.GetAssetPairsTradeVolumeAsync(assetPairs.Select(item => item.Id).ToArray(), 
+            List<AssetPairTradeVolumeResponse> tradeVolumes = await _tradeVolumesClient.GetAssetPairsTradeVolumeAsync(assetPairs.Keys.ToArray(), 
                 DateTime.UtcNow.AddDays(-_tradeVolumeToGetInDays).Date, DateTime.UtcNow);
 
             foreach (var tradeVolume in tradeVolumes)
             {
-                var assetPair = assetPairs.FirstOrDefault(item => item.Id == tradeVolume.AssetPairId);
-                
-                if (assetPair != null)
+                if (assetPairs.TryGetValue(tradeVolume.AssetPairId, out var assetPair))
                     _tradeVolumesCacheService.AddTadeVolume(assetPair, tradeVolume.BaseVolume, tradeVolume.QuotingVolume);
             }
             

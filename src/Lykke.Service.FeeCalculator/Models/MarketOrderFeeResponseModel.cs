@@ -1,4 +1,4 @@
-﻿namespace Lykke.Service.FeeCalculator.Modules
+﻿namespace Lykke.Service.FeeCalculator.Models
 {
     public class MarketOrderFeeResponseModel
     {

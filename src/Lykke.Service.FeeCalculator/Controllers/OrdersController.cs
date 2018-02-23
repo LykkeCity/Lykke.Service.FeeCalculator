@@ -4,7 +4,6 @@ using Lykke.Service.FeeCalculator.Core.Domain;
 using Lykke.Service.FeeCalculator.Core.Domain.Fees;
 using Lykke.Service.FeeCalculator.Core.Services;
 using Lykke.Service.FeeCalculator.Models;
-using Lykke.Service.FeeCalculator.Modules;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
 

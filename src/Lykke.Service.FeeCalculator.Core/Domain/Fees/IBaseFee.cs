@@ -4,5 +4,6 @@
     {
         decimal TakerFee { get; }
         decimal MakerFee { get; }
+        decimal MakerFeeModificator { get; set; }
     }
 }

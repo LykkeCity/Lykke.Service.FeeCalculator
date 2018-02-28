@@ -78,7 +78,8 @@ namespace Lykke.Service.FeeCalculator.Controllers
             return Ok(new LimitOrderFeeResponseModel
             {
                 TakerFeeSize = fee.TakerFee,
-                MakerFeeSize = fee.MakerFee
+                MakerFeeSize = fee.MakerFee,
+                MakerFeeModificator = fee.MakerFeeModificator
             });
         }
     }

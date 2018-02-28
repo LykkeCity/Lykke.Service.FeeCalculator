@@ -22,11 +22,12 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         /// <summary>
         /// Initializes a new instance of the StaticFee class.
         /// </summary>
-        public StaticFee(decimal takerFee, decimal makerFee, string assetPair = default(string))
+        public StaticFee(decimal takerFee, decimal makerFee, decimal makerFeeModificator, string assetPair = default(string))
         {
             AssetPair = assetPair;
             TakerFee = takerFee;
             MakerFee = makerFee;
+            MakerFeeModificator = makerFeeModificator;
             CustomInit();
         }
 
@@ -49,6 +50,11 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         /// </summary>
         [JsonProperty(PropertyName = "MakerFee")]
         public decimal MakerFee { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "MakerFeeModificator")]
+        public decimal MakerFeeModificator { get; set; }
 
         /// <summary>
         /// Validate the object.

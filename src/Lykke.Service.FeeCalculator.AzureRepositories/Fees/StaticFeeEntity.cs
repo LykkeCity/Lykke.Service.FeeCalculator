@@ -11,6 +11,7 @@ namespace Lykke.Service.FeeCalculator.AzureRepositories.Fees
         public string AssetPair { get; set; }
         public decimal TakerFee { get; set; }
         public decimal MakerFee { get; set; }
+        public decimal MakerFeeModificator { get; set; }
 
         internal static string GeneratePartitionKey() => "StaticFee";
         internal static string GenerateRowKey(string assetPair) => assetPair;
@@ -21,7 +22,8 @@ namespace Lykke.Service.FeeCalculator.AzureRepositories.Fees
             RowKey = GenerateRowKey(fee.AssetPair),
             AssetPair = fee.AssetPair,
             MakerFee = fee.MakerFee,
-            TakerFee = fee.TakerFee
+            TakerFee = fee.TakerFee,
+            MakerFeeModificator = fee.MakerFeeModificator
         };
     }
 }

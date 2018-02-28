@@ -22,12 +22,13 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         /// <summary>
         /// Initializes a new instance of the FeeModel class.
         /// </summary>
-        public FeeModel(decimal volume, decimal makerFee, decimal takerFee, string id = default(string))
+        public FeeModel(decimal volume, decimal makerFee, decimal takerFee, decimal makerFeeModificator, string id = default(string))
         {
             Id = id;
             Volume = volume;
             MakerFee = makerFee;
             TakerFee = takerFee;
+            MakerFeeModificator = makerFeeModificator;
             CustomInit();
         }
 
@@ -55,6 +56,11 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         /// </summary>
         [JsonProperty(PropertyName = "TakerFee")]
         public decimal TakerFee { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "MakerFeeModificator")]
+        public decimal MakerFeeModificator { get; set; }
 
         /// <summary>
         /// Validate the object.

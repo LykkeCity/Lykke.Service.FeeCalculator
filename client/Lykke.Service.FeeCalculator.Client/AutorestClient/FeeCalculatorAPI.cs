@@ -423,6 +423,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             return _result;
         }
 
+        /// <summary>
+        /// Adds a dynamic fee
+        /// </summary>
         /// <param name='model'>
         /// </param>
         /// <param name='customHeaders'>
@@ -571,6 +574,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             return _result;
         }
 
+        /// <summary>
+        /// Gets all the dynamic fees
+        /// </summary>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
         /// </param>
@@ -706,6 +712,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             return _result;
         }
 
+        /// <summary>
+        /// Deletes the dynamic fee by id
+        /// </summary>
         /// <param name='id'>
         /// </param>
         /// <param name='customHeaders'>
@@ -855,6 +864,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             return _result;
         }
 
+        /// <summary>
+        /// Adds a static fee
+        /// </summary>
         /// <param name='model'>
         /// </param>
         /// <param name='customHeaders'>
@@ -1003,6 +1015,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             return _result;
         }
 
+        /// <summary>
+        /// Gets all the static fees
+        /// </summary>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
         /// </param>
@@ -1138,6 +1153,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             return _result;
         }
 
+        /// <summary>
+        /// Deletes the static fee by asset pair
+        /// </summary>
         /// <param name='assetPair'>
         /// </param>
         /// <param name='customHeaders'>
@@ -1425,6 +1443,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             return _result;
         }
 
+        /// <summary>
+        /// Returns fee for the market order
+        /// </summary>
         /// <param name='orderAction'>
         /// Possible values include: 'Buy', 'Sell'
         /// </param>
@@ -1591,6 +1612,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             return _result;
         }
 
+        /// <summary>
+        /// Returns fee for the limit order
+        /// </summary>
         /// <param name='orderAction'>
         /// Possible values include: 'Buy', 'Sell'
         /// </param>

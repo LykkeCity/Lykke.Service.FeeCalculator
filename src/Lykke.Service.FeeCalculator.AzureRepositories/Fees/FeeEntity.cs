@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using Lykke.AzureStorage.Tables;
 using Lykke.AzureStorage.Tables.Entity.Annotation;
 using Lykke.AzureStorage.Tables.Entity.ValueTypesMerging;
@@ -14,6 +13,7 @@ namespace Lykke.Service.FeeCalculator.AzureRepositories.Fees
         public decimal Volume { get; set; }
         public decimal TakerFee { get; set; }
         public decimal MakerFee { get; set; }
+        public decimal MakerFeeModificator { get; set; }
 
         internal static string GeneratePartitionKey() => "Fee";
         internal static string GenerateRowKey(string id) => id;
@@ -29,7 +29,8 @@ namespace Lykke.Service.FeeCalculator.AzureRepositories.Fees
                 Id = id,
                 Volume = fee.Volume,
                 MakerFee = fee.MakerFee,
-                TakerFee = fee.TakerFee
+                TakerFee = fee.TakerFee,
+                MakerFeeModificator = fee.MakerFeeModificator
             };
         }
     }

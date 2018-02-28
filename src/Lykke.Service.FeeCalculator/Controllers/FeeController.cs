@@ -46,7 +46,8 @@ namespace Lykke.Service.FeeCalculator.Controllers
                 Id = model.Id,
                 Volume = model.Volume,
                 MakerFee = model.MakerFee,
-                TakerFee = model.TakerFee
+                TakerFee = model.TakerFee,
+                MakerFeeModificator = model.MakerFeeModificator
             });
             
             _feesCache.Invalidate();
@@ -99,7 +100,8 @@ namespace Lykke.Service.FeeCalculator.Controllers
             {
                 AssetPair = model.AssetPair,
                 MakerFee = model.MakerFee,
-                TakerFee = model.TakerFee
+                TakerFee = model.TakerFee,
+                MakerFeeModificator = model.MakerFeeModificator
             });
             
             _feesStaticCache.Invalidate();

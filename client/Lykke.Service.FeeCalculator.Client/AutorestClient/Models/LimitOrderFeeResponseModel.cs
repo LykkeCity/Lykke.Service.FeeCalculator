@@ -22,10 +22,11 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         /// <summary>
         /// Initializes a new instance of the LimitOrderFeeResponseModel class.
         /// </summary>
-        public LimitOrderFeeResponseModel(decimal makerFeeSize, decimal takerFeeSize)
+        public LimitOrderFeeResponseModel(decimal makerFeeSize, decimal takerFeeSize, decimal makerFeeModificator)
         {
             MakerFeeSize = makerFeeSize;
             TakerFeeSize = takerFeeSize;
+            MakerFeeModificator = makerFeeModificator;
             CustomInit();
         }
 
@@ -43,6 +44,11 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         /// </summary>
         [JsonProperty(PropertyName = "TakerFeeSize")]
         public decimal TakerFeeSize { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "MakerFeeModificator")]
+        public decimal MakerFeeModificator { get; set; }
 
         /// <summary>
         /// Validate the object.

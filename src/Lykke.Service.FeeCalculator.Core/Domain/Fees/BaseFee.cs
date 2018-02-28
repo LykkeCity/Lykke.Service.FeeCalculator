@@ -4,5 +4,6 @@
     {
         public decimal TakerFee { get; set; }
         public decimal MakerFee { get; set; }
+        public decimal MakerFeeModificator { get; set; }
     }
 }

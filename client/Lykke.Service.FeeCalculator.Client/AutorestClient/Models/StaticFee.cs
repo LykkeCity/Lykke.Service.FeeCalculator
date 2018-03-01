@@ -22,11 +22,17 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         /// <summary>
         /// Initializes a new instance of the StaticFee class.
         /// </summary>
-        public StaticFee(decimal takerFee, decimal makerFee, decimal makerFeeModificator, string assetPair = default(string))
+        /// <param name="takerFeeType">Possible values include: 'Unknown',
+        /// 'Absolute', 'Relative'</param>
+        /// <param name="makerFeeType">Possible values include: 'Unknown',
+        /// 'Absolute', 'Relative'</param>
+        public StaticFee(decimal takerFee, decimal makerFee, FeeType takerFeeType, FeeType makerFeeType, decimal makerFeeModificator, string assetPair = default(string))
         {
             AssetPair = assetPair;
             TakerFee = takerFee;
             MakerFee = makerFee;
+            TakerFeeType = takerFeeType;
+            MakerFeeType = makerFeeType;
             MakerFeeModificator = makerFeeModificator;
             CustomInit();
         }
@@ -52,6 +58,20 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         public decimal MakerFee { get; set; }
 
         /// <summary>
+        /// Gets or sets possible values include: 'Unknown', 'Absolute',
+        /// 'Relative'
+        /// </summary>
+        [JsonProperty(PropertyName = "TakerFeeType")]
+        public FeeType TakerFeeType { get; set; }
+
+        /// <summary>
+        /// Gets or sets possible values include: 'Unknown', 'Absolute',
+        /// 'Relative'
+        /// </summary>
+        [JsonProperty(PropertyName = "MakerFeeType")]
+        public FeeType MakerFeeType { get; set; }
+
+        /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "MakerFeeModificator")]
         public decimal MakerFeeModificator { get; set; }
@@ -64,7 +84,6 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         /// </exception>
         public virtual void Validate()
         {
-            //Nothing to validate
         }
     }
 }

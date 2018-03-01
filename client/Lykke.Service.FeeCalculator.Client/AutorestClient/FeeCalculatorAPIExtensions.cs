@@ -321,9 +321,6 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 }
             }
 
-            /// <summary>
-            /// Returns fee for the limit order
-            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -336,6 +333,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             /// </param>
             /// <param name='assetId'>
             /// </param>
+            /// <summary>
+            /// Returns fee for the limit order
+            /// </summary>
             public static object GetLimitOrderFee(this IFeeCalculatorAPI operations, OrderAction orderAction, string clientId = default(string), string assetPair = default(string), string assetId = default(string))
             {
                 return operations.GetLimitOrderFeeAsync(orderAction, clientId, assetPair, assetId).GetAwaiter().GetResult();

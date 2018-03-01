@@ -1612,9 +1612,6 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             return _result;
         }
 
-        /// <summary>
-        /// Returns fee for the limit order
-        /// </summary>
         /// <param name='orderAction'>
         /// Possible values include: 'Buy', 'Sell'
         /// </param>
@@ -1639,6 +1636,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
+        /// <summary>
+        /// Returns fee for the limit order
+        /// </summary>
         public async Task<HttpOperationResponse<object>> GetLimitOrderFeeWithHttpMessagesAsync(OrderAction orderAction, string clientId = default(string), string assetPair = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing

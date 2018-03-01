@@ -66,6 +66,8 @@ namespace Lykke.Service.FeeCalculator.Controllers
             {
                 TakerFeeSize = fee.TakerFee,
                 MakerFeeSize = fee.MakerFee,
+                TakerFeeType = fee.TakerFeeType,
+                MakerFeeType = fee.MakerFeeType,
                 MakerFeeModificator = fee.MakerFeeModificator
             });
         }

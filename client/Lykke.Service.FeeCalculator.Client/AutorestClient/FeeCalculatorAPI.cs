@@ -1612,6 +1612,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             return _result;
         }
 
+        /// <summary>
+        /// Returns fee for the limit order
+        /// </summary>
         /// <param name='orderAction'>
         /// Possible values include: 'Buy', 'Sell'
         /// </param>
@@ -1778,9 +1781,6 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             return _result;
         }
 
-        /// <summary>
-        /// Returns fee for the limit order
-        /// </summary>
         /// <param name='orderAction'>
         /// Possible values include: 'Buy', 'Sell'
         /// </param>

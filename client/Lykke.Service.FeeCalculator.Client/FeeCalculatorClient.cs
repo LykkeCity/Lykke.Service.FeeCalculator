@@ -47,7 +47,10 @@ namespace Lykke.Service.FeeCalculator.Client
                 return new LimitOrderFeeModel
                 {
                     TakerFeeSize = result.TakerFeeSize,
-                    MakerFeeSize = result.MakerFeeSize
+                    MakerFeeSize = result.MakerFeeSize,
+                    TakerFeeType = result.TakerFeeType,
+                    MakerFeeType = result.MakerFeeType,
+                    MakerFeeModificator = result.MakerFeeModificator
                 };
             }
 

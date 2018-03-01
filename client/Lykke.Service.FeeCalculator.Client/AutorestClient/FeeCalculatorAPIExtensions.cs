@@ -321,6 +321,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 }
             }
 
+            /// <summary>
+            /// Returns fee for the limit order
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -361,9 +364,6 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 }
             }
 
-            /// <summary>
-            /// Returns fee for the limit order
-            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>

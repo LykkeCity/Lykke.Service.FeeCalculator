@@ -157,6 +157,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
         /// </param>
         Task<HttpOperationResponse<object>> GetMarketOrderFeeWithHttpMessagesAsync(OrderAction orderAction, string clientId = default(string), string assetPair = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
+        /// <summary>
+        /// Returns fee for the limit order
+        /// </summary>
         /// <param name='orderAction'>
         /// Possible values include: 'Buy', 'Sell'
         /// </param>
@@ -174,9 +177,6 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
         /// </param>
         Task<HttpOperationResponse<object>> GetMarketOrderAssetFeeWithHttpMessagesAsync(OrderAction orderAction, string clientId = default(string), string assetPair = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
-        /// <summary>
-        /// Returns fee for the limit order
-        /// </summary>
         /// <param name='orderAction'>
         /// Possible values include: 'Buy', 'Sell'
         /// </param>

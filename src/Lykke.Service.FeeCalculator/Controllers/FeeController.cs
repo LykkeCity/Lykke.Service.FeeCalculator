@@ -47,6 +47,8 @@ namespace Lykke.Service.FeeCalculator.Controllers
                 Volume = model.Volume,
                 MakerFee = model.MakerFee,
                 TakerFee = model.TakerFee,
+                MakerFeeType = model.MakerFeeType,
+                TakerFeeType = model.TakerFeeType,
                 MakerFeeModificator = model.MakerFeeModificator
             });
             
@@ -101,6 +103,8 @@ namespace Lykke.Service.FeeCalculator.Controllers
                 AssetPair = model.AssetPair,
                 MakerFee = model.MakerFee,
                 TakerFee = model.TakerFee,
+                MakerFeeType = model.MakerFeeType,
+                TakerFeeType = model.TakerFeeType,
                 MakerFeeModificator = model.MakerFeeModificator
             });
             

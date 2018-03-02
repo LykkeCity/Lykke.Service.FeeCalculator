@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 using Lykke.Service.FeeCalculator.Core.Domain;
+using Lykke.Service.FeeCalculator.Core.Domain.Fees;
 using Lykke.Service.FeeCalculator.Core.Services;
 using Lykke.Service.FeeCalculator.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
         {
             _feeService = feeService;
         }
-
+        
         /// <summary>
         /// Returns fee for the market order
         /// </summary>
@@ -42,6 +43,18 @@ namespace Lykke.Service.FeeCalculator.Controllers
             {
                 DefaultFeeSize = fee.TakerFee
             });
+        }
+
+        [HttpGet("marketAssetFee")]
+        [SwaggerOperation("GetMarketOrderAssetFee")]
+        [ProducesResponseType(typeof(MarketOrderFee), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.InternalServerError)]
+        public async Task<IActionResult> GetMarketOrderAssetFee([FromQuery] string clientId, [FromQuery] string assetPair,
+            [FromQuery] string assetId,
+            [FromQuery] OrderAction orderAction)
+        {
+            var fee = await _feeService.GetMarketOrderFeeAsync(clientId, assetPair, assetId);
+            return Ok(fee);
         }
 
         /// <summary>

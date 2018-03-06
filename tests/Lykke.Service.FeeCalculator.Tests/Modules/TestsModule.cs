@@ -10,8 +10,9 @@ using Lykke.Service.FeeCalculator.Core.Domain.MarketOrderAssetFee;
 using Lykke.Service.FeeCalculator.Core.Services;
 using Lykke.Service.FeeCalculator.Services;
 using Lykke.Service.TradeVolumes.Client;
-using Moq;
+using NSubstitute;
 using StackExchange.Redis;
+
 
 namespace Lykke.Service.FeeCalculator.Tests.Modules
 {
@@ -20,7 +21,7 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
         protected override void Load(ContainerBuilder builder)
         {
             const int tradeVolumeToGetInDays = 30;
-            builder.RegisterInstance(Mock.Of<ILog>())
+            builder.RegisterInstance(Substitute.For<ILog>())
                 .As<ILog>()
                 .SingleInstance();
 
@@ -28,12 +29,10 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
                 .As<ITradeVolumesCacheService>()
                 .SingleInstance();
             
-            var mockTradeVolumesClient = new Mock<ITradeVolumesClient>();
+            var mockTradeVolumesClient = Substitute.For<ITradeVolumesClient>();
+            
             
             builder.RegisterInstance(mockTradeVolumesClient)
-                .SingleInstance();
-            
-            builder.RegisterInstance(mockTradeVolumesClient.Object)
                 .SingleInstance();
             
             builder.RegisterInstance(
@@ -69,7 +68,7 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
                 .WithParameter(TypedParameter.From(tradeVolumeToGetInDays))
                 .SingleInstance();
             
-            builder.RegisterInstance(Mock.Of<IClientAccountClient>())
+            builder.RegisterInstance(Substitute.For<IClientAccountClient>())
                 .As<IClientAccountClient>()
                 .SingleInstance();
             
@@ -118,6 +117,6 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
             //repository.AddFeeAsync(new StaticFee{AssetPair = "BTCCHF", MakerFee = 0.03M, TakerFee = 0.03M}).GetAwaiter().GetResult();
 
             return repository;
-        }
     }
+}
 }

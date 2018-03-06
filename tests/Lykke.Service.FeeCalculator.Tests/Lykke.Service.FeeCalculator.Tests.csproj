@@ -8,6 +8,7 @@
     <PackageReference Include="Lykke.Service.Assets.Client" Version="3.3.2" />
     <PackageReference Include="Lykke.Service.TradeVolumes.Client" Version="1.0.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.1" />
+    <PackageReference Include="NSubstitute" Version="3.1.0" />
     <PackageReference Include="Moq" Version="4.8.2" />
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
@@ -16,6 +17,7 @@
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\client\Lykke.Service.FeeCalculator.Client\Lykke.Service.FeeCalculator.Client.csproj" />
     <ProjectReference Include="..\..\src\Lykke.Service.FeeCalculator.AzureRepositories\Lykke.Service.FeeCalculator.AzureRepositories.csproj">
       <Project>{4BE49E02-AAAD-460B-8D00-57F412A3D181}</Project>
       <Name>Lykke.Service.FeeCalculator.AzureRepositories</Name>

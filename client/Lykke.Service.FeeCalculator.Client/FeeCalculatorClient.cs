@@ -9,7 +9,7 @@ using Common;
 
 namespace Lykke.Service.FeeCalculator.Client
 {
-    public class FeeCalculatorClient : IFeeCalculatorClient, IDisposable
+    public class FeeCalculatorClient : IFeeCalculatorClient
     {
         private readonly ILog _log;
         private IFeeCalculatorAPI _service;
@@ -77,7 +77,7 @@ namespace Lykke.Service.FeeCalculator.Client
             throw new Exception(ApiError);
         }
 
-        public async Task<List<CashoutFee>> GetCashoutFeesAsync(string assetId = null)
+        public async Task<IReadOnlyList<CashoutFee>> GetCashoutFeesAsync(string assetId = null)
         {
             var response = await _service.GetCashoutFeesAsync(assetId);
 
@@ -91,7 +91,7 @@ namespace Lykke.Service.FeeCalculator.Client
 
             if (response is List<CashoutFee> result)
             {
-                return result as List<CashoutFee>;
+                return result;
             }
 
             throw new Exception(ApiError);

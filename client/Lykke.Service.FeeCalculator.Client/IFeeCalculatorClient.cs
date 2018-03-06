@@ -6,7 +6,7 @@ using Lykke.Service.FeeCalculator.AutorestClient.Models;
 
 namespace Lykke.Service.FeeCalculator.Client
 {
-    public interface IFeeCalculatorClient
+    public interface IFeeCalculatorClient : IDisposable
     {
         /// <summary>
         /// Gets market order fee
@@ -19,8 +19,8 @@ namespace Lykke.Service.FeeCalculator.Client
         [Obsolete("Use MarketOrderAssetFee method")]
         Task<MarketOrderFeeModel> GetMarketOrderFees(string clientId, string assetPair, string assetId,
             OrderAction orderAction);
-        
-        Task<MarketOrderAssetFeeModel> GetMarketOrderAssetFee(string clientId, string assetPair, string assetId, 
+
+        Task<MarketOrderAssetFeeModel> GetMarketOrderAssetFee(string clientId, string assetPair, string assetId,
             OrderAction orderAction);
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Lykke.Service.FeeCalculator.Client
         /// <param name="assetId"></param>
         /// <returns></returns>
         Task<IReadOnlyCollection<CashoutFee>> GetCashoutFeesAsync(string assetId = null);
-        
+
         /// <summary>
         /// Gets bank card fee
         /// </summary>
@@ -53,33 +53,33 @@ namespace Lykke.Service.FeeCalculator.Client
         /// <param name="fee"></param>
         /// <returns></returns>
         Task AddFeeAsync(FeeModel fee);
-        
+
         /// <summary>
         /// Gets all the dynamic fees
         /// </summary>
         /// <returns></returns>
         Task<IReadOnlyCollection<Fee>> GetFeesAsync();
-        
+
         /// <summary>
         /// Deletes the dynamic fee by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         Task DeleteFeeAsync(string id);
-        
+
         /// <summary>
         /// Adds a static fee
         /// </summary>
         /// <param name="fee"></param>
         /// <returns></returns>
         Task AddStaticFeeAsync(StaticFeeModel fee);
-        
+
         /// <summary>
         /// Gets all the static fees
         /// </summary>
         /// <returns></returns>
         Task<IReadOnlyCollection<StaticFee>> GetStaticFeesAsync();
-        
+
         /// <summary>
         /// Deletes the static fee by the asset pair
         /// </summary>

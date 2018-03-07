@@ -29,7 +29,7 @@ namespace Lykke.Service.FeeCalculator.Client
 
         public async Task<MarketOrderAssetFeeModel> GetMarketOrderAssetFee(string clientId, string assetPair, string assetId, OrderAction orderAction)
         {
-            var key = KeyGenerator.GetKeyForOrder(clientId, assetPair, assetId, orderAction);
+            var key = KeyGenerator.GetKeyForMarketAssetOrder(clientId, assetPair, assetId, orderAction);
             if (_cache.TryGetValue<MarketOrderAssetFeeModel>(key, out var fee))
             {
                 return fee;
@@ -43,7 +43,7 @@ namespace Lykke.Service.FeeCalculator.Client
 
         public async Task<LimitOrderFeeModel> GetLimitOrderFees(string clientId, string assetPair, string assetId, OrderAction orderAction)
         {
-            var key = KeyGenerator.GetKeyForOrder(clientId, assetPair, assetId, orderAction);
+            var key = KeyGenerator.GetKeyForLimitOrder(clientId, assetPair, assetId, orderAction);
             if (_cache.TryGetValue<LimitOrderFeeModel>(key, out var fee))
             {
                 return fee;
@@ -57,7 +57,7 @@ namespace Lykke.Service.FeeCalculator.Client
 
         public async Task<MarketOrderFeeModel> GetMarketOrderFees(string clientId, string assetPair, string assetId, OrderAction orderAction)
         {
-            var key = KeyGenerator.GetKeyForOrder(clientId, assetPair, assetId, orderAction);
+            var key = KeyGenerator.GetKeyForMarketOrder(clientId, assetPair, assetId, orderAction);
             if (_cache.TryGetValue<MarketOrderFeeModel>(key, out var fee))
             {
                 return fee;
@@ -122,11 +122,20 @@ namespace Lykke.Service.FeeCalculator.Client
         private static class KeyGenerator
         {
             private const string GetAllCashOuts = "GET_ALL_CASHOUTS";
-            private const string AllBankCards = "ALL_BANK_CARDS";
-
-            public static object GetKeyForOrder(string clientId, string assetPair, string assetId, OrderAction orderAction)
+  
+            public static object GetKeyForMarketOrder(string clientId, string assetPair, string assetId, OrderAction orderAction)
             {
-                return clientId + assetPair + assetId + orderAction;
+                return "market" + clientId + assetPair + assetId + orderAction;
+            }
+
+            public static object GetKeyForMarketAssetOrder(string clientId, string assetPair, string assetId, OrderAction orderAction)
+            {
+                return "marketAsset" + clientId + assetPair + assetId + orderAction;
+            }
+
+            public static object GetKeyForLimitOrder(string clientId, string assetPair, string assetId, OrderAction orderAction)
+            {
+                return "limit" + clientId + assetPair + assetId + orderAction;
             }
 
             public static object GetKeyForCashOut(string assetId)
@@ -136,11 +145,6 @@ namespace Lykke.Service.FeeCalculator.Client
                     return GetAllCashOuts;
                 }
                 return assetId;
-            }
-
-            public static object GetKeyForBankCard()
-            {
-                return AllBankCards;
             }
         }
     }

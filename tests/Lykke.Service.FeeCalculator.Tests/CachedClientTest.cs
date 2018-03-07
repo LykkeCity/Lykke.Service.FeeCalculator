@@ -30,6 +30,17 @@ namespace Lykke.Service.FeeCalculator.Tests
             await _client.ReceivedWithAnyArgs(1).GetMarketOrderFees("", "", "", OrderAction.Buy);
         }
 
+
+        [Fact]
+        public async Task ShouldDistinguishOrderType()
+        {
+            await SetupMarketOrdersFee();
+
+            await SetupMarketOrderAssetFee();
+
+            await SetupLimitOrdersFee();
+        }
+
         [Fact]
         public async Task ShouldRefreshCacheMarketOrderFee()
         {
@@ -148,18 +159,6 @@ namespace Lykke.Service.FeeCalculator.Tests
             for (var i = 0; i < 10; i++)
             {
                 var cached = await _cached.GetCashoutFeesAsync("");
-                Assert.Equal(fee, cached);
-            }
-        }
-
-
-        private async Task SetupBankCard()
-        {
-            var fee = new BankCardsFeeModel();
-            _client.GetBankCardFees().ReturnsForAnyArgs(info => Task.FromResult(fee));
-            for (var i = 0; i < 10; i++)
-            {
-                var cached = await _cached.GetBankCardFees();
                 Assert.Equal(fee, cached);
             }
         }

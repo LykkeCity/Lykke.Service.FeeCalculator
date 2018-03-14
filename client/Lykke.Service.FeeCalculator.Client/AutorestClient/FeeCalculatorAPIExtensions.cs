@@ -364,6 +364,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 }
             }
 
+            /// <summary>
+            /// Returns fee for the limit order
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -402,6 +405,42 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             public static async Task<object> GetLimitOrderFeeAsync(this IFeeCalculatorAPI operations, OrderAction orderAction, string clientId = default(string), string assetPair = default(string), string assetId = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.GetLimitOrderFeeWithHttpMessagesAsync(orderAction, clientId, assetPair, assetId, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Returns fee for assetId and country
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='assetId'>
+            /// </param>
+            /// <param name='countryCode'>
+            /// </param>
+            public static WithdrawalFeeModel GetFee(this IFeeCalculatorAPI operations, string assetId, string countryCode)
+            {
+                return operations.GetFeeAsync(assetId, countryCode).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Returns fee for assetId and country
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='assetId'>
+            /// </param>
+            /// <param name='countryCode'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<WithdrawalFeeModel> GetFeeAsync(this IFeeCalculatorAPI operations, string assetId, string countryCode, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetFeeWithHttpMessagesAsync(assetId, countryCode, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

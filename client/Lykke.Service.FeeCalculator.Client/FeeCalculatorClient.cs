@@ -138,7 +138,25 @@ namespace Lykke.Service.FeeCalculator.Client
 
             throw new Exception(ApiError);
         }
-        
+
+        public async Task<WithdrawalFeeModel> GetWithdrawalFeeAsync(string assetId, string countryCode)
+        {
+            var response = await _service.GetWithdrawalFeeAsync(assetId, countryCode);
+
+            if (response is ErrorResponse error)
+            {
+                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetWithdrawalFeeAsync),
+                    $"assetId = {assetId}, error = {error.ErrorMessage}", null);
+
+                throw new Exception(error.ErrorMessage);
+            }
+
+            if (response is WithdrawalFeeModel result)
+                return result;
+
+            throw new Exception(ApiError);
+        }
+
         public async Task<BankCardsFeeModel> GetBankCardFees()
         {
             var response = await _service.GetPercentageAsync();

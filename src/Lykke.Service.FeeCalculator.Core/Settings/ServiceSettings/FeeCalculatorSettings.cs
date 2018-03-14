@@ -13,6 +13,7 @@ namespace Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings
         public IReadOnlyCollection<CashoutFee> CashoutFees { get; set; }
         [Optional]
         public IReadOnlyCollection<MarketOrderAssetFee> MarketOrderFees { get; set; }
+        public List<WithdrawalFee> WithdrawalFees { get; set; }
         public BankCardSettings BankCard { get; set; }
     }
 }

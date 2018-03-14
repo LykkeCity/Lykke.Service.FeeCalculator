@@ -63,6 +63,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 }
             }
 
+            /// <summary>
+            /// Adds a dynamic fee
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -73,6 +76,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 return operations.AddFeeAsync(model).GetAwaiter().GetResult();
             }
 
+            /// <summary>
+            /// Adds a dynamic fee
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -89,6 +95,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 }
             }
 
+            /// <summary>
+            /// Gets all the dynamic fees
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -97,6 +106,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 return operations.GetFeesAsync().GetAwaiter().GetResult();
             }
 
+            /// <summary>
+            /// Gets all the dynamic fees
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -111,6 +123,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 }
             }
 
+            /// <summary>
+            /// Deletes the dynamic fee by id
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -121,6 +136,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 return operations.DeleteFeeAsync(id).GetAwaiter().GetResult();
             }
 
+            /// <summary>
+            /// Deletes the dynamic fee by id
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -137,6 +155,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 }
             }
 
+            /// <summary>
+            /// Adds a static fee
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -147,6 +168,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 return operations.AddStaticFeeAsync(model).GetAwaiter().GetResult();
             }
 
+            /// <summary>
+            /// Adds a static fee
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -163,6 +187,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 }
             }
 
+            /// <summary>
+            /// Gets all the static fees
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -171,6 +198,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 return operations.GetStaticFeesAsync().GetAwaiter().GetResult();
             }
 
+            /// <summary>
+            /// Gets all the static fees
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -185,6 +215,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 }
             }
 
+            /// <summary>
+            /// Deletes the static fee by asset pair
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -195,6 +228,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 return operations.DeleteStaticFeeAsync(assetPair).GetAwaiter().GetResult();
             }
 
+            /// <summary>
+            /// Deletes the static fee by asset pair
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -239,6 +275,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 }
             }
 
+            /// <summary>
+            /// Returns fee for the market order
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -256,6 +295,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 return operations.GetMarketOrderFeeAsync(orderAction, clientId, assetPair, assetId).GetAwaiter().GetResult();
             }
 
+            /// <summary>
+            /// Returns fee for the market order
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -319,6 +361,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 }
             }
 
+            /// <summary>
+            /// Returns fee for the limit order
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -336,6 +381,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 return operations.GetLimitOrderFeeAsync(orderAction, clientId, assetPair, assetId).GetAwaiter().GetResult();
             }
 
+            /// <summary>
+            /// Returns fee for the limit order
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -354,6 +402,42 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             public static async Task<object> GetLimitOrderFeeAsync(this IFeeCalculatorAPI operations, OrderAction orderAction, string clientId = default(string), string assetPair = default(string), string assetId = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.GetLimitOrderFeeWithHttpMessagesAsync(orderAction, clientId, assetPair, assetId, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Returns fee for assetId and country
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='assetId'>
+            /// </param>
+            /// <param name='countryCode'>
+            /// </param>
+            public static WithdrawalFeeModel GetFee(this IFeeCalculatorAPI operations, string assetId, string countryCode)
+            {
+                return operations.GetFeeAsync(assetId, countryCode).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Returns fee for assetId and country
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='assetId'>
+            /// </param>
+            /// <param name='countryCode'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<WithdrawalFeeModel> GetFeeAsync(this IFeeCalculatorAPI operations, string assetId, string countryCode, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetFeeWithHttpMessagesAsync(assetId, countryCode, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

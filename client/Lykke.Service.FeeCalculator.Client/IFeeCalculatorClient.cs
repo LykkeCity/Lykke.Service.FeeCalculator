@@ -40,7 +40,15 @@ namespace Lykke.Service.FeeCalculator.Client
         /// <param name="assetId"></param>
         /// <returns></returns>
         Task<IReadOnlyCollection<CashoutFee>> GetCashoutFeesAsync(string assetId = null);
-        
+
+        /// <summary>
+        /// Gets withdrawal fee
+        /// </summary>
+        /// <param name="assetId"></param>
+        /// <param name="countryCode"></param>
+        /// <returns></returns>
+        Task<WithdrawalFeeModel> GetWithdrawalFeeAsync(string assetId, string countryCode);
+
         /// <summary>
         /// Gets bank card fee
         /// </summary>

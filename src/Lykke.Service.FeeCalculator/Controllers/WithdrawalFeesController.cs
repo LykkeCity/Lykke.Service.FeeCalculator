@@ -26,10 +26,11 @@ namespace Lykke.Service.FeeCalculator.Controllers
         /// <param name="countryCode"></param>
         /// <returns></returns>
         [HttpGet("{assetId}/{countryCode}")]
-        [SwaggerOperation("GetFee")]
+        [SwaggerOperation("GetWithdrawalFee")]
         [ProducesResponseType(typeof(WithdrawalFeeModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public IActionResult GetFee(string assetId, string countryCode)
+        //[ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
+        public IActionResult GetWithdrawalFee(string assetId, string countryCode)
         {
             if (string.IsNullOrWhiteSpace(assetId))
             {

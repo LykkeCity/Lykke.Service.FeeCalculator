@@ -118,6 +118,10 @@ namespace Lykke.Service.FeeCalculator.Client
             return _client.DeleteStaticFeeAsync(assetPair);
         }
 
+        public Task<WithdrawalFeeModel> GetWithdrawalFeeAsync(string assetId, string countryCode)
+        {
+            return _client.GetWithdrawalFeeAsync(assetId, countryCode);
+        }
 
         private static class KeyGenerator
         {

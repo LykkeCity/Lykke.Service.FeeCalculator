@@ -1978,7 +1978,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<WithdrawalFeeModel>> GetFeeWithHttpMessagesAsync(string assetId, string countryCode, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> GetWithdrawalFeeWithHttpMessagesAsync(string assetId, string countryCode, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (assetId == null)
             {
@@ -1998,7 +1998,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 tracingParameters.Add("assetId", assetId);
                 tracingParameters.Add("countryCode", countryCode);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "GetFee", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "GetWithdrawalFee", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
@@ -2064,7 +2064,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<WithdrawalFeeModel>();
+            var _result = new HttpOperationResponse<object>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -2074,6 +2074,24 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 try
                 {
                     _result.Body = SafeJsonConvert.DeserializeObject<WithdrawalFeeModel>(_responseContent, DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+            // Deserialize Response
+            if ((int)_statusCode == 400)
+            {
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<ErrorResponse>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {

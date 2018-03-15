@@ -210,7 +210,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<WithdrawalFeeModel>> GetFeeWithHttpMessagesAsync(string assetId, string countryCode, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> GetWithdrawalFeeWithHttpMessagesAsync(string assetId, string countryCode, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }

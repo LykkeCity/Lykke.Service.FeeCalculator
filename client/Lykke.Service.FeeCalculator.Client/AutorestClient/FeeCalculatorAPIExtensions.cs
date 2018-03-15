@@ -420,9 +420,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             /// </param>
             /// <param name='countryCode'>
             /// </param>
-            public static WithdrawalFeeModel GetFee(this IFeeCalculatorAPI operations, string assetId, string countryCode)
+            public static object GetWithdrawalFee(this IFeeCalculatorAPI operations, string assetId, string countryCode)
             {
-                return operations.GetFeeAsync(assetId, countryCode).GetAwaiter().GetResult();
+                return operations.GetWithdrawalFeeAsync(assetId, countryCode).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -438,9 +438,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<WithdrawalFeeModel> GetFeeAsync(this IFeeCalculatorAPI operations, string assetId, string countryCode, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> GetWithdrawalFeeAsync(this IFeeCalculatorAPI operations, string assetId, string countryCode, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetFeeWithHttpMessagesAsync(assetId, countryCode, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetWithdrawalFeeWithHttpMessagesAsync(assetId, countryCode, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

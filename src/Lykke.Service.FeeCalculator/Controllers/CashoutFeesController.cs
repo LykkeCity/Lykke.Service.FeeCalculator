@@ -1,49 +1,114 @@
-﻿using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
-using Lykke.Service.FeeCalculator.Models;
-using Lykke.Service.FeeCalculator.Services.DummySettingsHolder;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using Lykke.Service.FeeCalculator.Models;
+using Microsoft.AspNetCore.Mvc;    
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
+using AutoMapper;
+using Common;
+using Lykke.Common.ApiLibrary.Extensions;
+using Lykke.Service.Assets.Client;
+using Lykke.Service.FeeCalculator.Core.Domain.Fees;
+using Lykke.Service.FeeCalculator.Core.Services;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using CashoutFee = Lykke.Service.FeeCalculator.Models.CashoutFee;
 
 namespace Lykke.Service.FeeCalculator.Controllers
 {
-    [Route("CashoutFees")]
+    [Route("api/cashoutfees")]
     public class CashoutFeesController : Controller
     {
-        private readonly IDummySettingsHolder _dummySettingsHolder;
+        private readonly ICashoutFeesService _cashoutFeesService;
+        private readonly IAssetsServiceWithCache _assetsServiceWithCache;
 
-        public CashoutFeesController(IDummySettingsHolder dummySettingsHolder)
+        public CashoutFeesController(
+            ICashoutFeesService cashoutFeesService,
+            IAssetsServiceWithCache assetsServiceWithCache
+            )
         {
-            _dummySettingsHolder = dummySettingsHolder;
+            _cashoutFeesService = cashoutFeesService;
+            _assetsServiceWithCache = assetsServiceWithCache;
         }
 
         [HttpGet]
         [SwaggerOperation("GetCashoutFees")]
         [ProducesResponseType(typeof(List<CashoutFee>), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.InternalServerError)]
-        public IActionResult GetCashoutFees([FromQuery] string assetId = null)
+        public async Task<IActionResult> GetCashoutFees()
         {
-            if (string.IsNullOrWhiteSpace(assetId))
-                return Ok(_dummySettingsHolder.GetCashoutFees());
+            var fees = await _cashoutFeesService.GetAllAsync();
+            var result = Mapper.Map<List<CashoutFee>>(fees);
+            return Ok(result);
+        }
+        
+        [HttpGet("{assetId}")]
+        [SwaggerOperation("GetCashoutFee")]
+        [ProducesResponseType(typeof(CashoutFee), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetCashoutFees(string assetId)
+        {
+            var asset = await _assetsServiceWithCache.TryGetAssetAsync(assetId);
 
-            var fees = _dummySettingsHolder.GetCashoutFees()
-                .Where(fee => fee.AssetId.Equals(assetId, StringComparison.InvariantCultureIgnoreCase)).ToList();
-
-            if (fees.Count == 0)
-                fees = new List<CashoutFee>
+            if (asset == null)
+                return NotFound(ErrorResponse.Create($"asset '{assetId}' not found"));
+            
+            var fee = await _cashoutFeesService.GetAsync(assetId) ?? new Core.Domain.CashoutFee.CashoutFee
                 {
-                    new CashoutFee
-                    {
-                        AssetId = assetId,
-                        Size = 0,
-                        Type = FeeType.Absolute
-                    }
+                    AssetId = assetId,
+                    Size = 0,
+                    Type = FeeType.Absolute
                 };
 
-            return Ok(fees);
+            var result = Mapper.Map<CashoutFee>(fee);
+            return Ok(result);
+        }
+        
+        [HttpPost]
+        [SwaggerOperation("AddCashoutFee")]
+        [ProducesResponseType(typeof(void), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> AddCashoutFees([FromBody]CashoutFeeModel model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ErrorResponse.Create(ModelState.GetErrorMessage()));
+            
+            if (!string.IsNullOrEmpty(model.Id) && !model.Id.IsValidPartitionOrRowKey())
+                return BadRequest(ErrorResponse.Create($"Invalid {nameof(model.Id)} value"));
+            
+            var asset = await _assetsServiceWithCache.TryGetAssetAsync(model.AssetId);
+
+            if (asset == null)
+                return NotFound(ErrorResponse.Create($"asset '{model.AssetId}' not found"));
+
+            var fees = await _cashoutFeesService.GetAllAsync();
+
+            if (fees.Any(item => item.AssetId == model.AssetId))
+                return BadRequest($"fee for asset '{model.AssetId}' is already added");
+
+            await _cashoutFeesService.AddAsync(new Core.Domain.CashoutFee.CashoutFee
+            {
+                Id = model.Id,
+                AssetId = model.AssetId, 
+                Size = model.Size, 
+                Type = model.Type
+            });
+
+            return Ok();
+        }
+        
+        [HttpDelete("{id}")]
+        [SwaggerOperation("DeleteCashoutFee")]
+        [ProducesResponseType(typeof(void), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> DeleteCashoutFees(string id)
+        {
+            if (!id.IsValidPartitionOrRowKey())
+                return BadRequest(ErrorResponse.Create($"Invalid {nameof(id)} value"));
+            
+            await _cashoutFeesService.DeleteAsync(id);
+
+            return Ok();
         }
     }
 }

@@ -1,33 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using AutoMapper;
 using Common;
-using Lykke.Service.FeeCalculator.Core.Domain.Fees;
+using Lykke.Service.FeeCalculator.Core.Services;
 using Lykke.Service.FeeCalculator.Models;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Lykke.Service.FeeCalculator.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/fees")]
     public class FeeController : Controller
     {
-        private readonly IFeeRepository _feeRepository;
-        private readonly IStaticFeeRepository _staticFeeRepository;
-        private readonly CachedDataDictionary<decimal, IFee> _feesCache;
-        private readonly CachedDataDictionary<string, IStaticFee> _feesStaticCache;
+        private readonly IFeeService _feeService;
 
         public FeeController(
-            IFeeRepository feeRepository, 
-            IStaticFeeRepository staticFeeRepository,
-            CachedDataDictionary<decimal, IFee> feesCache,
-            CachedDataDictionary<string, IStaticFee> feesStaticCache
+            IFeeService feesCache
             )
         {
-            _feeRepository = feeRepository;
-            _staticFeeRepository = staticFeeRepository;
-            _feesCache = feesCache;
-            _feesStaticCache = feesStaticCache;
+            _feeService = feesCache;
         }
 
         /// <summary>
@@ -35,13 +27,16 @@ namespace Lykke.Service.FeeCalculator.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost("add")]
+        [HttpPost]
         [SwaggerOperation("AddFee")]
-        [ProducesResponseType(typeof(bool), (int) HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(void), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.BadRequest)]
         public async Task<IActionResult> AddFee([FromBody]FeeModel model)
         {
-            await _feeRepository.AddFeeAsync(new Fee
+            if (!string.IsNullOrEmpty(model.Id) && !model.Id.IsValidPartitionOrRowKey())
+                return BadRequest(ErrorResponse.Create($"Invalid {nameof(model.Id)} value"));
+            
+            await _feeService.AddAsync(new Core.Domain.Fees.Fee
             {
                 Id = model.Id,
                 Volume = model.Volume,
@@ -52,23 +47,22 @@ namespace Lykke.Service.FeeCalculator.Controllers
                 MakerFeeModificator = model.MakerFeeModificator
             });
             
-            _feesCache.Invalidate();
-
-            return Ok(true);
+            return Ok();
         }
         
         /// <summary>
         /// Gets all the dynamic fees
         /// </summary>
         /// <returns></returns>
-        [HttpGet("get")]
+        [HttpGet]
         [SwaggerOperation("GetFees")]
         [ProducesResponseType(typeof(List<Fee>), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> GetFees()
         {
-            var fees = await _feeRepository.GetFeesAsync();
-            return Ok(fees);
+            var fees = await _feeService.GetAllAsync();
+            var result = Mapper.Map<List<Fee>>(fees);
+            return Ok(result);
         }
         
         /// <summary>
@@ -76,71 +70,17 @@ namespace Lykke.Service.FeeCalculator.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpPost("delete/{id}")]
+        [HttpDelete("{id}")]
         [SwaggerOperation("DeleteFee")]
-        [ProducesResponseType(typeof(bool), (int) HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> DeleteFee([FromRoute]string id)
+        [ProducesResponseType(typeof(void), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> DeleteFee(string id)
         {
-            await _feeRepository.DeleteFeeAsync(id);
-            _feesCache.Invalidate();
-            return Ok(true);
-        }
-        
-        /// <summary>
-        /// Adds a static fee
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost("staticfee/add")]
-        [SwaggerOperation("AddStaticFee")]
-        [ProducesResponseType(typeof(bool), (int) HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> AddStaticFee([FromBody]StaticFeeModel model)
-        {
-            await _staticFeeRepository.AddFeeAsync(new StaticFee
-            {
-                AssetPair = model.AssetPair,
-                MakerFee = model.MakerFee,
-                TakerFee = model.TakerFee,
-                MakerFeeType = model.MakerFeeType,
-                TakerFeeType = model.TakerFeeType,
-                MakerFeeModificator = model.MakerFeeModificator
-            });
+            if (!id.IsValidPartitionOrRowKey())
+                return BadRequest(ErrorResponse.Create($"Invalid {nameof(id)} value"));
             
-            _feesStaticCache.Invalidate();
-
-            return Ok(true);
-        }
-        
-        /// <summary>
-        /// Gets all the static fees
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("staticfee/get")]
-        [SwaggerOperation("GetStaticFees")]
-        [ProducesResponseType(typeof(List<StaticFee>), (int) HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> GetStaticFees()
-        {
-            var fees = await _staticFeeRepository.GetFeesAsync();
-            return Ok(fees);
-        }
-        
-        /// <summary>
-        /// Deletes the static fee by asset pair
-        /// </summary>
-        /// <param name="assetPair"></param>
-        /// <returns></returns>
-        [HttpPost("staticfee/delete/{assetPair}")]
-        [SwaggerOperation("DeleteStaticFee")]
-        [ProducesResponseType(typeof(bool), (int) HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> DeleteStaticFee(string assetPair)
-        {
-            await _staticFeeRepository.DeleteFeeAsync(assetPair);
-            _feesStaticCache.Invalidate();
-            return Ok(true);
+            await _feeService.DeleteAsync(id);
+            return Ok();
         }
     }
 }

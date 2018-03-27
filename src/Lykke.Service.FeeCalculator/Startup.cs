@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
 using AzureStorage.Tables;
 using Common.Log;
 using Lykke.AzureStorage.Tables.Entity.Metamodel;
@@ -12,6 +13,7 @@ using Lykke.Logs;
 using Lykke.Service.FeeCalculator.Core.Services;
 using Lykke.Service.FeeCalculator.Core.Settings;
 using Lykke.Service.FeeCalculator.Modules;
+using Lykke.Service.FeeCalculator.Profiles;
 using Lykke.SettingsReader;
 using Lykke.SlackNotification.AzureQueue;
 using Microsoft.AspNetCore.Builder;
@@ -62,13 +64,20 @@ namespace Lykke.Service.FeeCalculator
                         Format = "decimal"
                     });
                 });
+                
+                Mapper.Initialize(cfg =>
+                {
+                    cfg.AddProfiles(typeof(ServiceProfile));
+                });
+
+                Mapper.AssertConfigurationIsValid();
 
                 var builder = new ContainerBuilder();
                 var appSettings = Configuration.LoadSettings<AppSettings>();
                 Log = CreateLogWithSlack(services, appSettings);
 
-                builder.RegisterModule(new ServiceModule(appSettings, Log));
                 builder.Populate(services);
+                builder.RegisterModule(new ServiceModule(appSettings, Log));
                 ApplicationContainer = builder.Build();
 
                 var provider = new AnnotationsBasedMetamodelProvider();

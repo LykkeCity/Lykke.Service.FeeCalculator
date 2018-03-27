@@ -1,116 +1,68 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Common;
-using Common.Log;
-using Lykke.Service.FeeCalculator.Core.Domain;
+using JetBrains.Annotations;
 using Lykke.Service.FeeCalculator.Core.Domain.Fees;
+using Lykke.Service.FeeCalculator.Core.Extensions;
 using Lykke.Service.FeeCalculator.Core.Services;
-using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
-using Lykke.Service.TradeVolumes.Client;
-using Lykke.Service.TradeVolumes.Client.Models;
+using Lykke.Service.FeeCalculator.Services.CachedModels;
+using Lykke.Service.FeeCalculator.Services.Extensions;
+using StackExchange.Redis;
 
 namespace Lykke.Service.FeeCalculator.Services
 {
     public class FeeService : IFeeService
     {
-        private readonly ITradeVolumesCacheService _tradeVolumesCacheService;
-        private readonly ITradeVolumesClient _tradeVolumesClient;
-        private readonly CachedDataDictionary<decimal, IFee> _feesCache;
-        private readonly CachedDataDictionary<string, IStaticFee> _feesStaticCache;
-        private readonly IClientIdCacheService _clientIdCacheService;
-        private readonly int _tradeVolumeToGetInDays;
-        private readonly MarketOrderFee[] _marketOrderFees;
-        private readonly ILog _log;
+        private readonly IFeeRepository _repository;
+        private readonly IDatabase _db;
+        private readonly string _feesKey;
 
+        [UsedImplicitly]
         public FeeService(
-            ITradeVolumesCacheService tradeVolumesCacheService,
-            ITradeVolumesClient tradeVolumesClient,
-            CachedDataDictionary<decimal, IFee> feesCache,
-            CachedDataDictionary<string, IStaticFee> feesStaticCache,
-            IClientIdCacheService clientIdCacheService,
-            int tradeVolumeToGetInDays,
-            MarketOrderFee[] marketOrderFees,
-            ILog log
+            IConnectionMultiplexer connectionMultiplexer,
+            IFeeRepository repository,
+            string cacheInstanceName
             )
         {
-            _tradeVolumesCacheService = tradeVolumesCacheService;
-            _tradeVolumesClient = tradeVolumesClient;
-            _feesCache = feesCache;
-            _feesStaticCache = feesStaticCache;
-            _clientIdCacheService = clientIdCacheService;
-            _tradeVolumeToGetInDays = tradeVolumeToGetInDays;
-            _marketOrderFees = marketOrderFees;
-            _log = log;
+            _db = connectionMultiplexer.GetDatabase();
+            _repository = repository;
+            _feesKey = $"{cacheInstanceName}:fees";
+        }
+        
+        public async Task<IFee[]> GetAllAsync()
+        {
+            var serializedValues = await _db.SortedSetRangeByValueAsync(_feesKey);
+            var fees =  serializedValues.Select(item => ((byte[])item).DeserializeFee<CachedFee>()).Select(Fee.Create).ToList();
+
+            if (fees.Count != 0) 
+                return fees.OrderByDescending(item => item.Volume).ToArray();
+            
+            fees = (await _repository.GetFeesAsync()).Select(Fee.Create).ToList();
+            var entites = fees
+                .Select(fee => new SortedSetEntry(fee.SerializeFee(baseFee => new CachedFee(fee)), 0))
+                .ToArray();
+            
+            await _db.SortedSetAddAsync(_feesKey, entites);
+
+            return fees.OrderByDescending(item => item.Volume).ToArray();
         }
 
-        public async Task<MarketOrderFee> GetMarketOrderFeeAsync(string clientId, string assetPairId, string assetId)
+        public async Task AddAsync(IFee fee)
         {
-            var marketOrderFee = _marketOrderFees.FirstOrDefault(item => item.AssetId == assetId);
-
-            if (marketOrderFee != null)
-                return marketOrderFee;
-
-            var fee = await GetFeeAsync(clientId, assetPairId, assetId);
+            bool isNew = string.IsNullOrEmpty(fee.Id);
             
-            return new MarketOrderFee
-            {
-                Amount = fee.TakerFee,
-                AssetId = assetId,
-                Type = FeeType.Relative,
-                TargetAssetId = null
-            };
+            var item = await _repository.AddFeeAsync(fee);
+            var value = item.SerializeFee(baseFee => new CachedFee(item));
+            
+            if (!isNew)
+                await _db.DeleteFromCacheByIdAsync(_feesKey, fee.Id);
+            
+            await _db.SortedSetAddAsync(_feesKey, new[] {new SortedSetEntry(value, 0)});
         }
 
-        public async Task<IBaseFee> GetFeeAsync(string clientId, string assetPairId, string assetId)
+        public async Task DeleteAsync(string id)
         {
-            var fee = await _feesStaticCache.GetItemAsync(assetPairId);
-            
-            if (fee != null)
-                return fee;
-
-            var id = await _clientIdCacheService.GetClientId(clientId);
-            
-            AssetPairTradeVolumeResponse clientVolume = null;
-            
-            try
-            {
-                clientVolume = await _tradeVolumesClient.GetClientAssetPairTradeVolumeAsync(assetPairId, id,
-                    DateTime.UtcNow.AddDays(-_tradeVolumeToGetInDays).Date, DateTime.UtcNow.Date);
-            }
-            catch (Exception ex)
-            {
-                _log.WriteWarning(nameof(GetFeeAsync), new {ClientId = id, AssetPairId = assetPairId}, "can't get client volume", ex);
-            }
-             
-            AssetPairTradeVolume assetPairVolume = _tradeVolumesCacheService.GetTradeVolume(assetPairId);
-
-            double percentage = 0;
-            
-            if (clientVolume != null && assetPairVolume != null && assetPairVolume.BaseVolume > 0 && assetPairVolume.QuotingVolume > 0)
-            {
-                percentage = (assetPairVolume.BaseAssetId == assetId
-                    ? clientVolume.BaseVolume / assetPairVolume.BaseVolume
-                    : clientVolume.QuotingVolume / assetPairVolume.QuotingVolume) * 100;
-            }
-
-            var result = await GetFeeByPercentageAsync(percentage);
-
-            return result ?? new BaseFee();
-        }
-
-        public async Task<IBaseFee> GetFeeByPercentageAsync(double percentage)
-        {
-            var value = Convert.ToDecimal(percentage);
-            var fees = (await _feesCache.Values()).OrderByDescending(item => item.Volume).ToList();
-
-            foreach (var fee in fees)
-            {
-                if (value > fee.Volume)
-                    return fee;
-            }
-
-            return fees.LastOrDefault();
+            await _repository.DeleteFeeAsync(id);
+            await _db.DeleteFromCacheByIdAsync(_feesKey, id);
         }
     }
 }

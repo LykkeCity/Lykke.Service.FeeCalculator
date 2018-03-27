@@ -1,6 +1,4 @@
-﻿using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
-
-namespace Lykke.Service.FeeCalculator.Core.Domain.Fees
+﻿namespace Lykke.Service.FeeCalculator.Core.Domain.Fees
 {
     public class Fee : IFee
     {
@@ -11,5 +9,19 @@ namespace Lykke.Service.FeeCalculator.Core.Domain.Fees
         public FeeType TakerFeeType { get; set; }
         public FeeType MakerFeeType { get; set; }
         public decimal MakerFeeModificator { get; set; }
+
+        public static IFee Create(IFee src)
+        {
+            return new Fee
+            {
+                Id = src.Id,
+                Volume = src.Volume,
+                TakerFee = src.TakerFee,
+                MakerFee = src.MakerFee,
+                MakerFeeType = src.MakerFeeType,
+                TakerFeeType = src.TakerFeeType,
+                MakerFeeModificator = src.MakerFeeModificator
+            };
+        }
     }
 }

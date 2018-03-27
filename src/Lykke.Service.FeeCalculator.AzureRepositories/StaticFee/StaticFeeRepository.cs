@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AzureStorage;
 using Lykke.Service.FeeCalculator.Core.Domain.Fees;
 
-namespace Lykke.Service.FeeCalculator.AzureRepositories.Fees
+namespace Lykke.Service.FeeCalculator.AzureRepositories.StaticFee
 {
     public class StaticFeeRepository : IStaticFeeRepository
     {
@@ -14,9 +14,11 @@ namespace Lykke.Service.FeeCalculator.AzureRepositories.Fees
             _tableStorage = tableStorage;
         }
         
-        public Task AddFeeAsync(IStaticFee fee)
+        public async Task<IStaticFee> AddFeeAsync(IStaticFee fee)
         {
-            return _tableStorage.InsertOrMergeAsync(StaticFeeEntity.Create(fee));
+            var entity = StaticFeeEntity.Create(fee);
+            await _tableStorage.InsertOrMergeAsync(entity);
+            return entity;
         }
 
         public async Task<IEnumerable<IStaticFee>> GetFeesAsync()
@@ -24,9 +26,9 @@ namespace Lykke.Service.FeeCalculator.AzureRepositories.Fees
             return await _tableStorage.GetDataAsync(StaticFeeEntity.GeneratePartitionKey());
         }
 
-        public async Task DeleteFeeAsync(string assetPair)
+        public async Task DeleteFeeAsync(string id)
         {
-            await _tableStorage.DeleteIfExistAsync(StaticFeeEntity.GeneratePartitionKey(), StaticFeeEntity.GenerateRowKey(assetPair));
+            await _tableStorage.DeleteIfExistAsync(StaticFeeEntity.GeneratePartitionKey(), StaticFeeEntity.GenerateRowKey(id));
         }
     }
 }

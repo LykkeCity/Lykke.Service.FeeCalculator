@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Lykke.Service.ClientAccount.Client;
-using Lykke.Service.ClientAccount.Client.AutorestClient.Models;
 using Lykke.Service.FeeCalculator.Core.Services;
 
 namespace Lykke.Service.FeeCalculator.Services
@@ -12,6 +11,7 @@ namespace Lykke.Service.FeeCalculator.Services
         private readonly IClientAccountClient _clientAccountClient;
         private readonly ConcurrentDictionary<string, string> _cache = new ConcurrentDictionary<string, string>();
 
+        [UsedImplicitly]
         public ClientIdCacheService(IClientAccountClient clientAccountClient)
         {
             _clientAccountClient = clientAccountClient;

@@ -34,66 +34,84 @@ namespace Lykke.Service.FeeCalculator.Client
         {
             var response = await _service.GetLimitOrderFeeAsync(orderAction, clientId, assetPair, assetId);
 
-            if (response is ErrorResponse error)
+            switch (response)
             {
-                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetLimitOrderFees),
-                    $"clientId = {clientId}, assetPair = {assetPair}, assetId = {assetId}, orderAction = {orderAction}, error = {error.ErrorMessage}", null);
-
-                throw new Exception(error.ErrorMessage);
-            }
-
-            if (response is LimitOrderFeeResponseModel result)
-            {
-                return new LimitOrderFeeModel
-                {
-                    TakerFeeSize = result.TakerFeeSize,
-                    MakerFeeSize = result.MakerFeeSize,
-                    TakerFeeType = result.TakerFeeType,
-                    MakerFeeType = result.MakerFeeType,
-                    MakerFeeModificator = result.MakerFeeModificator
-                };
+                case ErrorResponse error:
+                    throw new Exception(error.ErrorMessage);
+                case LimitOrderFeeResponseModel result:
+                    return new LimitOrderFeeModel
+                    {
+                        TakerFeeSize = result.TakerFeeSize,
+                        MakerFeeSize = result.MakerFeeSize,
+                        TakerFeeType = result.TakerFeeType,
+                        MakerFeeType = result.MakerFeeType,
+                        MakerFeeModificator = result.MakerFeeModificator
+                    };
             }
 
             throw new Exception(ApiError);
+        }
+
+        public async Task<IReadOnlyCollection<CashoutFee>> GetCashoutFeesAsync()
+        {
+            var response = await _service.GetCashoutFeesAsync();
+
+            switch (response)
+            {
+                case ErrorResponse error:
+                    throw new Exception(error.ErrorMessage);
+                case List<CashoutFee> result:
+                    return result;
+            }
+
+            throw new Exception(ApiError);
+        }
+
+        public async Task<CashoutFee> GetCashoutFeeAsync(string assetId)
+        {
+            var response = await _service.GetCashoutFeeAsync(assetId);
+
+            switch (response)
+            {
+                case ErrorResponse error:
+                    throw new Exception(error.ErrorMessage);
+                case CashoutFee result:
+                    return result;
+            }
+
+            throw new Exception(ApiError);
+        }
+
+        public async Task AddCashoutFeeAsync(CashoutFeeModel model)
+        {
+            var response = await _service.AddCashoutFeeAsync(model);
+
+            if (response != null)
+                throw new Exception(response.ErrorMessage);
+        }
+
+        public async Task DeleteCashoutFeeAsync(string id)
+        {
+            var response = await _service.DeleteCashoutFeeAsync(id);
+
+            if (response != null)
+                throw new Exception(response.ErrorMessage);
         }
 
         public async Task<MarketOrderFeeModel> GetMarketOrderFees(string clientId, string assetPair, string assetId, OrderAction orderAction)
         {
             var response = await _service.GetMarketOrderFeeAsync(orderAction, clientId, assetPair, assetId);
 
-            if (response is ErrorResponse error)
+            switch (response)
             {
-                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetMarketOrderFees),
-                    $"clientId = {clientId}, assetPair = {assetPair}, assetId = {assetId}, orderAction = {orderAction}, error = {error.ErrorMessage}", null);
-
-                throw new Exception(error.ErrorMessage);
+                case ErrorResponse error:
+                    throw new Exception(error.ErrorMessage);
+                case MarketOrderFeeResponseModel result:
+                    return new MarketOrderFeeModel
+                    {
+                        DefaultFeeSize = result.DefaultFeeSize
+                    };
             }
-
-            if (response is MarketOrderFeeResponseModel result)
-            {
-                return new MarketOrderFeeModel
-                {
-                    DefaultFeeSize = result.DefaultFeeSize
-                };
-            }
-
-            throw new Exception(ApiError);
-        }
-
-        public async Task<IReadOnlyCollection<CashoutFee>> GetCashoutFeesAsync(string assetId = null)
-        {
-            var response = await _service.GetCashoutFeesAsync(assetId);
-
-            if (response is ErrorResponse error)
-            {
-                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetMarketOrderFees),
-                    $"assetId = {assetId}, error = {error.ErrorMessage}", null);
-
-                throw new Exception(error.ErrorMessage);
-            }
-
-            if (response is List<CashoutFee> result)
-                return result;
 
             throw new Exception(ApiError);
         }
@@ -102,16 +120,14 @@ namespace Lykke.Service.FeeCalculator.Client
         {
             var response = await _service.GetPercentageAsync();
 
-            if (response is ErrorResponse error)
+            switch (response)
             {
-                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetBankCardFees), error.ToJson(), null);
+                case ErrorResponse error:
+                    await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetBankCardFees), error.ToJson(), null);
 
-                throw new Exception(error.ErrorMessage);
-            }
-
-            if (response is BankCardsFeeResponseModel result)
-            {
-                return new BankCardsFeeModel {Percentage = result.Percentage};
+                    throw new Exception(error.ErrorMessage);
+                case BankCardsFeeResponseModel result:
+                    return new BankCardsFeeModel {Percentage = result.Percentage};
             }
 
             throw new Exception(ApiError);
@@ -121,24 +137,21 @@ namespace Lykke.Service.FeeCalculator.Client
         {
             var response = await _service.AddFeeAsync(fee);
 
-            if (response is ErrorResponse error)
-                throw new Exception(error.ErrorMessage);
-
-            if (response is bool)
-                return;
-
-            throw new Exception(ApiError);
+            if (response != null)
+                throw new Exception(response.ErrorMessage);
         }
 
         public async Task<IReadOnlyCollection<Fee>> GetFeesAsync()
         {
             var response = await _service.GetFeesAsync();
 
-            if (response is ErrorResponse error)
-                throw new Exception(error.ErrorMessage);
-
-            if (response is List<Fee> fees)
-                return fees;
+            switch (response)
+            {
+                case ErrorResponse error:
+                    throw new Exception(error.ErrorMessage);
+                case List<Fee> fees:
+                    return fees;
+            }
 
             throw new Exception(ApiError);
         }
@@ -147,37 +160,29 @@ namespace Lykke.Service.FeeCalculator.Client
         {
             var response = await _service.DeleteFeeAsync(id);
 
-            if (response is ErrorResponse error)
-                throw new Exception(error.ErrorMessage);
-
-            if (response is bool)
-                return;
-
-            throw new Exception(ApiError);
+            if (response != null)
+                throw new Exception(response.ErrorMessage);
         }
 
         public async Task AddStaticFeeAsync(StaticFeeModel fee)
         {
             var response = await _service.AddStaticFeeAsync(fee);
 
-            if (response is ErrorResponse error)
-                throw new Exception(error.ErrorMessage);
-
-            if (response is bool)
-                return;
-
-            throw new Exception(ApiError);
+            if (response != null)
+                throw new Exception(response.ErrorMessage);
         }
 
         public async Task<IReadOnlyCollection<StaticFee>> GetStaticFeesAsync()
         {
             var response = await _service.GetStaticFeesAsync();
 
-            if (response is ErrorResponse error)
-                throw new Exception(error.ErrorMessage);
-
-            if (response is List<StaticFee> fees)
-                return fees;
+            switch (response)
+            {
+                case ErrorResponse error:
+                    throw new Exception(error.ErrorMessage);
+                case List<StaticFee> fees:
+                    return fees;
+            }
 
             throw new Exception(ApiError);
         }
@@ -186,13 +191,39 @@ namespace Lykke.Service.FeeCalculator.Client
         {
             var response = await _service.DeleteStaticFeeAsync(assetPair);
 
-            if (response is ErrorResponse error)
-                throw new Exception(error.ErrorMessage);
+            if (response != null)
+                throw new Exception(response.ErrorMessage);
+        }
 
-            if (response is bool)
-                return;
+        public async Task<IReadOnlyCollection<MarketOrderAssetFee>> GetMarketOrderAssetFeesAsync()
+        {
+            var response = await _service.GetMarketOrderAssetFeesAsync();
+
+            switch (response)
+            {
+                case ErrorResponse error:
+                    throw new Exception(error.ErrorMessage);
+                case List<MarketOrderAssetFee> result:
+                    return result;
+            }
 
             throw new Exception(ApiError);
+        }
+
+        public async Task AddMarketOrderAssetFeeAsync(MarketOrderAssetFeeModel model)
+        {
+            var response = await _service.AddMarketOrderAssetFeeAsync(model);
+
+            if (response != null)
+                throw new Exception(response.ErrorMessage);
+        }
+
+        public async Task DeleteMarketOrderAssetFeeAsync(string id)
+        {
+            var response = await _service.DeleteMarketOrderAssetFeeAsync(id);
+
+            if (response != null)
+                throw new Exception(response.ErrorMessage);
         }
     }
 }

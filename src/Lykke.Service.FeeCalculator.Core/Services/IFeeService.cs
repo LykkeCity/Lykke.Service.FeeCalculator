@@ -5,7 +5,8 @@ namespace Lykke.Service.FeeCalculator.Core.Services
 {
     public interface IFeeService
     {
-        Task<IBaseFee> GetFeeAsync(string clientId, string assetPairId, string assetId);
-        Task<IBaseFee> GetFeeByPercentageAsync(double percentage);
+        Task<IFee[]> GetAllAsync();
+        Task AddAsync(IFee fee);
+        Task DeleteAsync(string id);
     }
 }

@@ -6,6 +6,7 @@ namespace Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings
     {
         public TimeSpan AssetsUpdateInterval { get; set; }
         public TimeSpan TradeVolumesUpdateInterval { get; set; }
-        public TimeSpan FeesUpdateInterval { get; set; }
+        public string RedisConfiguration { get; set; }
+        public string InstanceName { get; set; }
     }
 }

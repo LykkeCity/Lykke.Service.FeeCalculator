@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Lykke.Service.FeeCalculator.Client.Models;
 using System.Collections.Generic;
 using Lykke.Service.FeeCalculator.AutorestClient.Models;
+using MarketOrderAssetFeeModel = Lykke.Service.FeeCalculator.Client.Models.MarketOrderAssetFeeModel;
 
 namespace Lykke.Service.FeeCalculator.Client
 {
@@ -34,11 +35,31 @@ namespace Lykke.Service.FeeCalculator.Client
             OrderAction orderAction);
 
         /// <summary>
+        /// Gets all cashout fees
+        /// </summary>
+        /// <returns></returns>
+        Task<IReadOnlyCollection<CashoutFee>> GetCashoutFeesAsync();
+        
+        /// <summary>
         /// Gets cashout fee
         /// </summary>
         /// <param name="assetId"></param>
         /// <returns></returns>
-        Task<IReadOnlyCollection<CashoutFee>> GetCashoutFeesAsync(string assetId = null);
+        Task<CashoutFee> GetCashoutFeeAsync(string assetId);
+        
+        /// <summary>
+        /// Adds cashout fee
+        /// </summary>
+        /// <param name="model">cashout fee</param>
+        /// <returns></returns>
+        Task AddCashoutFeeAsync(CashoutFeeModel model);
+        
+        /// <summary>
+        /// Deletes cashout fee by id
+        /// </summary>
+        /// <param name="id">cashout fee id</param>
+        /// <returns></returns>
+        Task DeleteCashoutFeeAsync(string id);
 
         /// <summary>
         /// Gets withdrawal fee
@@ -93,5 +114,25 @@ namespace Lykke.Service.FeeCalculator.Client
         /// <param name="assetPair"></param>
         /// <returns></returns>
         Task DeleteStaticFeeAsync(string assetPair);
+        
+        /// <summary>
+        /// Gets all market order asset fees
+        /// </summary>
+        /// <returns></returns>
+        Task<IReadOnlyCollection<MarketOrderAssetFee>> GetMarketOrderAssetFeesAsync();
+        
+        /// <summary>
+        /// Adds market order asset fee
+        /// </summary>
+        /// <param name="model">market order asset fee</param>
+        /// <returns></returns>
+        Task AddMarketOrderAssetFeeAsync(MarketOrderAssetFeeModel model);
+        
+        /// <summary>
+        /// Deletes market order asset fee by id
+        /// </summary>
+        /// <param name="id">market order asset fee id</param>
+        /// <returns></returns>
+        Task DeleteMarketOrderAssetFeeAsync(string id);
     }
 }

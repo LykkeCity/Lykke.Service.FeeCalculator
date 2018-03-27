@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AzureStorage;
 using Lykke.Service.FeeCalculator.Core.Domain.Fees;
 
-namespace Lykke.Service.FeeCalculator.AzureRepositories.Fees
+namespace Lykke.Service.FeeCalculator.AzureRepositories.Fee
 {
     public class FeeRepository : IFeeRepository
     {
@@ -14,9 +14,11 @@ namespace Lykke.Service.FeeCalculator.AzureRepositories.Fees
             _tableStorage = tableStorage;
         }
         
-        public Task AddFeeAsync(IFee fee)
+        public async Task<IFee> AddFeeAsync(IFee fee)
         {
-            return _tableStorage.InsertOrMergeAsync(FeeEntity.Create(fee));
+            var entity = FeeEntity.Create(fee);
+            await _tableStorage.InsertOrMergeAsync(entity);
+            return entity;
         }
 
         public async Task<IEnumerable<IFee>> GetFeesAsync()

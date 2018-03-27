@@ -7,6 +7,7 @@ using Lykke.Service.FeeCalculator.Client.Models;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Xunit;
+using MarketOrderAssetFeeModel = Lykke.Service.FeeCalculator.Client.Models.MarketOrderAssetFeeModel;
 
 namespace Lykke.Service.FeeCalculator.Tests
 {
@@ -100,7 +101,7 @@ namespace Lykke.Service.FeeCalculator.Tests
         {
             await SetupCachOut();
 
-            await _client.ReceivedWithAnyArgs(1).GetCashoutFeesAsync("");
+            await _client.ReceivedWithAnyArgs(1).GetCashoutFeesAsync();
         }
 
         [Fact]
@@ -112,7 +113,7 @@ namespace Lykke.Service.FeeCalculator.Tests
 
             await SetupCachOut();
 
-            await _client.ReceivedWithAnyArgs(2).GetCashoutFeesAsync("");
+            await _client.ReceivedWithAnyArgs(2).GetCashoutFeesAsync();
         }
 
 
@@ -155,10 +156,10 @@ namespace Lykke.Service.FeeCalculator.Tests
         private async Task SetupCachOut()
         {
             IReadOnlyCollection<CashoutFee> fee = new List<CashoutFee> { new CashoutFee() };
-            _client.GetCashoutFeesAsync("").ReturnsForAnyArgs(info => Task.FromResult(fee));
+            _client.GetCashoutFeesAsync().ReturnsForAnyArgs(info => Task.FromResult(fee));
             for (var i = 0; i < 10; i++)
             {
-                var cached = await _cached.GetCashoutFeesAsync("");
+                var cached = await _cached.GetCashoutFeesAsync();
                 Assert.Equal(fee, cached);
             }
         }

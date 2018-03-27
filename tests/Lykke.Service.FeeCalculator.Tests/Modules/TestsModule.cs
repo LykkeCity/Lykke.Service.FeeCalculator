@@ -1,16 +1,17 @@
-﻿using System.Linq;
-using Autofac;
+﻿using Autofac;
 using AzureStorage.Tables;
-using Common;
 using Common.Log;
 using Lykke.Service.ClientAccount.Client;
-using Lykke.Service.FeeCalculator.AzureRepositories.Fees;
+using Lykke.Service.FeeCalculator.AzureRepositories.Fee;
+using Lykke.Service.FeeCalculator.AzureRepositories.MarketOrderAssetFee;
+using Lykke.Service.FeeCalculator.AzureRepositories.StaticFee;
 using Lykke.Service.FeeCalculator.Core.Domain.Fees;
+using Lykke.Service.FeeCalculator.Core.Domain.MarketOrderAssetFee;
 using Lykke.Service.FeeCalculator.Core.Services;
 using Lykke.Service.FeeCalculator.Services;
 using Lykke.Service.TradeVolumes.Client;
+using StackExchange.Redis;
 using NSubstitute;
-
 
 namespace Lykke.Service.FeeCalculator.Tests.Modules
 {
@@ -29,7 +30,6 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
             
             var mockTradeVolumesClient = Substitute.For<ITradeVolumesClient>();
             
-            
             builder.RegisterInstance(mockTradeVolumesClient)
                 .SingleInstance();
             
@@ -37,26 +37,32 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
                 GetFeeRepository()  
             ).As<IFeeRepository>().SingleInstance();
             
+            builder.RegisterType<FeeService>()
+                .As<IFeeService>()
+                .WithParameter(TypedParameter.From("FeeCalculator"))
+                .SingleInstance();
+            
+            builder.RegisterType<MarketOrderAssetFeeService>()
+                .As<IMarketOrderAssetFeeService>()
+                .WithParameter(TypedParameter.From("FeeCalculator"))
+                .SingleInstance();
+            
             builder.RegisterInstance(
                 GetStaticFeeRepository()  
             ).As<IStaticFeeRepository>().SingleInstance();
             
-            builder.Register(x =>
-            {
-                var ctx = x.Resolve<IComponentContext>();
-                return new CachedDataDictionary<decimal, IFee>(
-                    async () => (await ctx.Resolve<IFeeRepository>().GetFeesAsync()).ToDictionary(itm => itm.Volume));
-            }).SingleInstance();
+            builder.RegisterInstance(
+                GetMarketOrderAssetFeesRepository()  
+            ).As<IMarketOrderAssetFeesRepository>().SingleInstance();
             
-            builder.Register(x =>
-            {
-                var ctx = x.Resolve<IComponentContext>();
-                return new CachedDataDictionary<string, IStaticFee>(
-                    async () => (await ctx.Resolve<IStaticFeeRepository>().GetFeesAsync()).ToDictionary(itm => itm.AssetPair));
-            }).SingleInstance();
+            builder.RegisterType<StaticFeeService>()
+                .As<IStaticFeeService>()
+                .WithParameter(TypedParameter.From("FeeCalculator"))
+                .SingleInstance();
             
-            builder.RegisterType<FeeService>()
-                .As<IFeeService>()
+            
+            builder.RegisterType<FeeCalculatorService>()
+                .As<IFeeCalculatorService>()
                 .WithParameter(TypedParameter.From(tradeVolumeToGetInDays))
                 .SingleInstance();
             
@@ -66,6 +72,14 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
             
             builder.RegisterType<ClientIdCacheService>()
                 .As<IClientIdCacheService>()
+                .SingleInstance();
+
+            var mockDatabase = Substitute.For<IDatabase>();
+            var mockMultiplexer = Substitute.For<IConnectionMultiplexer>();
+            mockMultiplexer.GetDatabase(Arg.Any<int>(), Arg.Any<object>()).Returns(mockDatabase);
+            
+            builder.RegisterInstance(mockMultiplexer)
+                .As<IConnectionMultiplexer>()
                 .SingleInstance();
         }
         
@@ -88,6 +102,15 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
             var repository = new StaticFeeRepository(new NoSqlTableInMemory<StaticFeeEntity>());
             
             repository.AddFeeAsync(new StaticFee{AssetPair = "BTCCHF", MakerFee = 0.03M, TakerFee = 0.03M}).GetAwaiter().GetResult();
+
+            return repository;
+        }
+        
+        private IMarketOrderAssetFeesRepository GetMarketOrderAssetFeesRepository()
+        {
+            var repository = new MarketOrderAssetFeeRepository(new NoSqlTableInMemory<MarketOrderAssetFeeEntity>());
+            
+            //repository.AddFeeAsync(new StaticFee{AssetPair = "BTCCHF", MakerFee = 0.03M, TakerFee = 0.03M}).GetAwaiter().GetResult();
 
             return repository;
         }

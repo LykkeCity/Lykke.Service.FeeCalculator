@@ -1,4 +1,4 @@
-﻿using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
+﻿using Lykke.Service.FeeCalculator.Core.Domain.Fees;
 
 namespace Lykke.Service.FeeCalculator.Models
 {

@@ -3,9 +3,8 @@ using Lykke.AzureStorage.Tables;
 using Lykke.AzureStorage.Tables.Entity.Annotation;
 using Lykke.AzureStorage.Tables.Entity.ValueTypesMerging;
 using Lykke.Service.FeeCalculator.Core.Domain.Fees;
-using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
 
-namespace Lykke.Service.FeeCalculator.AzureRepositories.Fees
+namespace Lykke.Service.FeeCalculator.AzureRepositories.Fee
 {
     [ValueTypeMergingStrategy(ValueTypeMergingStrategy.UpdateAlways)]
     public class FeeEntity : AzureTableEntity, IFee
@@ -21,7 +20,7 @@ namespace Lykke.Service.FeeCalculator.AzureRepositories.Fees
         internal static string GeneratePartitionKey() => "Fee";
         internal static string GenerateRowKey(string id) => id;
 
-        public static FeeEntity Create(IFee fee)
+        internal static FeeEntity Create(IFee fee)
         {
             string id = fee.Id ?? Guid.NewGuid().ToString();
             

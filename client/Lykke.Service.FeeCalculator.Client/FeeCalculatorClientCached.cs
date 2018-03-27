@@ -4,6 +4,7 @@ using Lykke.Service.FeeCalculator.Client.Models;
 using Lykke.Service.FeeCalculator.AutorestClient.Models;
 using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
+using MarketOrderAssetFeeModel = Lykke.Service.FeeCalculator.Client.Models.MarketOrderAssetFeeModel;
 
 namespace Lykke.Service.FeeCalculator.Client
 {
@@ -18,7 +19,6 @@ namespace Lykke.Service.FeeCalculator.Client
             _client = client;
             _cache = cache;
             _expirationPeriod = expirationPeriod;
-
         }
 
         public void Dispose()
@@ -30,6 +30,7 @@ namespace Lykke.Service.FeeCalculator.Client
         public async Task<MarketOrderAssetFeeModel> GetMarketOrderAssetFee(string clientId, string assetPair, string assetId, OrderAction orderAction)
         {
             var key = KeyGenerator.GetKeyForMarketAssetOrder(clientId, assetPair, assetId, orderAction);
+            
             if (_cache.TryGetValue<MarketOrderAssetFeeModel>(key, out var fee))
             {
                 return fee;
@@ -39,6 +40,11 @@ namespace Lykke.Service.FeeCalculator.Client
 
             _cache.Set(key, newFee, _expirationPeriod);
             return newFee;
+        }
+
+        async Task<MarketOrderAssetFeeModel> IFeeCalculatorClient.GetMarketOrderAssetFee(string clientId, string assetPair, string assetId, OrderAction orderAction)
+        {
+            return await GetMarketOrderAssetFee(clientId, assetPair, assetId, orderAction);
         }
 
         public async Task<LimitOrderFeeModel> GetLimitOrderFees(string clientId, string assetPair, string assetId, OrderAction orderAction)
@@ -55,6 +61,48 @@ namespace Lykke.Service.FeeCalculator.Client
             return newFee;
         }
 
+        public async Task<IReadOnlyCollection<CashoutFee>> GetCashoutFeesAsync()
+        {
+            var key = KeyGenerator.GetKeyForCashOut(null);
+            
+            if (_cache.TryGetValue<IReadOnlyList<CashoutFee>>(key, out var cashOut))
+            {
+                return cashOut;
+            }
+
+            var fees = await _client.GetCashoutFeesAsync();
+            
+            _cache.Set(key, fees, _expirationPeriod);
+            
+            return fees;
+        }
+
+        public async Task<CashoutFee> GetCashoutFeeAsync(string assetId)
+        {
+            var key = KeyGenerator.GetKeyForCashOut(assetId);
+            
+            if (_cache.TryGetValue<CashoutFee>(key, out var cashOut))
+            {
+                return cashOut;
+            }
+
+            var fee = await _client.GetCashoutFeeAsync(assetId);
+            
+            _cache.Set(key, fee, _expirationPeriod);
+            
+            return fee;
+        }
+
+        public Task AddCashoutFeeAsync(CashoutFeeModel model)
+        {
+            return _client.AddCashoutFeeAsync(model);
+        }
+
+        public Task DeleteCashoutFeeAsync(string id)
+        {
+            return _client.DeleteCashoutFeeAsync(id);
+        }
+
         public async Task<MarketOrderFeeModel> GetMarketOrderFees(string clientId, string assetPair, string assetId, OrderAction orderAction)
         {
             var key = KeyGenerator.GetKeyForMarketOrder(clientId, assetPair, assetId, orderAction);
@@ -67,20 +115,6 @@ namespace Lykke.Service.FeeCalculator.Client
 
             _cache.Set(key, newFee, _expirationPeriod);
             return newFee;
-        }
-
-        public async Task<IReadOnlyCollection<CashoutFee>> GetCashoutFeesAsync(string assetId = null)
-        {
-            var key = KeyGenerator.GetKeyForCashOut(assetId);
-            if (_cache.TryGetValue<IReadOnlyList<CashoutFee>>(key, out var cashOut))
-            {
-                return cashOut;
-            }
-
-            var newCashOut = await _client.GetCashoutFeesAsync(assetId);
-
-            _cache.Set(key, newCashOut, _expirationPeriod);
-            return newCashOut;
         }
 
         public Task<BankCardsFeeModel> GetBankCardFees()
@@ -116,6 +150,21 @@ namespace Lykke.Service.FeeCalculator.Client
         public Task DeleteStaticFeeAsync(string assetPair)
         {
             return _client.DeleteStaticFeeAsync(assetPair);
+        }
+
+        public Task<IReadOnlyCollection<MarketOrderAssetFee>> GetMarketOrderAssetFeesAsync()
+        {
+            return _client.GetMarketOrderAssetFeesAsync();
+        }
+
+        public Task AddMarketOrderAssetFeeAsync(MarketOrderAssetFeeModel model)
+        {
+            return _client.AddMarketOrderAssetFeeAsync(model);
+        }
+
+        public Task DeleteMarketOrderAssetFeeAsync(string id)
+        {
+            return _client.DeleteMarketOrderAssetFeeAsync(id);
         }
 
         public Task<WithdrawalFeeModel> GetWithdrawalFeeAsync(string assetId, string countryCode)

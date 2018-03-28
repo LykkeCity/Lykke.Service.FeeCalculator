@@ -14,7 +14,7 @@ using StaticFee = Lykke.Service.FeeCalculator.Models.StaticFee;
 
 namespace Lykke.Service.FeeCalculator.Controllers
 {
-    [Route("api/staticfees")]
+    [Route("api/Fee")]
     public class StaticFeeController : Controller
     {
         private readonly IStaticFeeService _staticFeeService;
@@ -34,7 +34,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost("staticfee/add")]
         [SwaggerOperation("AddStaticFee")]
         [ProducesResponseType(typeof(void), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.BadRequest)]
@@ -74,7 +74,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
         /// Gets all the static fees
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("staticfee/get")]
         [SwaggerOperation("GetStaticFees")]
         [ProducesResponseType(typeof(List<StaticFee>), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.InternalServerError)]
@@ -90,7 +90,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("{id}")]
+        [HttpPost("staticfee/delete/{id}")]
         [SwaggerOperation("DeleteStaticFee")]
         [ProducesResponseType(typeof(void), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.BadRequest)]

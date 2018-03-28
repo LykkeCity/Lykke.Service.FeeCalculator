@@ -10,7 +10,6 @@ using Lykke.Service.FeeCalculator.Core.Services;
 using Lykke.Service.FeeCalculator.Models;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using MarketOrderAssetFee = Lykke.Service.FeeCalculator.Models.MarketOrderAssetFee;
 
 namespace Lykke.Service.FeeCalculator.Controllers
 {
@@ -38,7 +37,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
         [SwaggerOperation("AddMarketOrderAssetFee")]
         [ProducesResponseType(typeof(void), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> AddMarketOrderAssetFee([FromBody]MarketOrderAssetFeeModel model)
+        public async Task<IActionResult> AddMarketOrderAssetFee([FromBody]MoAssetFeeModel model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ErrorResponse.Create(ModelState.GetErrorMessage()));
@@ -75,12 +74,12 @@ namespace Lykke.Service.FeeCalculator.Controllers
         /// <returns></returns>
         [HttpGet]
         [SwaggerOperation("GetMarketOrderAssetFees")]
-        [ProducesResponseType(typeof(List<MarketOrderAssetFee>), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(List<MoAssetFee>), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> GetMarketOrderAssetFees()
         {
             var fees = await _marketOrderAssetFeeService.GetAllAsync();
-            var result = Mapper.Map<List<MarketOrderAssetFee>>(fees);
+            var result = Mapper.Map<List<MoAssetFee>>(fees);
             return Ok(result);
         }
         

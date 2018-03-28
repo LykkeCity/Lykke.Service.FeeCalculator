@@ -9,22 +9,22 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class MarketOrderAssetFee
+    public partial class MoAssetFeeModel
     {
         /// <summary>
-        /// Initializes a new instance of the MarketOrderAssetFee class.
+        /// Initializes a new instance of the MoAssetFeeModel class.
         /// </summary>
-        public MarketOrderAssetFee()
+        public MoAssetFeeModel()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the MarketOrderAssetFee class.
+        /// Initializes a new instance of the MoAssetFeeModel class.
         /// </summary>
         /// <param name="type">Possible values include: 'Unknown', 'Absolute',
         /// 'Relative'</param>
-        public MarketOrderAssetFee(decimal amount, FeeType type, string id = default(string), string assetId = default(string), string targetAssetId = default(string), string targetWalletId = default(string))
+        public MoAssetFeeModel(decimal amount, FeeType type, string id = default(string), string assetId = default(string), string targetAssetId = default(string), string targetWalletId = default(string))
         {
             Id = id;
             Amount = amount;

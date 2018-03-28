@@ -271,7 +271,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             /// </param>
             /// <param name='model'>
             /// </param>
-            public static ErrorResponse AddMarketOrderAssetFee(this IFeeCalculatorAPI operations, MarketOrderAssetFeeModel model = default(MarketOrderAssetFeeModel))
+            public static ErrorResponse AddMarketOrderAssetFee(this IFeeCalculatorAPI operations, MoAssetFeeModel model = default(MoAssetFeeModel))
             {
                 return operations.AddMarketOrderAssetFeeAsync(model).GetAwaiter().GetResult();
             }
@@ -287,7 +287,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ErrorResponse> AddMarketOrderAssetFeeAsync(this IFeeCalculatorAPI operations, MarketOrderAssetFeeModel model = default(MarketOrderAssetFeeModel), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ErrorResponse> AddMarketOrderAssetFeeAsync(this IFeeCalculatorAPI operations, MoAssetFeeModel model = default(MoAssetFeeModel), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.AddMarketOrderAssetFeeWithHttpMessagesAsync(model, null, cancellationToken).ConfigureAwait(false))
                 {

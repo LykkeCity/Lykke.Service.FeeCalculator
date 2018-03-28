@@ -47,6 +47,7 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
             
             builder.RegisterType<MarketOrderAssetFeeService>()
                 .As<IMarketOrderAssetFeeService>()
+                .WithParameter(TypedParameter.From("FeeCalculator"))
                 .SingleInstance();
             
             builder.RegisterInstance(

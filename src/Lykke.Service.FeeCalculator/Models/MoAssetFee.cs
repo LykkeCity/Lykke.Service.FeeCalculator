@@ -2,7 +2,7 @@
 
 namespace Lykke.Service.FeeCalculator.Models
 {
-    public class MarketOrderAssetFee
+    public class MoAssetFee
     {
         public string Id { get; set; }
         public decimal Amount { get; set; }

@@ -142,7 +142,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<ErrorResponse>> AddMarketOrderAssetFeeWithHttpMessagesAsync(MarketOrderAssetFeeModel model = default(MarketOrderAssetFeeModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ErrorResponse>> AddMarketOrderAssetFeeWithHttpMessagesAsync(MoAssetFeeModel model = default(MoAssetFeeModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Deletes the market order asset fee by id

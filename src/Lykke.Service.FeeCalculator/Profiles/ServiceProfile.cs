@@ -11,7 +11,7 @@ namespace Lykke.Service.FeeCalculator.Profiles
         {
             CreateMap<IFee, Models.Fee>(MemberList.Source);
             CreateMap<ICashoutFee, Models.CashoutFee>(MemberList.Source);
-            CreateMap<IMarketOrderAssetFee, Models.MarketOrderAssetFee>(MemberList.Source);
+            CreateMap<IMarketOrderAssetFee, Models.MoAssetFee>(MemberList.Source);
             CreateMap<IStaticFee, Models.StaticFee>(MemberList.Source);
         }
     }

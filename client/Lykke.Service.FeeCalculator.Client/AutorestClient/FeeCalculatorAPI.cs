@@ -1328,7 +1328,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<IList<MarketOrderAssetFee>>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<IList<MoAssetFee>>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -1385,7 +1385,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ErrorResponse>> AddMarketOrderAssetFeeWithHttpMessagesAsync(MarketOrderAssetFeeModel model = default(MarketOrderAssetFeeModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ErrorResponse>> AddMarketOrderAssetFeeWithHttpMessagesAsync(MoAssetFeeModel model = default(MoAssetFeeModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (model != null)
             {
@@ -1930,7 +1930,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<MarketOrderAssetFee>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<MoAssetFee>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {

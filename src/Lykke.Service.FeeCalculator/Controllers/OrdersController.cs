@@ -6,7 +6,6 @@ using Lykke.Service.FeeCalculator.Core.Services;
 using Lykke.Service.FeeCalculator.Models;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using MarketOrderAssetFee = Lykke.Service.FeeCalculator.Models.MarketOrderAssetFee;
 
 namespace Lykke.Service.FeeCalculator.Controllers
 {
@@ -48,14 +47,14 @@ namespace Lykke.Service.FeeCalculator.Controllers
 
         [HttpGet("marketAssetFee")]
         [SwaggerOperation("GetMarketOrderAssetFee")]
-        [ProducesResponseType(typeof(MarketOrderAssetFee), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(MoAssetFee), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> GetMarketOrderAssetFee([FromQuery] string clientId, [FromQuery] string assetPair,
             [FromQuery] string assetId,
             [FromQuery] OrderAction orderAction)
         {
             var fee = await _feeCalculatorService.GetMarketOrderFeeAsync(clientId, assetPair, assetId);
-            var result = Mapper.Map<MarketOrderAssetFee>(fee);
+            var result = Mapper.Map<MoAssetFee>(fee);
             return Ok(result);
         }
 

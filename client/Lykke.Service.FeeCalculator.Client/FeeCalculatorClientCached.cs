@@ -152,12 +152,12 @@ namespace Lykke.Service.FeeCalculator.Client
             return _client.DeleteStaticFeeAsync(assetPair);
         }
 
-        public Task<IReadOnlyCollection<MarketOrderAssetFee>> GetMarketOrderAssetFeesAsync()
+        public Task<IReadOnlyCollection<MoAssetFee>> GetMarketOrderAssetFeesAsync()
         {
             return _client.GetMarketOrderAssetFeesAsync();
         }
 
-        public Task AddMarketOrderAssetFeeAsync(MarketOrderAssetFeeModel model)
+        public Task AddMarketOrderAssetFeeAsync(MoAssetFeeModel model)
         {
             return _client.AddMarketOrderAssetFeeAsync(model);
         }

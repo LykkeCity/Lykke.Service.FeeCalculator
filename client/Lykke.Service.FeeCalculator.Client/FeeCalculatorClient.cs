@@ -259,14 +259,7 @@ namespace Lykke.Service.FeeCalculator.Client
 
         public async Task AddMarketOrderAssetFeeAsync(MoAssetFeeModel model)
         {
-            var response = await _service.AddMarketOrderAssetFeeAsync(new AutorestClient.Models.MarketOrderAssetFeeModel
-            {
-                Amount = model.Amount,
-                Type = model.Type,
-                AssetId = model.AssetId,
-                TargetAssetId = model.TargetAssetId,
-                TargetWalletId = model.TargetWalletId
-            });
+            var response = await _service.AddMarketOrderAssetFeeAsync(model);
             
             if (response != null)
                 throw new Exception(response.ErrorMessage);

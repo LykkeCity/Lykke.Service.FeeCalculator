@@ -119,14 +119,14 @@ namespace Lykke.Service.FeeCalculator.Client
         /// Gets all market order asset fees
         /// </summary>
         /// <returns></returns>
-        Task<IReadOnlyCollection<MarketOrderAssetFee>> GetMarketOrderAssetFeesAsync();
+        Task<IReadOnlyCollection<MoAssetFee>> GetMarketOrderAssetFeesAsync();
         
         /// <summary>
         /// Adds market order asset fee
         /// </summary>
         /// <param name="model">market order asset fee</param>
         /// <returns></returns>
-        Task AddMarketOrderAssetFeeAsync(MarketOrderAssetFeeModel model);
+        Task AddMarketOrderAssetFeeAsync(MoAssetFeeModel model);
         
         /// <summary>
         /// Deletes market order asset fee by id

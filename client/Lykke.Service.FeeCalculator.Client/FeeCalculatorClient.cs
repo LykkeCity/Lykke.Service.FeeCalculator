@@ -242,7 +242,7 @@ namespace Lykke.Service.FeeCalculator.Client
                 throw new Exception(response.ErrorMessage);
         }
 
-        public async Task<IReadOnlyCollection<MarketOrderAssetFee>> GetMarketOrderAssetFeesAsync()
+        public async Task<IReadOnlyCollection<MoAssetFee>> GetMarketOrderAssetFeesAsync()
         {
             var response = await _service.GetMarketOrderAssetFeesAsync();
 
@@ -250,14 +250,14 @@ namespace Lykke.Service.FeeCalculator.Client
             {
                 case ErrorResponse error:
                     throw new Exception(error.ErrorMessage);
-                case List<MarketOrderAssetFee> result:
+                case List<MoAssetFee> result:
                     return result;
             }
 
             throw new Exception(ApiError);
         }
 
-        public async Task AddMarketOrderAssetFeeAsync(MarketOrderAssetFeeModel model)
+        public async Task AddMarketOrderAssetFeeAsync(MoAssetFeeModel model)
         {
             var response = await _service.AddMarketOrderAssetFeeAsync(new AutorestClient.Models.MarketOrderAssetFeeModel
             {

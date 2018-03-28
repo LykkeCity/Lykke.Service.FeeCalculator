@@ -3,7 +3,7 @@ using Lykke.Service.FeeCalculator.Core.Domain.Fees;
 
 namespace Lykke.Service.FeeCalculator.Models
 {
-    public class MarketOrderAssetFeeModel
+    public class MoAssetFeeModel
     {
         public string Id { get; set; }
         public decimal Amount { get; set; }

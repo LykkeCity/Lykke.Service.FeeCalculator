@@ -52,7 +52,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
             
             var fees = await _marketOrderAssetFeeService.GetAllAsync();
 
-            if (fees.Any(item => item.AssetId == model.AssetId))
+            if (fees.Any(item => item.AssetId == model.AssetId && item.Id != model.Id))
                 return BadRequest($"fee for asset '{model.AssetId}' is already added");
             
             await _marketOrderAssetFeeService.AddAsync(new Core.Domain.MarketOrderAssetFee.MarketOrderAssetFee

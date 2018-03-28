@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -35,6 +36,11 @@ namespace Lykke.Service.FeeCalculator.Controllers
         {
             if (!string.IsNullOrEmpty(model.Id) && !model.Id.IsValidPartitionOrRowKey())
                 return BadRequest(ErrorResponse.Create($"Invalid {nameof(model.Id)} value"));
+            
+            var fees = await _feeService.GetAllAsync();
+
+            if (fees.Any(item => item.Volume == model.Volume && item.Id != model.Id))
+                return BadRequest($"fee for volume '{model.Volume}' is already added");
             
             await _feeService.AddAsync(new Core.Domain.Fees.Fee
             {

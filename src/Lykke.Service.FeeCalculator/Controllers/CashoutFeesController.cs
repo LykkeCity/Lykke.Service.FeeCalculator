@@ -8,7 +8,6 @@ using AutoMapper;
 using Common;
 using Lykke.Common.ApiLibrary.Extensions;
 using Lykke.Service.Assets.Client;
-using Lykke.Service.FeeCalculator.Core.Domain.Fees;
 using Lykke.Service.FeeCalculator.Core.Services;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using CashoutFee = Lykke.Service.FeeCalculator.Models.CashoutFee;
@@ -30,37 +29,18 @@ namespace Lykke.Service.FeeCalculator.Controllers
             _assetsServiceWithCache = assetsServiceWithCache;
         }
 
-        [HttpGet]
+        [HttpGet("/CashoutFees")]
         [SwaggerOperation("GetCashoutFees")]
         [ProducesResponseType(typeof(List<CashoutFee>), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> GetCashoutFees()
+        public async Task<IActionResult> GetCashoutFees(string assetId = null)
         {
             var fees = await _cashoutFeesService.GetAllAsync();
-            var result = Mapper.Map<List<CashoutFee>>(fees);
-            return Ok(result);
-        }
-        
-        [HttpGet("{assetId}")]
-        [SwaggerOperation("GetCashoutFee")]
-        [ProducesResponseType(typeof(CashoutFee), (int) HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetCashoutFees(string assetId)
-        {
-            var asset = await _assetsServiceWithCache.TryGetAssetAsync(assetId);
-
-            if (asset == null)
-                return NotFound(ErrorResponse.Create($"asset '{assetId}' not found"));
             
-            var fee = await _cashoutFeesService.GetAsync(assetId) ?? new Core.Domain.CashoutFee.CashoutFee
-                {
-                    AssetId = assetId,
-                    Size = 0,
-                    Type = FeeType.Absolute
-                };
-
-            var result = Mapper.Map<CashoutFee>(fee);
+            if (!string.IsNullOrEmpty(assetId))
+                fees = fees.Where(item => item.AssetId == assetId).ToArray();
+            
+            var result = Mapper.Map<List<CashoutFee>>(fees);
             return Ok(result);
         }
         

@@ -63,7 +63,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
 
             var fees = await _cashoutFeesService.GetAllAsync();
 
-            if (fees.Any(item => item.AssetId == model.AssetId))
+            if (fees.Any(item => item.AssetId == model.AssetId && item.Id != model.Id))
                 return BadRequest($"fee for asset '{model.AssetId}' is already added");
 
             await _cashoutFeesService.AddAsync(new Core.Domain.CashoutFee.CashoutFee

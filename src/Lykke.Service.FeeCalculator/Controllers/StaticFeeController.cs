@@ -53,7 +53,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
             
             var fees = await _staticFeeService.GetAllAsync();
 
-            if (fees.Any(item => item.AssetPair == model.AssetPair))
+            if (fees.Any(item => item.AssetPair == model.AssetPair && item.Id != model.Id))
                 return BadRequest($"fee for asset pair '{model.AssetPair}' is already added");
             
             await _staticFeeService.AddAsync(new Core.Domain.Fees.StaticFee

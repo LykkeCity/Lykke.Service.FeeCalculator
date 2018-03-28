@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Common.Log;
 using Lykke.Service.FeeCalculator.Client.Models;
 using System.Collections.Generic;
+using System.Linq;
 using Common;
 using Lykke.Service.FeeCalculator.AutorestClient;
 using Lykke.Service.FeeCalculator.AutorestClient.Models;
@@ -80,9 +81,9 @@ namespace Lykke.Service.FeeCalculator.Client
             throw new Exception(ApiError);
         }
 
-        public async Task<IReadOnlyCollection<CashoutFee>> GetCashoutFeesAsync()
+        public async Task<IReadOnlyCollection<CashoutFee>> GetCashoutFeesAsync(string assetId = null)
         {
-            var response = await _service.GetCashoutFeesAsync();
+            var response = await _service.GetCashoutFeesAsync(assetId);
 
             switch (response)
             {
@@ -97,14 +98,14 @@ namespace Lykke.Service.FeeCalculator.Client
 
         public async Task<CashoutFee> GetCashoutFeeAsync(string assetId)
         {
-            var response = await _service.GetCashoutFeeAsync(assetId);
+            var response = await _service.GetCashoutFeesAsync(assetId);
 
             switch (response)
             {
                 case ErrorResponse error:
                     throw new Exception(error.ErrorMessage);
-                case CashoutFee result:
-                    return result;
+                case List<CashoutFee> result:
+                    return result.FirstOrDefault(item => item.AssetId == assetId);
             }
 
             throw new Exception(ApiError);

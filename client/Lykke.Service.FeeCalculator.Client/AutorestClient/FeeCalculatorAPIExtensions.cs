@@ -40,20 +40,24 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            public static object GetCashoutFees(this IFeeCalculatorAPI operations)
+            /// <param name='assetId'>
+            /// </param>
+            public static object GetCashoutFees(this IFeeCalculatorAPI operations, string assetId = default(string))
             {
-                return operations.GetCashoutFeesAsync().GetAwaiter().GetResult();
+                return operations.GetCashoutFeesAsync(assetId).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
+            /// <param name='assetId'>
+            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> GetCashoutFeesAsync(this IFeeCalculatorAPI operations, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> GetCashoutFeesAsync(this IFeeCalculatorAPI operations, string assetId = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetCashoutFeesWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetCashoutFeesWithHttpMessagesAsync(assetId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -88,32 +92,6 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='assetId'>
-            /// </param>
-            public static object GetCashoutFee(this IFeeCalculatorAPI operations, string assetId)
-            {
-                return operations.GetCashoutFeeAsync(assetId).GetAwaiter().GetResult();
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='assetId'>
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<object> GetCashoutFeeAsync(this IFeeCalculatorAPI operations, string assetId, CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetCashoutFeeWithHttpMessagesAsync(assetId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
             /// <param name='id'>
             /// </param>
             public static ErrorResponse DeleteCashoutFee(this IFeeCalculatorAPI operations, string id)
@@ -132,34 +110,6 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             public static async Task<ErrorResponse> DeleteCashoutFeeAsync(this IFeeCalculatorAPI operations, string id, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.DeleteCashoutFeeWithHttpMessagesAsync(id, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <summary>
-            /// Gets all the dynamic fees
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            public static object GetFees(this IFeeCalculatorAPI operations)
-            {
-                return operations.GetFeesAsync().GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Gets all the dynamic fees
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<object> GetFeesAsync(this IFeeCalculatorAPI operations, CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetFeesWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -192,6 +142,34 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             public static async Task<ErrorResponse> AddFeeAsync(this IFeeCalculatorAPI operations, FeeModel model = default(FeeModel), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.AddFeeWithHttpMessagesAsync(model, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Gets all the dynamic fees
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            public static object GetFees(this IFeeCalculatorAPI operations)
+            {
+                return operations.GetFeesAsync().GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Gets all the dynamic fees
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<object> GetFeesAsync(this IFeeCalculatorAPI operations, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetFeesWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -482,34 +460,6 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             }
 
             /// <summary>
-            /// Gets all the static fees
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            public static object GetStaticFees(this IFeeCalculatorAPI operations)
-            {
-                return operations.GetStaticFeesAsync().GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Gets all the static fees
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<object> GetStaticFeesAsync(this IFeeCalculatorAPI operations, CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetStaticFeesWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <summary>
             /// Adds a static fee
             /// </summary>
             /// <param name='operations'>
@@ -536,6 +486,34 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             public static async Task<ErrorResponse> AddStaticFeeAsync(this IFeeCalculatorAPI operations, StaticFeeModel model = default(StaticFeeModel), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.AddStaticFeeWithHttpMessagesAsync(model, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Gets all the static fees
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            public static object GetStaticFees(this IFeeCalculatorAPI operations)
+            {
+                return operations.GetStaticFeesAsync().GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Gets all the static fees
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<object> GetStaticFeesAsync(this IFeeCalculatorAPI operations, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetStaticFeesWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

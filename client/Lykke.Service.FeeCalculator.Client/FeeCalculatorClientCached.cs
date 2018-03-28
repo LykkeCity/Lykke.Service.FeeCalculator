@@ -61,7 +61,7 @@ namespace Lykke.Service.FeeCalculator.Client
             return newFee;
         }
 
-        public async Task<IReadOnlyCollection<CashoutFee>> GetCashoutFeesAsync()
+        public async Task<IReadOnlyCollection<CashoutFee>> GetCashoutFeesAsync(string assetId = null)
         {
             var key = KeyGenerator.GetKeyForCashOut(null);
             
@@ -70,7 +70,7 @@ namespace Lykke.Service.FeeCalculator.Client
                 return cashOut;
             }
 
-            var fees = await _client.GetCashoutFeesAsync();
+            var fees = await _client.GetCashoutFeesAsync(assetId);
             
             _cache.Set(key, fees, _expirationPeriod);
             

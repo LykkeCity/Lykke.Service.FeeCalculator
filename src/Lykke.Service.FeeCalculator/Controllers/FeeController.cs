@@ -10,7 +10,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Lykke.Service.FeeCalculator.Controllers
 {
-    [Route("api/fees")]
+    [Route("api/Fee")]
     public class FeeController : Controller
     {
         private readonly IFeeService _feeService;
@@ -27,7 +27,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost("add")]
         [SwaggerOperation("AddFee")]
         [ProducesResponseType(typeof(void), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.BadRequest)]
@@ -54,7 +54,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
         /// Gets all the dynamic fees
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("get")]
         [SwaggerOperation("GetFees")]
         [ProducesResponseType(typeof(List<Fee>), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.InternalServerError)]
@@ -70,7 +70,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("{id}")]
+        [HttpPost("delete/{id}")]
         [SwaggerOperation("DeleteFee")]
         [ProducesResponseType(typeof(void), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.BadRequest)]

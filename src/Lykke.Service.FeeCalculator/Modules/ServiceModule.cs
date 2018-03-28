@@ -52,7 +52,7 @@ namespace Lykke.Service.FeeCalculator.Modules
             builder.RegisterType<ShutdownManager>()
                 .As<IShutdownManager>();
 
-            builder.RegisterInstance(feeSettings).SingleInstance();
+            builder.RegisterInstance(feeSettings.WithdrawalFees).SingleInstance();
 
             builder.RegisterInstance(new DummySettingsHolder(feeSettings.CashoutFees, feeSettings.BankCard))
                 .As<IDummySettingsHolder>()

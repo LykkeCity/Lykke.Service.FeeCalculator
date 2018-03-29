@@ -44,7 +44,7 @@ namespace Lykke.Service.FeeCalculator.Client
                 throw new Exception(error.ErrorMessage);
             }
 
-            if (response is MarketOrderFee result)
+            if (response is MoAssetFee result)
             {
                 return new MarketOrderAssetFeeModel
                 {

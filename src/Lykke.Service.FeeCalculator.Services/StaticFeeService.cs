@@ -69,5 +69,21 @@ namespace Lykke.Service.FeeCalculator.Services
             await _repository.DeleteFeeAsync(id);
             await _db.DeleteFromCacheByIdAsync(_feesKey, id);
         }
+
+        public async Task InitAsync()
+        {
+            //get fees with old format, create a new and delete the old one
+            var fees = (await _repository.GetFeesAsync())
+                .Where(item => string.IsNullOrEmpty(item.Id)).ToArray();
+
+            if (fees.Length == 0)
+                return;
+
+            foreach (var fee in fees)
+            {
+                await _repository.AddFeeAsync(fee);
+                await _repository.DeleteOldFeeAsync(fee.AssetPair);
+            }
+        }
     }
 }

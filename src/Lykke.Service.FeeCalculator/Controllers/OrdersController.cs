@@ -48,18 +48,6 @@ namespace Lykke.Service.FeeCalculator.Controllers
 
         [HttpGet("marketAssetFee")]
         [SwaggerOperation("GetMarketOrderAssetFee")]
-        [ProducesResponseType(typeof(MarketOrderFee), (int) HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> GetMarketOrderAssetFee([FromQuery] string clientId, [FromQuery] string assetPair,
-            [FromQuery] string assetId,
-            [FromQuery] OrderAction orderAction)
-        {
-            var fee = await _feeService.GetMarketOrderFeeAsync(clientId, assetPair, assetId);
-            return Ok(fee);
-        }
-
-        [HttpGet("marketAssetFee")]
-        [SwaggerOperation("GetMarketOrderAssetFee")]
         [ProducesResponseType(typeof(MoAssetFee), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> GetMarketOrderAssetFee([FromQuery] string clientId, [FromQuery] string assetPair,

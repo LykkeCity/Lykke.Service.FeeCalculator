@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Common.Log;
 using Lykke.Service.FeeCalculator.Client.Models;
@@ -29,6 +29,28 @@ namespace Lykke.Service.FeeCalculator.Client
                 return;
             _service.Dispose();
             _service = null;
+        }
+
+        public async Task<MarketOrderAssetFeeModel> GetMarketOrderAssetFee(string clientId, string assetPair, string assetId, OrderAction orderAction)
+        {
+            var response = await _service.GetMarketOrderAssetFeeAsync(orderAction, clientId, assetPair, assetId);
+
+            switch (response)
+            {
+                case ErrorResponse error:
+                    throw new Exception(error.ErrorMessage);
+                case MoAssetFee result:
+                    return new MarketOrderAssetFeeModel
+                    {
+                        Amount = result.Amount,
+                        AssetId = result.AssetId,
+                        TargetAssetId = result.TargetAssetId,
+                        TargetWalletId = result.TargetWalletId,
+                        Type = result.Type
+                    };
+            }
+
+            throw new Exception(ApiError);
         }
 
         public async Task<LimitOrderFeeModel> GetLimitOrderFees(string clientId, string assetPair, string assetId, OrderAction orderAction)

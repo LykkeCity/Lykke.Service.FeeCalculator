@@ -373,46 +373,6 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 }
             }
 
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='orderAction'>
-            /// Possible values include: 'Buy', 'Sell'
-            /// </param>
-            /// <param name='clientId'>
-            /// </param>
-            /// <param name='assetPair'>
-            /// </param>
-            /// <param name='assetId'>
-            /// </param>
-            public static object GetMarketOrderAssetFee(this IFeeCalculatorAPI operations, OrderAction orderAction, string clientId = default(string), string assetPair = default(string), string assetId = default(string))
-            {
-                return operations.GetMarketOrderAssetFeeAsync(orderAction, clientId, assetPair, assetId).GetAwaiter().GetResult();
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='orderAction'>
-            /// Possible values include: 'Buy', 'Sell'
-            /// </param>
-            /// <param name='clientId'>
-            /// </param>
-            /// <param name='assetPair'>
-            /// </param>
-            /// <param name='assetId'>
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<object> GetMarketOrderAssetFeeAsync(this IFeeCalculatorAPI operations, OrderAction orderAction, string clientId = default(string), string assetPair = default(string), string assetId = default(string), CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetMarketOrderAssetFeeWithHttpMessagesAsync(orderAction, clientId, assetPair, assetId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
             /// <summary>
             /// Returns fee for the limit order
             /// </summary>

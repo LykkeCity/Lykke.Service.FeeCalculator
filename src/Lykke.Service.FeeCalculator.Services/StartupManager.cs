@@ -18,6 +18,7 @@ namespace Lykke.Service.FeeCalculator.Services
         private readonly CacheUpdaterHandler _cacheUpdater;
         private readonly ICashoutFeesService _cashoutFeesService;
         private readonly IMarketOrderAssetFeeService _marketOrderAssetFeeService;
+        private readonly IStaticFeeService _staticFeeService;
         private readonly ILog _log;
 
         [UsedImplicitly]
@@ -25,11 +26,13 @@ namespace Lykke.Service.FeeCalculator.Services
             CacheUpdaterHandler cacheUpdater,
             ICashoutFeesService cashoutFeesService,
             IMarketOrderAssetFeeService marketOrderAssetFeeService,
+            IStaticFeeService staticFeeService,
             ILog log)
         {
             _cacheUpdater = cacheUpdater;
             _cashoutFeesService = cashoutFeesService;
             _marketOrderAssetFeeService = marketOrderAssetFeeService;
+            _staticFeeService = staticFeeService;
             _log = log;
         }
 
@@ -43,10 +46,11 @@ namespace Lykke.Service.FeeCalculator.Services
             _log.WriteInfo(nameof(StartAsync), null, "Trade volumes cache is initialized");
             
             //TODO: remove in next release
-            _log.WriteInfo(nameof(StartAsync), null, "Init fees (cashout and market order asset fees) from settings...");
+            _log.WriteInfo(nameof(StartAsync), null, "Init fees (cashout and market order asset fees) from settings and static fees from db...");
             
             await _cashoutFeesService.InitAsync();
             await _marketOrderAssetFeeService.InitAsync();
+            await _staticFeeService.InitAsync();
             
             _log.WriteInfo(nameof(StartAsync), null, "Init fees done");
         }

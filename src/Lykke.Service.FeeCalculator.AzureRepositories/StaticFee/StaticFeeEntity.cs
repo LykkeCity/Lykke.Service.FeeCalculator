@@ -19,6 +19,7 @@ namespace Lykke.Service.FeeCalculator.AzureRepositories.StaticFee
 
         internal static string GeneratePartitionKey() => "StaticFee";
         internal static string GenerateRowKey(string id) => id;
+        internal static string GenerateOldRowKey(string assetPair) => assetPair;
 
         internal static StaticFeeEntity Create(IStaticFee fee)
         {

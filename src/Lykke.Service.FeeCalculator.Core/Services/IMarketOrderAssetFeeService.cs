@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Lykke.Service.FeeCalculator.Core.Domain.MarketOrderAssetFee;
 
 namespace Lykke.Service.FeeCalculator.Core.Services
 {
     public interface IMarketOrderAssetFeeService
     {
-        Task<IMarketOrderAssetFee[]> GetAllAsync();
+        Task<IReadOnlyCollection<IMarketOrderAssetFee>> GetAllAsync();
         Task<IMarketOrderAssetFee> GetAsync(string assetId);
         Task AddAsync(IMarketOrderAssetFee fee);
         Task DeleteAsync(string id);

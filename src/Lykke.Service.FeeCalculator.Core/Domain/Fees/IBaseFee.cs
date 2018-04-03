@@ -1,8 +1,6 @@
-﻿using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
-
-namespace Lykke.Service.FeeCalculator.Core.Domain.Fees
+﻿namespace Lykke.Service.FeeCalculator.Core.Domain.Fees
 {
-    public interface IBaseFee
+    public interface IBaseFee : IFeeId
     {
         decimal TakerFee { get; }
         decimal MakerFee { get; }

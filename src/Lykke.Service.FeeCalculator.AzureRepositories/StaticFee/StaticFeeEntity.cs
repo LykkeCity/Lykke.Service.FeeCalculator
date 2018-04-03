@@ -3,34 +3,34 @@ using Lykke.AzureStorage.Tables;
 using Lykke.AzureStorage.Tables.Entity.Annotation;
 using Lykke.AzureStorage.Tables.Entity.ValueTypesMerging;
 using Lykke.Service.FeeCalculator.Core.Domain.Fees;
-using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
 
-namespace Lykke.Service.FeeCalculator.AzureRepositories.Fees
+namespace Lykke.Service.FeeCalculator.AzureRepositories.StaticFee
 {
     [ValueTypeMergingStrategy(ValueTypeMergingStrategy.UpdateAlways)]
-    public class FeeEntity : AzureTableEntity, IFee
+    public class StaticFeeEntity : AzureTableEntity, IStaticFee
     {
         public string Id { get; set; }
-        public decimal Volume { get; set; }
+        public string AssetPair { get; set; }
         public decimal TakerFee { get; set; }
         public decimal MakerFee { get; set; }
         public FeeType TakerFeeType { get; set; }
         public FeeType MakerFeeType { get; set; }
         public decimal MakerFeeModificator { get; set; }
 
-        internal static string GeneratePartitionKey() => "Fee";
+        internal static string GeneratePartitionKey() => "StaticFee";
         internal static string GenerateRowKey(string id) => id;
+        internal static string GenerateOldRowKey(string assetPair) => assetPair;
 
-        public static FeeEntity Create(IFee fee)
+        internal static StaticFeeEntity Create(IStaticFee fee)
         {
             string id = fee.Id ?? Guid.NewGuid().ToString();
-            
-            return new FeeEntity
+
+            return new StaticFeeEntity
             {
                 PartitionKey = GeneratePartitionKey(),
                 RowKey = GenerateRowKey(id),
                 Id = id,
-                Volume = fee.Volume,
+                AssetPair = fee.AssetPair,
                 MakerFee = fee.MakerFee,
                 TakerFee = fee.TakerFee,
                 MakerFeeType = fee.MakerFeeType,

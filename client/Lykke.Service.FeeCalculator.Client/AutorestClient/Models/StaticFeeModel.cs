@@ -26,8 +26,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         /// 'Absolute', 'Relative'</param>
         /// <param name="takerFeeType">Possible values include: 'Unknown',
         /// 'Absolute', 'Relative'</param>
-        public StaticFeeModel(decimal makerFee, decimal takerFee, FeeType makerFeeType, FeeType takerFeeType, decimal makerFeeModificator, string assetPair = default(string))
+        public StaticFeeModel(decimal makerFee, decimal takerFee, FeeType makerFeeType, FeeType takerFeeType, decimal makerFeeModificator, string id = default(string), string assetPair = default(string))
         {
+            Id = id;
             AssetPair = assetPair;
             MakerFee = makerFee;
             TakerFee = takerFee;
@@ -41,6 +42,11 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         /// An initialization method that performs custom operations like setting defaults
         /// </summary>
         partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Id")]
+        public string Id { get; set; }
 
         /// <summary>
         /// </summary>

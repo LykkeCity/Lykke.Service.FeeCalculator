@@ -24,8 +24,9 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         /// </summary>
         /// <param name="type">Possible values include: 'Unknown', 'Absolute',
         /// 'Relative'</param>
-        public CashoutFee(double size, FeeType type, string assetId = default(string))
+        public CashoutFee(double size, FeeType type, string id = default(string), string assetId = default(string))
         {
+            Id = id;
             AssetId = assetId;
             Size = size;
             Type = type;
@@ -36,6 +37,11 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         /// An initialization method that performs custom operations like setting defaults
         /// </summary>
         partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Id")]
+        public string Id { get; set; }
 
         /// <summary>
         /// </summary>

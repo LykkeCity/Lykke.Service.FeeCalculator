@@ -22,11 +22,18 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         /// <summary>
         /// Initializes a new instance of the StaticFeeModel class.
         /// </summary>
-        public StaticFeeModel(decimal makerFee, decimal takerFee, string assetPair = default(string))
+        /// <param name="makerFeeType">Possible values include: 'Unknown',
+        /// 'Absolute', 'Relative'</param>
+        /// <param name="takerFeeType">Possible values include: 'Unknown',
+        /// 'Absolute', 'Relative'</param>
+        public StaticFeeModel(decimal makerFee, decimal takerFee, FeeType makerFeeType, FeeType takerFeeType, decimal makerFeeModificator, string assetPair = default(string))
         {
             AssetPair = assetPair;
             MakerFee = makerFee;
             TakerFee = takerFee;
+            MakerFeeType = makerFeeType;
+            TakerFeeType = takerFeeType;
+            MakerFeeModificator = makerFeeModificator;
             CustomInit();
         }
 
@@ -51,6 +58,25 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         public decimal TakerFee { get; set; }
 
         /// <summary>
+        /// Gets or sets possible values include: 'Unknown', 'Absolute',
+        /// 'Relative'
+        /// </summary>
+        [JsonProperty(PropertyName = "MakerFeeType")]
+        public FeeType MakerFeeType { get; set; }
+
+        /// <summary>
+        /// Gets or sets possible values include: 'Unknown', 'Absolute',
+        /// 'Relative'
+        /// </summary>
+        [JsonProperty(PropertyName = "TakerFeeType")]
+        public FeeType TakerFeeType { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "MakerFeeModificator")]
+        public decimal MakerFeeModificator { get; set; }
+
+        /// <summary>
         /// Validate the object.
         /// </summary>
         /// <exception cref="Microsoft.Rest.ValidationException">
@@ -58,7 +84,6 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         /// </exception>
         public virtual void Validate()
         {
-            //Nothing to validate
         }
     }
 }

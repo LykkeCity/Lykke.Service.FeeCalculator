@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Lykke.Service.FeeCalculator.Core.Domain.CashoutFee;
 
 namespace Lykke.Service.FeeCalculator.Core.Services
 {
     public interface ICashoutFeesService
     {
-        Task<ICashoutFee[]> GetAllAsync();
+        Task<IReadOnlyCollection<ICashoutFee>> GetAllAsync();
         Task<ICashoutFee> GetAsync(string assetId);
         Task AddAsync(ICashoutFee fee);
         Task DeleteAsync(string id);

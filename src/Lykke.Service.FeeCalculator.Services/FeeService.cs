@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Lykke.Service.FeeCalculator.Core.Domain.Fees;
@@ -28,7 +29,7 @@ namespace Lykke.Service.FeeCalculator.Services
             _feesKey = $"{cacheInstanceName}:fees";
         }
         
-        public async Task<IFee[]> GetAllAsync()
+        public async Task<IReadOnlyCollection<IFee>> GetAllAsync()
         {
             var serializedValues = await _db.SortedSetRangeByValueAsync(_feesKey);
             var fees =  serializedValues.Select(item => ((byte[])item).DeserializeFee<CachedFee>()).Select(Fee.Create).ToList();

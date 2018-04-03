@@ -26,14 +26,14 @@ namespace Lykke.Service.FeeCalculator.AzureRepositories.StaticFee
             return await _tableStorage.GetDataAsync(StaticFeeEntity.GeneratePartitionKey());
         }
 
-        public async Task DeleteFeeAsync(string id)
+        public Task DeleteFeeAsync(string id)
         {
-            await _tableStorage.DeleteIfExistAsync(StaticFeeEntity.GeneratePartitionKey(), StaticFeeEntity.GenerateRowKey(id));
+            return _tableStorage.DeleteIfExistAsync(StaticFeeEntity.GeneratePartitionKey(), StaticFeeEntity.GenerateRowKey(id));
         }
 
-        public async Task DeleteOldFeeAsync(string assetPair)
+        public Task DeleteOldFeeAsync(string assetPair)
         {
-            await _tableStorage.DeleteIfExistAsync(StaticFeeEntity.GeneratePartitionKey(), StaticFeeEntity.GenerateOldRowKey(assetPair));
+            return _tableStorage.DeleteIfExistAsync(StaticFeeEntity.GeneratePartitionKey(), StaticFeeEntity.GenerateOldRowKey(assetPair));
         }
     }
 }

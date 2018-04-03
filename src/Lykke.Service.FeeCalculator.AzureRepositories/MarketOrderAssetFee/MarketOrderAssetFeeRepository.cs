@@ -26,9 +26,9 @@ namespace Lykke.Service.FeeCalculator.AzureRepositories.MarketOrderAssetFee
             return entity;
         }
 
-        public async Task DeleteAsync(string id)
+        public Task DeleteAsync(string id)
         {
-            await _tableStorage.DeleteIfExistAsync(MarketOrderAssetFeeEntity.GeneratePartitionKey(), MarketOrderAssetFeeEntity.GenerateRowKey(id));
+            return _tableStorage.DeleteIfExistAsync(MarketOrderAssetFeeEntity.GeneratePartitionKey(), MarketOrderAssetFeeEntity.GenerateRowKey(id));
         }
     }
 }

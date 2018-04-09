@@ -26,9 +26,9 @@ namespace Lykke.Service.FeeCalculator.AzureRepositories.CashoutFee
             return entity;
         }
 
-        public async Task DeleteAsync(string assetId)
+        public Task DeleteAsync(string assetId)
         {
-            await _tableStorage.DeleteIfExistAsync(CashoutFeeEntity.GeneratePartitionKey(), CashoutFeeEntity.GenerateRowKey(assetId));
+            return _tableStorage.DeleteIfExistAsync(CashoutFeeEntity.GeneratePartitionKey(), CashoutFeeEntity.GenerateRowKey(assetId));
         }
     }
 }

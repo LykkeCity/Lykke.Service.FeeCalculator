@@ -32,7 +32,7 @@ namespace Lykke.Service.FeeCalculator.Services
             _feesKey = $"{cacheInstanceName}:marketOrderAssetFees";
         }
 
-        public async Task<IMarketOrderAssetFee[]> GetAllAsync()
+        public async Task<IReadOnlyCollection<IMarketOrderAssetFee>> GetAllAsync()
         {
             var serializedValues = await _db.SortedSetRangeByValueAsync(_feesKey);
             var fees = serializedValues.Select(item => ((byte[]) item).DeserializeFee<CachedMarketOrderAssetFee>()).Select(MarketOrderAssetFee.Create)
@@ -48,7 +48,7 @@ namespace Lykke.Service.FeeCalculator.Services
 
             await _db.SortedSetAddAsync(_feesKey, entites);
 
-            return fees.ToArray();
+            return fees;
         }
 
         public async Task<IMarketOrderAssetFee> GetAsync(string assetId)

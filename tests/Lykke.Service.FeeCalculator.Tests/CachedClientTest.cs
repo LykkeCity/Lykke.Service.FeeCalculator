@@ -27,7 +27,9 @@ namespace Lykke.Service.FeeCalculator.Tests
         {
             await SetupMarketOrdersFee();
 
+#pragma warning disable 618
             await _client.ReceivedWithAnyArgs(1).GetMarketOrderFees("", "", "", OrderAction.Buy);
+#pragma warning restore 618
         }
 
 
@@ -50,7 +52,9 @@ namespace Lykke.Service.FeeCalculator.Tests
 
             await SetupMarketOrdersFee();
 
+#pragma warning disable 618
             await _client.ReceivedWithAnyArgs(2).GetMarketOrderFees("", "", "", OrderAction.Buy);
+#pragma warning restore 618
         }
 
 
@@ -96,30 +100,52 @@ namespace Lykke.Service.FeeCalculator.Tests
 
 
         [Fact]
-        public async Task ShouldCacheCashOut()
+        public async Task ShouldCacheCashOuts()
         {
-            await SetupCachOut();
+            await SetupCashOuts();
 
             await _client.ReceivedWithAnyArgs(1).GetCashoutFeesAsync("");
         }
 
         [Fact]
-        public async Task ShouldRefreshCacheCashOut()
+        public async Task ShouldRefreshCacheCashOuts()
         {
-            await SetupCachOut();
+            await SetupCashOuts();
 
             await Task.Delay(TimeSpan.FromSeconds(1.5));
 
-            await SetupCachOut();
+            await SetupCashOuts();
 
             await _client.ReceivedWithAnyArgs(2).GetCashoutFeesAsync("");
+        }
+
+        [Fact]
+        public async Task ShouldCacheCashOut()
+        {
+            await SetupCashOut();
+
+            await _client.ReceivedWithAnyArgs(1).GetCashoutFeeAsync("");
+        }
+
+        [Fact]
+        public async Task ShouldRefreshCacheCashOut()
+        {
+            await SetupCashOut();
+
+            await Task.Delay(TimeSpan.FromSeconds(1.5));
+
+            await SetupCashOut();
+
+            await _client.ReceivedWithAnyArgs(2).GetCashoutFeeAsync("");
         }
 
 
         private async Task SetupMarketOrdersFee()
         {
             var fee = new MarketOrderFeeModel();
+#pragma warning disable 618
             _client.GetMarketOrderFees("", "", "", OrderAction.Buy).ReturnsForAnyArgs(info => Task.FromResult(fee));
+#pragma warning restore 618
             for (var i = 0; i < 10; i++)
             {
                 var cached = await _cached.GetMarketOrderFees("", "", "", OrderAction.Buy);
@@ -152,13 +178,24 @@ namespace Lykke.Service.FeeCalculator.Tests
         }
 
 
-        private async Task SetupCachOut()
+        private async Task SetupCashOuts()
         {
             IReadOnlyCollection<CashoutFee> fee = new List<CashoutFee> { new CashoutFee() };
             _client.GetCashoutFeesAsync("").ReturnsForAnyArgs(info => Task.FromResult(fee));
             for (var i = 0; i < 10; i++)
             {
                 var cached = await _cached.GetCashoutFeesAsync("");
+                Assert.Equal(fee, cached);
+            }
+        }
+
+        private async Task SetupCashOut()
+        {
+            var fee = new CashoutFee();
+            _client.GetCashoutFeeAsync("").ReturnsForAnyArgs(info => Task.FromResult(fee));
+            for (var i = 0; i < 10; i++)
+            {
+                var cached = await _cached.GetCashoutFeeAsync("");
                 Assert.Equal(fee, cached);
             }
         }

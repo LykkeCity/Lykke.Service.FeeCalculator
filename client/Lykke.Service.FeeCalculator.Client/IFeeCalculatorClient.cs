@@ -46,7 +46,7 @@ namespace Lykke.Service.FeeCalculator.Client
         /// <param name="assetId"></param>
         /// <returns></returns>
         Task<CashoutFee> GetCashoutFeeAsync(string assetId);
-        
+
         /// <summary>
         /// Adds cashout fee
         /// </summary>

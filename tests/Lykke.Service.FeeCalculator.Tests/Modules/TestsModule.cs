@@ -10,8 +10,10 @@ using Lykke.Service.FeeCalculator.Core.Domain.MarketOrderAssetFee;
 using Lykke.Service.FeeCalculator.Core.Services;
 using Lykke.Service.FeeCalculator.Services;
 using Lykke.Service.TradeVolumes.Client;
+using NSubstitute;
 using StackExchange.Redis;
 using NSubstitute;
+
 
 namespace Lykke.Service.FeeCalculator.Tests.Modules
 {
@@ -30,6 +32,7 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
             
             var mockTradeVolumesClient = Substitute.For<ITradeVolumesClient>();
             
+
             builder.RegisterInstance(mockTradeVolumesClient)
                 .SingleInstance();
             
@@ -76,7 +79,7 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
 
             var mockDatabase = Substitute.For<IDatabase>();
             var mockMultiplexer = Substitute.For<IConnectionMultiplexer>();
-            mockMultiplexer.GetDatabase(Arg.Any<int>(), Arg.Any<object>()).Returns(mockDatabase);
+            mockMultiplexer.GetDatabase(0, null).ReturnsForAnyArgs(mockDatabase);
             
             builder.RegisterInstance(mockMultiplexer)
                 .As<IConnectionMultiplexer>()

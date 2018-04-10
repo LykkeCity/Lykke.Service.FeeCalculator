@@ -200,7 +200,7 @@ namespace Lykke.Service.FeeCalculator.Client
                 {
                     return GetAllCashOuts;
                 }
-                return assetId;
+                return "set-cashout-" + assetId;
             }
 
             public static object GetKeyForCashOut(string assetId)
@@ -209,7 +209,7 @@ namespace Lykke.Service.FeeCalculator.Client
                 {
                     return GetCashOut;
                 }
-                return assetId;
+                return "cashout-" + assetId;
             }
 
             public static object GetKeyForWithdrawalFee(string assetId, string countryCode)

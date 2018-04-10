@@ -10,7 +10,6 @@ using Lykke.Service.FeeCalculator.Core.Domain.MarketOrderAssetFee;
 using Lykke.Service.FeeCalculator.Core.Services;
 using Lykke.Service.FeeCalculator.Services;
 using Lykke.Service.TradeVolumes.Client;
-using Moq;
 using NSubstitute;
 using StackExchange.Redis;
 

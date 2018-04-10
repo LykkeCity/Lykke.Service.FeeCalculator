@@ -164,7 +164,7 @@ namespace Lykke.Service.FeeCalculator.Client
         {
             private const string GetAllCashOuts = "GET_ALL_CASHOUTS";
             private const string GetCashOut = "GET_CASHOUT";
-  
+
             public static object GetKeyForMarketOrder(string clientId, string assetPair, string assetId, OrderAction orderAction)
             {
                 return "market" + clientId + assetPair + assetId + orderAction;
@@ -186,16 +186,16 @@ namespace Lykke.Service.FeeCalculator.Client
                 {
                     return GetAllCashOuts;
                 }
-                return assetId;
-            }    
-            
+                return "set-cashout-" + assetId;
+            }
+
             public static object GetKeyForCashOut(string assetId)
             {
                 if (assetId == null)
                 {
                     return GetCashOut;
                 }
-                return assetId;
+                return "cashout-" + assetId;
             }
         }
     }

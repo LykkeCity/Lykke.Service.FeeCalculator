@@ -7,6 +7,8 @@
 namespace Lykke.Service.FeeCalculator.AutorestClient
 {
     using Models;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -582,6 +584,54 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             public static async Task<object> GetWithdrawalFeeAsync(this IFeeCalculatorAPI operations, string assetId, string countryCode, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.GetWithdrawalFeeWithHttpMessagesAsync(assetId, countryCode, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            public static object GetWithdrawalFees(this IFeeCalculatorAPI operations)
+            {
+                return operations.GetWithdrawalFeesAsync().GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<object> GetWithdrawalFeesAsync(this IFeeCalculatorAPI operations, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetWithdrawalFeesWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='model'>
+            /// </param>
+            public static ErrorResponse SaveWithdrawalFee(this IFeeCalculatorAPI operations, IList<WithdrawalFeeModel> model = default(IList<WithdrawalFeeModel>))
+            {
+                return operations.SaveWithdrawalFeeAsync(model).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='model'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<ErrorResponse> SaveWithdrawalFeeAsync(this IFeeCalculatorAPI operations, IList<WithdrawalFeeModel> model = default(IList<WithdrawalFeeModel>), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.SaveWithdrawalFeeWithHttpMessagesAsync(model, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

@@ -109,18 +109,37 @@ namespace Lykke.Service.FeeCalculator.Client
             return _client.DeleteCashoutFeeAsync(id);
         }
 
-        public async Task<WithdrawalFeeModel> GetWithdrawalFeeAsync(string assetId, string countryCode)
+        public async Task<IReadOnlyCollection<WithdrawalFeeModel>> GetWithdrawalFeesAsync()
+        {
+            var key = KeyGenerator.GetKeyForWithdrawalFees();
+            if (_cache.TryGetValue<IReadOnlyList<WithdrawalFeeModel>>(key, out var fees))
+            {
+                return fees;
+            }
+
+            var newCashOut = await _client.GetWithdrawalFeesAsync();
+
+            _cache.Set(key, newCashOut, _expirationPeriod);
+            return newCashOut;
+        }
+
+        public async Task<WithdrawalFee> GetWithdrawalFeeAsync(string assetId, string countryCode)
         {
             var key = KeyGenerator.GetKeyForWithdrawalFee(assetId, countryCode);
-            if (_cache.TryGetValue<WithdrawalFeeModel>(key, out var withdrawalFee))
+            if (_cache.TryGetValue<WithdrawalFee>(key, out var withdrawalFee))
             {
                 return withdrawalFee;
             }
 
-            var newwithdrawalFee = await _client.GetWithdrawalFeeAsync(assetId, countryCode);
+            var newWithdrawalFee = await _client.GetWithdrawalFeeAsync(assetId, countryCode);
 
-            _cache.Set(key, newwithdrawalFee, _expirationPeriod);
-            return newwithdrawalFee;
+            _cache.Set(key, newWithdrawalFee, _expirationPeriod);
+            return newWithdrawalFee;
+        }
+
+        public Task SaveWithdrawalFeeAsync(List<WithdrawalFeeModel> model)
+        {
+            return _client.SaveWithdrawalFeeAsync(model);
         }
 
         public Task<BankCardsFeeModel> GetBankCardFees()
@@ -173,7 +192,6 @@ namespace Lykke.Service.FeeCalculator.Client
             return _client.DeleteMarketOrderAssetFeeAsync(id);
         }
 
-
         private static class KeyGenerator
         {
             private const string GetAllCashOuts = "GET_ALL_CASHOUTS";
@@ -212,10 +230,16 @@ namespace Lykke.Service.FeeCalculator.Client
                 return "cashout-" + assetId;
             }
 
+            public static object GetKeyForWithdrawalFees()
+            {
+                return "set-withdrawal";
+            }
+
             public static object GetKeyForWithdrawalFee(string assetId, string countryCode)
             {
                 return assetId + countryCode;
             }
+
         }
     }
 }

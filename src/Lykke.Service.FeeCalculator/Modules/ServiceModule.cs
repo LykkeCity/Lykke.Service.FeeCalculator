@@ -9,9 +9,11 @@ using Lykke.Service.FeeCalculator.AzureRepositories.CashoutFee;
 using Lykke.Service.FeeCalculator.AzureRepositories.Fee;
 using Lykke.Service.FeeCalculator.AzureRepositories.MarketOrderAssetFee;
 using Lykke.Service.FeeCalculator.AzureRepositories.StaticFee;
+using Lykke.Service.FeeCalculator.AzureRepositories.WithdrawalFee;
 using Lykke.Service.FeeCalculator.Core.Domain.CashoutFee;
 using Lykke.Service.FeeCalculator.Core.Domain.Fees;
 using Lykke.Service.FeeCalculator.Core.Domain.MarketOrderAssetFee;
+using Lykke.Service.FeeCalculator.Core.Domain.WithdrawalFee;
 using Lykke.Service.FeeCalculator.Core.Services;
 using Lykke.Service.FeeCalculator.Core.Settings;
 using Lykke.Service.FeeCalculator.Services;
@@ -132,7 +134,19 @@ namespace Lykke.Service.FeeCalculator.Modules
                 .WithParameter(TypedParameter.From(_settings.CurrentValue.FeeCalculatorService.Cache.InstanceName))
                 .WithParameter(TypedParameter.From(_settings.CurrentValue.FeeCalculatorService.CashoutFees))
                 .SingleInstance();
-            
+
+            builder.RegisterInstance<IWithdrawalFeesRepository>(
+                new WithdrawalFeesRepository(AzureTableStorage<WithdrawalFeeEntity>.Create(
+                    _settings.ConnectionString(x => x.FeeCalculatorService.Db.DataConnString), "WithdrawalFees", _log))
+            ).SingleInstance();
+
+            builder.RegisterType<WithdrawalFeesService>()
+                .As<IWithdrawalFeesService>()
+                .WithParameter(TypedParameter.From(_settings.CurrentValue.FeeCalculatorService.Cache.InstanceName))
+                .WithParameter(TypedParameter.From(_settings.CurrentValue.FeeCalculatorService.WithdrawalFees))
+                .SingleInstance();
+
+
             builder.RegisterTradeVolumesClient(_settings.CurrentValue.TradeVolumesServiceClient.ServiceUrl, _log);
             
             _services.RegisterAssetsClient(AssetServiceSettings.Create(

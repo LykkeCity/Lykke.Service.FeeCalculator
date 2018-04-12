@@ -186,7 +186,7 @@ namespace Lykke.Service.FeeCalculator.Tests
 
         private async Task SetupWithdrawalFee()
         {
-            var fee = new WithdrawalFeeModel();
+            var fee = new WithdrawalFee();
             _client.GetWithdrawalFeeAsync("USD", "RUB").ReturnsForAnyArgs(info => Task.FromResult(fee));
             for (var i = 0; i < 10; i++)
             {
@@ -194,8 +194,6 @@ namespace Lykke.Service.FeeCalculator.Tests
                 Assert.Equal(fee, cached);
             }
         }
-
-
 
         private async Task SetupLimitOrdersFee()
         {

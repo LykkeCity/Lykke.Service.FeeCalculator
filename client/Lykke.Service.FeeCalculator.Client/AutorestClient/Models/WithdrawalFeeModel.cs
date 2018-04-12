@@ -7,6 +7,8 @@
 namespace Lykke.Service.FeeCalculator.AutorestClient.Models
 {
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Linq;
 
     public partial class WithdrawalFeeModel
@@ -22,13 +24,18 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         /// <summary>
         /// Initializes a new instance of the WithdrawalFeeModel class.
         /// </summary>
-        /// <param name="paymentSystem">Possible values include: 'Unknown',
-        /// 'Sepa', 'Swift', 'Swiss'</param>
-        public WithdrawalFeeModel(double size, PaymentSystemType paymentSystem, string assetId = default(string))
+        /// <param name="paymentSystemForSelectedCountries">Possible values
+        /// include: 'Unknown', 'Sepa', 'Swift', 'Swiss'</param>
+        /// <param name="paymentSystemForOtherCountries">Possible values
+        /// include: 'Unknown', 'Sepa', 'Swift', 'Swiss'</param>
+        public WithdrawalFeeModel(double sizeForSelectedCountries, double sizeForOtherCountries, PaymentSystemType paymentSystemForSelectedCountries, PaymentSystemType paymentSystemForOtherCountries, string assetId = default(string), IList<string> countries = default(IList<string>))
         {
             AssetId = assetId;
-            Size = size;
-            PaymentSystem = paymentSystem;
+            SizeForSelectedCountries = sizeForSelectedCountries;
+            SizeForOtherCountries = sizeForOtherCountries;
+            Countries = countries;
+            PaymentSystemForSelectedCountries = paymentSystemForSelectedCountries;
+            PaymentSystemForOtherCountries = paymentSystemForOtherCountries;
             CustomInit();
         }
 
@@ -44,15 +51,32 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "Size")]
-        public double Size { get; set; }
+        [JsonProperty(PropertyName = "SizeForSelectedCountries")]
+        public double SizeForSelectedCountries { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "SizeForOtherCountries")]
+        public double SizeForOtherCountries { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Countries")]
+        public IList<string> Countries { get; set; }
 
         /// <summary>
         /// Gets or sets possible values include: 'Unknown', 'Sepa', 'Swift',
         /// 'Swiss'
         /// </summary>
-        [JsonProperty(PropertyName = "PaymentSystem")]
-        public PaymentSystemType PaymentSystem { get; set; }
+        [JsonProperty(PropertyName = "PaymentSystemForSelectedCountries")]
+        public PaymentSystemType PaymentSystemForSelectedCountries { get; set; }
+
+        /// <summary>
+        /// Gets or sets possible values include: 'Unknown', 'Sepa', 'Swift',
+        /// 'Swiss'
+        /// </summary>
+        [JsonProperty(PropertyName = "PaymentSystemForOtherCountries")]
+        public PaymentSystemType PaymentSystemForOtherCountries { get; set; }
 
         /// <summary>
         /// Validate the object.

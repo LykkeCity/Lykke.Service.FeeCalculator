@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings
+namespace Lykke.Service.FeeCalculator.Core.Domain.WithdrawalFee
 {
     public enum PaymentSystemType
     {

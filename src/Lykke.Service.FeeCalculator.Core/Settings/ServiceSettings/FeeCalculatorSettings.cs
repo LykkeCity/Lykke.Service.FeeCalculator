@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Lykke.Service.FeeCalculator.Core.Domain.CashoutFee;
 using Lykke.Service.FeeCalculator.Core.Domain.MarketOrderAssetFee;
+using Lykke.Service.FeeCalculator.Core.Domain.WithdrawalFee;
 using Lykke.SettingsReader.Attributes;
 
 namespace Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings
@@ -13,7 +14,7 @@ namespace Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings
         public IReadOnlyCollection<CashoutFee> CashoutFees { get; set; }
         [Optional]
         public IReadOnlyCollection<MarketOrderAssetFee> MarketOrderFees { get; set; }
-        public List<WithdrawalFee> WithdrawalFees { get; set; }
+        public IReadOnlyCollection<WithdrawalFee> WithdrawalFees { get; set; }
         public BankCardSettings BankCard { get; set; }
     }
 }

@@ -61,7 +61,7 @@ namespace Lykke.Service.FeeCalculator.Services
             return await Task.FromResult((IWithdrawalFee)null);
         }
 
-        public async Task SaveAsync(List<WithdrawalFeeModel> fee)
+        public async Task SaveAsync(WithdrawalFeeModel fee)
         {
             await Task.FromResult(0);
 

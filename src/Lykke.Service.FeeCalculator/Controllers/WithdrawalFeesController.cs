@@ -90,7 +90,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
         [SwaggerOperation("SaveWithdrawalFee")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> SaveWithdrawalFee([FromBody]List<WithdrawalFeeModel> model)
+        public async Task<IActionResult> SaveWithdrawalFee([FromBody]WithdrawalFeeModel model)
         {
             await Task.FromResult(0);
 

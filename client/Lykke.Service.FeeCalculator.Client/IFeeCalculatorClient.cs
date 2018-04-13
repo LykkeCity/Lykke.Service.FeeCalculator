@@ -80,7 +80,7 @@ namespace Lykke.Service.FeeCalculator.Client
         /// </summary>
         /// <param name="model">withdrawal fee</param>
         /// <returns></returns>
-        Task SaveWithdrawalFeeAsync(List<WithdrawalFeeModel> model);
+        Task SaveWithdrawalFeeAsync(WithdrawalFeeModel model);
 
         /// <summary>
         /// Gets bank card fee

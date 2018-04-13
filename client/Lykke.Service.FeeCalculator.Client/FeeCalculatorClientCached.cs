@@ -137,7 +137,7 @@ namespace Lykke.Service.FeeCalculator.Client
             return newWithdrawalFee;
         }
 
-        public Task SaveWithdrawalFeeAsync(List<WithdrawalFeeModel> model)
+        public Task SaveWithdrawalFeeAsync(WithdrawalFeeModel model)
         {
             return _client.SaveWithdrawalFeeAsync(model);
         }

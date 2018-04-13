@@ -154,9 +154,9 @@ namespace Lykke.Service.FeeCalculator.Client
             throw new Exception(ApiError);
         }
 
-        public async Task SaveWithdrawalFeeAsync(List<WithdrawalFeeModel> model)
+        public async Task SaveWithdrawalFeeAsync(WithdrawalFeeModel model)
         {
-            var response = await _service.SaveWithdrawalFeeAsync(model);
+            var response = _service.SaveWithdrawalFeeAsync(model);
 
             if (response != null)
                 throw new Exception(response.ErrorMessage);

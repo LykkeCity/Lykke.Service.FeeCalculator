@@ -52,7 +52,7 @@ namespace Lykke.Service.FeeCalculator.Services
             return fees;
 
             */
-            return await Task.FromResult((IReadOnlyCollection<WithdrawalFeeModel>)null);
+            return await Task.FromResult(new List<WithdrawalFeeModel>());
         }
 
         public async Task<IWithdrawalFee> GetAsync(string assetId)

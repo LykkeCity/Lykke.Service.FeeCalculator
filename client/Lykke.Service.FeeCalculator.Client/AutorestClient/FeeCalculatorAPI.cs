@@ -113,7 +113,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
         /// </summary>
         private void Initialize()
         {
-            BaseUri = new System.Uri("http://localhost:5000/");
+            BaseUri = new System.Uri("http://localhost:5000");
             SerializationSettings = new JsonSerializerSettings
             {
                 Formatting = Newtonsoft.Json.Formatting.Indented,
@@ -1801,9 +1801,6 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             return _result;
         }
 
-        /// <summary>
-        /// Returns fee for the limit order
-        /// </summary>
         /// <param name='orderAction'>
         /// Possible values include: 'Buy', 'Sell'
         /// </param>
@@ -1933,7 +1930,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<MarketOrderFee>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<MoAssetFee>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -2201,6 +2198,12 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
 
             // Serialize Request
             string _requestContent = null;
+            if(model != null)
+            {
+                _requestContent = SafeJsonConvert.SerializeObject(model, SerializationSettings);
+                _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+            }
             // Send Request
             if (_shouldTrace)
             {
@@ -2215,7 +2218,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 500)
+            if ((int)_statusCode != 200 && (int)_statusCode != 400)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {

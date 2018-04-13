@@ -17,15 +17,14 @@ namespace Lykke.Service.FeeCalculator.Controllers
     public class WithdrawalFeesController : Controller
     {
         private readonly IWithdrawalFeesService _withdrawalFeesService;
-        private readonly List<WithdrawalFee> _settings;
+//        private readonly List<WithdrawalFee> _settings;
 
         public WithdrawalFeesController(
-            IWithdrawalFeesService withdrawalFeesService,
-            List<WithdrawalFee> settings
+            IWithdrawalFeesService withdrawalFeesService
             )
         {
             _withdrawalFeesService = withdrawalFeesService;
-            _settings = settings;
+//            _settings = settings;
         }
 
         /// <summary>
@@ -50,7 +49,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
             }
 
             WithdrawalFee assetAllCountriesSetting = null;
-
+            /*
             foreach (var withdrawalFeeSetting in _settings)
             {
                 if (withdrawalFeeSetting.AssetId == assetId)
@@ -68,7 +67,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
                     }
                 }
             }
-
+            */
             if (assetAllCountriesSetting == null)
             {
                 return BadRequest($"No settings found for assetId: {assetId} and country: {countryCode}");

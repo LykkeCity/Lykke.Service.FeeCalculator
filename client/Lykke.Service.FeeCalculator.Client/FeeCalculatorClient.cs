@@ -162,7 +162,7 @@ namespace Lykke.Service.FeeCalculator.Client
 
         public async Task SaveWithdrawalFeeAsync(WithdrawalFeeModel model)
         {
-            var response = _service.SaveWithdrawalFeeAsync(model);
+            var response = await _service.SaveWithdrawalFeeAsync(model);
 
             if (response != null)
                 throw new Exception(response.ErrorMessage);

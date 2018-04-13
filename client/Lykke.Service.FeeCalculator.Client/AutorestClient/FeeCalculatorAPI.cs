@@ -2853,17 +2853,11 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ErrorResponse>> SaveWithdrawalFeeWithHttpMessagesAsync(IList<WithdrawalFeeModel> model = default(IList<WithdrawalFeeModel>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ErrorResponse>> SaveWithdrawalFeeWithHttpMessagesAsync(WithdrawalFeeModel model = default(WithdrawalFeeModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (model != null)
             {
-                foreach (var element in model)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
+                model.Validate();
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;

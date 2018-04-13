@@ -7,8 +7,6 @@
 namespace Lykke.Service.FeeCalculator.AutorestClient
 {
     using Models;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -616,7 +614,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             /// </param>
             /// <param name='model'>
             /// </param>
-            public static ErrorResponse SaveWithdrawalFee(this IFeeCalculatorAPI operations, IList<WithdrawalFeeModel> model = default(IList<WithdrawalFeeModel>))
+            public static ErrorResponse SaveWithdrawalFee(this IFeeCalculatorAPI operations, WithdrawalFeeModel model = default(WithdrawalFeeModel))
             {
                 return operations.SaveWithdrawalFeeAsync(model).GetAwaiter().GetResult();
             }
@@ -629,7 +627,7 @@ namespace Lykke.Service.FeeCalculator.AutorestClient
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ErrorResponse> SaveWithdrawalFeeAsync(this IFeeCalculatorAPI operations, IList<WithdrawalFeeModel> model = default(IList<WithdrawalFeeModel>), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ErrorResponse> SaveWithdrawalFeeAsync(this IFeeCalculatorAPI operations, WithdrawalFeeModel model = default(WithdrawalFeeModel), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.SaveWithdrawalFeeWithHttpMessagesAsync(model, null, cancellationToken).ConfigureAwait(false))
                 {

@@ -9,6 +9,6 @@ namespace Lykke.Service.FeeCalculator.Core.Services
     {
         Task<IReadOnlyCollection<WithdrawalFeeModel>> GetAllAsync();
         Task<IWithdrawalFee> GetAsync(string assetId);
-        Task SaveAsync(List<WithdrawalFeeModel> fee);
+        Task SaveAsync(WithdrawalFeeModel fee);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common;
 using JetBrains.Annotations;
 using Lykke.Service.FeeCalculator.Core.Domain.CashoutFee;
 using Lykke.Service.FeeCalculator.Core.Domain.WithdrawalFee;
@@ -15,7 +16,6 @@ namespace Lykke.Service.FeeCalculator.Services
     public class WithdrawalFeesService : IWithdrawalFeesService
     {
         private readonly IWithdrawalFeesRepository _repository;
-        private readonly IReadOnlyCollection<WithdrawalFee> _feesSettings;
         private readonly IDatabase _db;
         private readonly string _feesKey;
 
@@ -23,66 +23,45 @@ namespace Lykke.Service.FeeCalculator.Services
         public WithdrawalFeesService(
             IConnectionMultiplexer connectionMultiplexer,
             IWithdrawalFeesRepository repository,
-            IReadOnlyCollection<WithdrawalFee> feesSettings,
             string cacheInstanceName
         )
         {
             _db = connectionMultiplexer.GetDatabase();
             _repository = repository;
-            _feesSettings = feesSettings;
             _feesKey = $"{cacheInstanceName}:withdrawalFees";
         }
 
-        public async Task<IReadOnlyCollection<WithdrawalFeeModel>> GetAllAsync()
+        public async Task<IEnumerable<IWithdrawalFeeModel>> GetAllAsync()
         {
+            var serializedValues = await _db.HashGetAllAsync(_feesKey);
+            var feesFromCache = serializedValues.Select(_ => _.Value.ToString().DeserializeJson<WithdrawalFeeModel>()).ToList();
+            if (feesFromCache.Count != 0)
+            {
+                return feesFromCache.ToArray();
+            }
 
-            /*
-            var serializedValues = await _db.SortedSetRangeByValueAsync(_feesKey);
-            var fees = serializedValues.Select(item => ((byte[]) item).DeserializeFee<CachedCashoutFee>()).Select(CashoutFee.Create).ToList();
-
-            if (fees.Count != 0)
-                return fees.ToArray();
-
-            fees = (await _repository.GetAllAsync()).Select(CashoutFee.Create).ToList();
-            var entites = fees
-                .Select(fee => new SortedSetEntry(fee.SerializeFee(baseFee => new CachedCashoutFee(fee)), 0))
-                .ToArray();
-
-            await _db.SortedSetAddAsync(_feesKey, entites);
+            var fees = await _repository.GetAllAsync();
+            await _db.HashSetAsync(_feesKey, fees.Select(_ => new HashEntry(_.AssetId, _.ToJson())).ToArray());
             return fees;
-
-            */
-            return await Task.FromResult(new List<WithdrawalFeeModel>());
         }
 
-        public async Task<IWithdrawalFee> GetAsync(string assetId)
+        public async Task<WithdrawalFeeModel> GetAsync(string assetId)
         {
-            //return (await GetAllAsync()).FirstOrDefault(item => item.AssetId == assetId);
-            return await Task.FromResult((IWithdrawalFee)null);
+            var serializedFee = await _db.HashGetAsync(_feesKey, assetId);
+            WithdrawalFeeModel model = serializedFee.ToString().DeserializeJson<WithdrawalFeeModel>();
+            return model;
         }
 
         public async Task SaveAsync(WithdrawalFeeModel fee)
         {
-            await Task.FromResult(0);
+            await _repository.SaveAsync(fee);
 
-            /*
-            var item = await _repository.SaveAsync(fee);
-            var value = item.SerializeFee(baseFee => new CachedCashoutFee(item));
+            var he = new HashEntry(fee.AssetId, fee.ToJson());
+            await _db.HashSetAsync(_feesKey, new HashEntry[] { he });
 
-            await _db.SortedSetAddAsync(_feesKey, new[] {new SortedSetEntry(value, 0)});
-            */
-            return;
+            var vals = _db.HashValuesAsync(_feesKey);
         }
 
-        public async Task DeleteAsync(string id)
-        {
-            /*
-            await _repository.DeleteAsync(id);
-            await _db.DeleteFromCacheByIdAsync(_feesKey, id);
-            */
-
-            await Task.FromResult(0);
-        }
 
         public async Task InitAsync()
         {

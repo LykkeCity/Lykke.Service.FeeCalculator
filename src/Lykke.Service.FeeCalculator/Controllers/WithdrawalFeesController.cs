@@ -37,7 +37,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
         [SwaggerOperation("GetWithdrawalFee")]
         [ProducesResponseType(typeof(WithdrawalFee), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public IActionResult GetWithdrawalFee(string assetId, string countryCode)
+        public async Task<IActionResult> GetWithdrawalFee(string assetId, string countryCode)
         {
             if (string.IsNullOrWhiteSpace(assetId))
             {
@@ -48,32 +48,20 @@ namespace Lykke.Service.FeeCalculator.Controllers
                 return BadRequest("No country code defined");
             }
 
-            WithdrawalFee assetAllCountriesSetting = null;
-            /*
-            foreach (var withdrawalFeeSetting in _settings)
-            {
-                if (withdrawalFeeSetting.AssetId == assetId)
-                {
-                    if (withdrawalFeeSetting.Countries != null)
-                    {
-                        if (withdrawalFeeSetting.Countries.Contains(countryCode))
-                        {
-                            return Ok(new WithdrawalFee { AssetId = assetId, Size = withdrawalFeeSetting.Size, PaymentSystem = withdrawalFeeSetting.PaymentSystem });
-                        }
-                    }
-                    else
-                    {
-                        assetAllCountriesSetting = withdrawalFeeSetting;
-                    }
-                }
-            }
-            */
-            if (assetAllCountriesSetting == null)
+            var model = await _withdrawalFeesService.GetAsync(assetId);
+            if (model == null)
             {
                 return BadRequest($"No settings found for assetId: {assetId} and country: {countryCode}");
             }
 
-            return Ok(new WithdrawalFee { AssetId = assetId, Size = assetAllCountriesSetting.Size, PaymentSystem = assetAllCountriesSetting.PaymentSystem });
+            if (model.Countries != null && model.Countries.Contains(countryCode))
+            {
+                return Ok(new WithdrawalFee { AssetId = assetId, Size = model.SizeForSelectedCountries, PaymentSystem = model.PaymentSystemForSelectedCountries });
+            }
+            else
+            {
+                return Ok(new WithdrawalFee { AssetId = assetId, Size = model.SizeForOtherCountries, PaymentSystem = model.PaymentSystemForOtherCountries});
+            }
         }
 
         [HttpGet("/WithdrawalFees")]

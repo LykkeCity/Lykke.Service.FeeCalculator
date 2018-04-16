@@ -7,8 +7,8 @@ namespace Lykke.Service.FeeCalculator.Core.Services
 {
     public interface IWithdrawalFeesService
     {
-        Task<IReadOnlyCollection<WithdrawalFeeModel>> GetAllAsync();
-        Task<IWithdrawalFee> GetAsync(string assetId);
+        Task<IEnumerable<IWithdrawalFeeModel>> GetAllAsync();
+        Task<WithdrawalFeeModel> GetAsync(string assetId);
         Task SaveAsync(WithdrawalFeeModel fee);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AzureStorage;
+using Common;
 using Lykke.Service.FeeCalculator.Core.Domain.WithdrawalFee;
 
 namespace Lykke.Service.FeeCalculator.AzureRepositories.WithdrawalFee
@@ -14,21 +16,21 @@ namespace Lykke.Service.FeeCalculator.AzureRepositories.WithdrawalFee
             _tableStorage = tableStorage;
         }
         
-        public async Task<IEnumerable<IWithdrawalFee>> GetAllAsync()
+        public async Task<IEnumerable<IWithdrawalFeeModel>> GetAllAsync()
         {
-            return await _tableStorage.GetDataAsync(WithdrawalFeeEntity.GeneratePartitionKey());
+            var models = await _tableStorage.GetDataAsync(WithdrawalFeeEntity.GeneratePartitionKey());
+            foreach(var model in models)
+            {
+                model.Countries = model.SerializedCountries?.DeserializeJson<IReadOnlyCollection<string>>();
+            }
+            return models;
         }
 
-        public async Task<IWithdrawalFee> SaveAsync(IWithdrawalFee fee)
+        public async Task SaveAsync(WithdrawalFeeModel fee)
         {
             var entity = WithdrawalFeeEntity.Create(fee);
             await _tableStorage.InsertOrMergeAsync(entity);
-            return entity;
         }
 
-        public Task DeleteAsync(string assetId)
-        {
-            return _tableStorage.DeleteIfExistAsync(WithdrawalFeeEntity.GeneratePartitionKey(), WithdrawalFeeEntity.GenerateRowKey(assetId));
-        }
     }
 }

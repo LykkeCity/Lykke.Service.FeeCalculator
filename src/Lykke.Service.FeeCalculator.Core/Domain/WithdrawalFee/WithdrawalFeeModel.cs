@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Lykke.Service.FeeCalculator.Core.Domain.WithdrawalFee
 {
-    public class WithdrawalFeeModel
+    public class WithdrawalFeeModel : IWithdrawalFeeModel
     {
         public string AssetId { get; set; }
 

@@ -11,7 +11,5 @@ namespace Lykke.Service.FeeCalculator.Core.Domain.WithdrawalFee
         double Size { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
         PaymentSystemType PaymentSystem { get; set; }
-        [Optional]
-        IReadOnlyCollection<string> Countries { get; set; }
     }
 }

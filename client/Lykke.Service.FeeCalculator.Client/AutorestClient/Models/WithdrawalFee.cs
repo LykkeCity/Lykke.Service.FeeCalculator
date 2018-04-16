@@ -7,8 +7,6 @@
 namespace Lykke.Service.FeeCalculator.AutorestClient.Models
 {
     using Newtonsoft.Json;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Linq;
 
     public partial class WithdrawalFee
@@ -26,12 +24,11 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         /// </summary>
         /// <param name="paymentSystem">Possible values include: 'Unknown',
         /// 'Sepa', 'Swift', 'Swiss'</param>
-        public WithdrawalFee(double size, PaymentSystemType paymentSystem, string assetId = default(string), IList<string> countries = default(IList<string>))
+        public WithdrawalFee(double size, PaymentSystemType paymentSystem, string assetId = default(string))
         {
             AssetId = assetId;
             Size = size;
             PaymentSystem = paymentSystem;
-            Countries = countries;
             CustomInit();
         }
 
@@ -56,11 +53,6 @@ namespace Lykke.Service.FeeCalculator.AutorestClient.Models
         /// </summary>
         [JsonProperty(PropertyName = "PaymentSystem")]
         public PaymentSystemType PaymentSystem { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Countries")]
-        public IList<string> Countries { get; set; }
 
         /// <summary>
         /// Validate the object.

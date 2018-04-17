@@ -48,7 +48,16 @@ namespace Lykke.Service.FeeCalculator.Services
         public async Task<WithdrawalFeeModel> GetAsync(string assetId)
         {
             var serializedFee = await _db.HashGetAsync(_feesKey, assetId);
-            WithdrawalFeeModel model = serializedFee.ToString().DeserializeJson<WithdrawalFeeModel>();
+            WithdrawalFeeModel model = serializedFee.ToString()?.DeserializeJson<WithdrawalFeeModel>();
+            if (model == null)
+            {
+                return new WithdrawalFeeModel()
+                {
+                    AssetId = assetId,
+                    PaymentSystemForOtherCountries = PaymentSystemType.Swift,
+                    SizeForOtherCountries = 0
+                };
+            }
             return model;
         }
 

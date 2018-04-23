@@ -53,14 +53,35 @@ namespace Lykke.Service.FeeCalculator.Client
         /// <param name="model">cashout fee</param>
         /// <returns></returns>
         Task AddCashoutFeeAsync(CashoutFeeModel model);
-        
+
         /// <summary>
         /// Deletes cashout fee by id
         /// </summary>
         /// <param name="id">cashout fee id</param>
         /// <returns></returns>
         Task DeleteCashoutFeeAsync(string id);
-        
+
+        /// <summary>
+        /// Gets all withdrawal fees
+        /// </summary>
+        /// <returns></returns>
+        Task<IReadOnlyCollection<WithdrawalFeeModel>> GetWithdrawalFeesAsync();
+
+        /// <summary>
+        /// Gets withdrawal fee
+        /// </summary>
+        /// <param name="assetId"></param>
+        /// <param name="countryCode"></param>
+        /// <returns></returns>
+        Task<WithdrawalFee> GetWithdrawalFeeAsync(string assetId, string countryCode);
+
+        /// <summary>
+        /// Saves withdrawal fee
+        /// </summary>
+        /// <param name="model">withdrawal fee</param>
+        /// <returns></returns>
+        Task SaveWithdrawalFeeAsync(WithdrawalFeeModel model);
+
         /// <summary>
         /// Gets bank card fee
         /// </summary>

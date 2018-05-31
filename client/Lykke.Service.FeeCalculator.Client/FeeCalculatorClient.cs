@@ -4,6 +4,7 @@ using Common.Log;
 using Lykke.Service.FeeCalculator.Client.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using Common;
 using Lykke.Service.FeeCalculator.AutorestClient;
 using Lykke.Service.FeeCalculator.AutorestClient.Models;
@@ -20,7 +21,7 @@ namespace Lykke.Service.FeeCalculator.Client
         public FeeCalculatorClient(string serviceUrl, ILog log)
         {
             _log = log;
-            _service = new FeeCalculatorAPI(new Uri(serviceUrl));
+            _service = new FeeCalculatorAPI(new Uri(serviceUrl), new HttpClient());
         }
 
         public void Dispose()
@@ -193,7 +194,7 @@ namespace Lykke.Service.FeeCalculator.Client
 
                     throw new Exception(error.ErrorMessage);
                 case BankCardsFeeResponseModel result:
-                    return new BankCardsFeeModel {Percentage = result.Percentage};
+                    return new BankCardsFeeModel { Percentage = result.Percentage };
             }
 
             throw new Exception(ApiError);

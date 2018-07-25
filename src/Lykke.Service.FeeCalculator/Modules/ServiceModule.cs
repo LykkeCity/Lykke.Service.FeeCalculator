@@ -148,7 +148,7 @@ namespace Lykke.Service.FeeCalculator.Modules
             
             _services.RegisterAssetsClient(AssetServiceSettings.Create(
                 new Uri(_settings.CurrentValue.AssetsServiceClient.ServiceUrl),
-                feeSettings.Cache.AssetsUpdateInterval));
+                feeSettings.Cache.AssetsUpdateInterval), _log);
 
             builder.Populate(_services);
             

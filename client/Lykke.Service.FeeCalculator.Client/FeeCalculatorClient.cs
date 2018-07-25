@@ -6,12 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using Common;
+using Lykke.Common.Log;
 using Lykke.Service.FeeCalculator.AutorestClient;
 using Lykke.Service.FeeCalculator.AutorestClient.Models;
 
 namespace Lykke.Service.FeeCalculator.Client
 {
-    public class FeeCalculatorClient : IFeeCalculatorClient, IDisposable
+    public class FeeCalculatorClient : IFeeCalculatorClient
     {
         private readonly ILog _log;
         private IFeeCalculatorAPI _service;
@@ -21,6 +22,12 @@ namespace Lykke.Service.FeeCalculator.Client
         public FeeCalculatorClient(string serviceUrl, ILog log)
         {
             _log = log;
+            _service = new FeeCalculatorAPI(new Uri(serviceUrl), new HttpClient());
+        }
+
+        public FeeCalculatorClient(string serviceUrl, ILogFactory logFactory)
+        {
+            _log = logFactory.CreateLog(this);
             _service = new FeeCalculatorAPI(new Uri(serviceUrl), new HttpClient());
         }
 
@@ -171,9 +178,7 @@ namespace Lykke.Service.FeeCalculator.Client
 
             if (response is ErrorResponse error)
             {
-                await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetWithdrawalFeeAsync),
-                    $"assetId = {assetId}, error = {error.ErrorMessage}", null);
-
+                _log.Error($"assetId = {assetId}, error = {error.ErrorMessage}", context: nameof(GetWithdrawalFeeAsync));
                 throw new Exception(error.ErrorMessage);
             }
 
@@ -190,7 +195,7 @@ namespace Lykke.Service.FeeCalculator.Client
             switch (response)
             {
                 case ErrorResponse error:
-                    await _log.WriteErrorAsync(nameof(FeeCalculatorClient), nameof(GetBankCardFees), error.ToJson(), null);
+                    _log.Error(error.ToJson(), context: nameof(GetBankCardFees));
 
                     throw new Exception(error.ErrorMessage);
                 case BankCardsFeeResponseModel result:

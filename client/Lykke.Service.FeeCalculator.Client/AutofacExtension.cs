@@ -1,11 +1,13 @@
 ﻿using System;
 using Autofac;
 using Common.Log;
+using JetBrains.Annotations;
 using Lykke.Common.Log;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Lykke.Service.FeeCalculator.Client
 {
+    [PublicAPI]
     public static class AutofacExtension
     {
         [Obsolete("ILog argument is obsolete")]
@@ -49,18 +51,17 @@ namespace Lykke.Service.FeeCalculator.Client
                 .SingleInstance();
         }
 
-        public static void RegisterFeeCalculatorClientWithCache(this ContainerBuilder builder, string serviceUrl, TimeSpan exirationPeriod, ILogFactory logFactory)
+        public static void RegisterFeeCalculatorClientWithCache(this ContainerBuilder builder, string serviceUrl, TimeSpan exirationPeriod)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
             if (serviceUrl == null) throw new ArgumentNullException(nameof(serviceUrl));
-            if (logFactory == null) throw new ArgumentNullException(nameof(logFactory));
             if (string.IsNullOrWhiteSpace(serviceUrl))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(serviceUrl));
 
             builder.Register(x =>
                 {
                     var cache = new MemoryCache(new MemoryCacheOptions { ExpirationScanFrequency = TimeSpan.FromSeconds(30) });
-                    return new FeeCalculatorClientCached(new FeeCalculatorClient(serviceUrl, logFactory),
+                    return new FeeCalculatorClientCached(new FeeCalculatorClient(serviceUrl, x.Resolve<ILogFactory>()),
                             exirationPeriod, cache);
                 })
                 .As<IFeeCalculatorClient>()

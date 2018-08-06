@@ -146,8 +146,8 @@ namespace Lykke.Service.FeeCalculator.Modules
 
 
             builder.RegisterTradeVolumesClient(_settings.CurrentValue.TradeVolumesServiceClient.ServiceUrl, _log);
-            
-            _services.RegisterAssetsClient(AssetServiceSettings.Create(
+
+            builder.RegisterAssetsClient(AssetServiceSettings.Create(
                 new Uri(_settings.CurrentValue.AssetsServiceClient.ServiceUrl),
                 feeSettings.Cache.AssetsUpdateInterval), _log);
 

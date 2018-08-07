@@ -5,7 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Lykke.AzureStorage" Version="8.10.0" />
-    <PackageReference Include="Lykke.Service.Assets.Client" Version="4.1.0" />
+    <PackageReference Include="Lykke.Service.Assets.Client" Version="4.4.0" />
     <PackageReference Include="Lykke.Service.TradeVolumes.Client" Version="1.0.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
     <PackageReference Include="NSubstitute" Version="3.1.0" />

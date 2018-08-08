@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Common.Log;
 using JetBrains.Annotations;
+using Lykke.Common.Log;
 using Lykke.Service.FeeCalculator.Core.Domain;
 using Lykke.Service.FeeCalculator.Core.Domain.Fees;
 using Lykke.Service.FeeCalculator.Core.Domain.MarketOrderAssetFee;
@@ -32,7 +33,7 @@ namespace Lykke.Service.FeeCalculator.Services
             IClientIdCacheService clientIdCacheService,
             int tradeVolumeToGetInDays,
             IMarketOrderAssetFeeService marketOrderAssetFees,
-            ILog log
+            ILogFactory logFactory
             )
         {
             _tradeVolumesCacheService = tradeVolumesCacheService;
@@ -42,7 +43,7 @@ namespace Lykke.Service.FeeCalculator.Services
             _clientIdCacheService = clientIdCacheService;
             _tradeVolumeToGetInDays = tradeVolumeToGetInDays;
             _marketOrderAssetFeeService = marketOrderAssetFees;
-            _log = log;
+            _log = logFactory.CreateLog(this);
         }
 
         public async Task<IMarketOrderAssetFee> GetMarketOrderFeeAsync(string clientId, string assetPairId, string assetId)

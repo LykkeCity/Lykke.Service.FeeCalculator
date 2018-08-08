@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using AzureStorage.Tables;
-using Common.Log;
+using Lykke.Common.Log;
+using Lykke.Sdk;
 using Lykke.Service.FeeCalculator.AzureRepositories.CashoutFee;
 using Lykke.Service.FeeCalculator.AzureRepositories.Fee;
 using Lykke.Service.FeeCalculator.AzureRepositories.FeeLog;
@@ -27,32 +28,19 @@ namespace Lykke.Service.FeeCalculator.Modules
     public class ServiceModule : Module
     {
         private readonly IReloadingManager<AppSettings> _settings;
-        private readonly ILog _log;
 
-        public ServiceModule(IReloadingManager<AppSettings> settings, ILog log)
+        public ServiceModule(IReloadingManager<AppSettings> settings)
         {
             _settings = settings;
-            _log = log;
         }
 
         protected override void Load(ContainerBuilder builder)
         {
             var feeSettings = _settings.CurrentValue.FeeCalculatorService;
-
-            builder.RegisterInstance(_log)
-                .As<ILog>()
-                .SingleInstance();
-
-            builder.RegisterType<HealthService>()
-                .As<IHealthService>()
-                .SingleInstance();
-
+            
             builder.RegisterType<StartupManager>()
                 .As<IStartupManager>();
-
-            builder.RegisterType<ShutdownManager>()
-                .As<IShutdownManager>();
-
+            
             //TODO: remove
             builder.RegisterInstance(new DummySettingsHolder(feeSettings.BankCard))
                 .As<IDummySettingsHolder>()
@@ -86,30 +74,45 @@ namespace Lykke.Service.FeeCalculator.Modules
                 .WithParameter(TypedParameter.From(feeSettings.MarketOrderFees))
                 .SingleInstance();
 
-            builder.RegisterInstance<IFeeRepository>(
-                new FeeRepository(AzureTableStorage<FeeEntity>.Create(
-                    _settings.ConnectionString(x => x.FeeCalculatorService.Db.DataConnString), "VolumeFees", _log))
-            ).SingleInstance();
+            builder.Register(ctx =>
+            {
+                var logFactory = ctx.Resolve<ILogFactory>();
+                return new FeeRepository(AzureTableStorage<FeeEntity>.Create(
+                    _settings.ConnectionString(x => x.FeeCalculatorService.Db.DataConnString), "VolumeFees",
+                    logFactory));
+            })
+                .As<IFeeRepository>()
+                .SingleInstance();
 
             builder.RegisterType<FeeService>()
                 .As<IFeeService>()
                 .WithParameter(TypedParameter.From(_settings.CurrentValue.FeeCalculatorService.Cache.InstanceName))
                 .SingleInstance();
 
-            builder.RegisterInstance<IStaticFeeRepository>(
-                new StaticFeeRepository(AzureTableStorage<StaticFeeEntity>.Create(
-                    _settings.ConnectionString(x => x.FeeCalculatorService.Db.DataConnString), "StaticFees", _log))
-            ).SingleInstance();
+            builder.Register(ctx =>
+                {
+                    var logFactory = ctx.Resolve<ILogFactory>();
+                    return new StaticFeeRepository(AzureTableStorage<StaticFeeEntity>.Create(
+                        _settings.ConnectionString(x => x.FeeCalculatorService.Db.DataConnString), "StaticFees",
+                        logFactory));
+                })
+                .As<IStaticFeeRepository>()
+                .SingleInstance();
 
             builder.RegisterType<StaticFeeService>()
                 .As<IStaticFeeService>()
                 .WithParameter(TypedParameter.From(_settings.CurrentValue.FeeCalculatorService.Cache.InstanceName))
                 .SingleInstance();
 
-            builder.RegisterInstance<IMarketOrderAssetFeesRepository>(
-                new MarketOrderAssetFeeRepository(AzureTableStorage<MarketOrderAssetFeeEntity>.Create(
-                    _settings.ConnectionString(x => x.FeeCalculatorService.Db.DataConnString), "MarketOrderAssetFees", _log))
-            ).SingleInstance();
+            builder.Register(ctx =>
+                {
+                    var logFactory = ctx.Resolve<ILogFactory>();
+                    return new MarketOrderAssetFeeRepository(AzureTableStorage<MarketOrderAssetFeeEntity>.Create(
+                        _settings.ConnectionString(x => x.FeeCalculatorService.Db.DataConnString), "MarketOrderAssetFees",
+                        logFactory));
+                })
+                .As<IMarketOrderAssetFeesRepository>()
+                .SingleInstance();
 
             builder.RegisterType<MarketOrderAssetFeeService>()
                 .As<IMarketOrderAssetFeeService>()
@@ -117,10 +120,15 @@ namespace Lykke.Service.FeeCalculator.Modules
                 .WithParameter(TypedParameter.From(_settings.CurrentValue.FeeCalculatorService.MarketOrderFees))
                 .SingleInstance();
 
-            builder.RegisterInstance<ICashoutFeesRepository>(
-                new CashoutFeesRepository(AzureTableStorage<CashoutFeeEntity>.Create(
-                    _settings.ConnectionString(x => x.FeeCalculatorService.Db.DataConnString), "CashoutFees", _log))
-            ).SingleInstance();
+            builder.Register(ctx =>
+                {
+                    var logFactory = ctx.Resolve<ILogFactory>();
+                    return new CashoutFeesRepository(AzureTableStorage<CashoutFeeEntity>.Create(
+                        _settings.ConnectionString(x => x.FeeCalculatorService.Db.DataConnString), "CashoutFees",
+                        logFactory));
+                })
+                .As<ICashoutFeesRepository>()
+                .SingleInstance();
 
             builder.RegisterType<CashoutFeesService>()
                 .As<ICashoutFeesService>()
@@ -128,10 +136,15 @@ namespace Lykke.Service.FeeCalculator.Modules
                 .WithParameter(TypedParameter.From(_settings.CurrentValue.FeeCalculatorService.CashoutFees))
                 .SingleInstance();
 
-            builder.RegisterInstance<IWithdrawalFeesRepository>(
-                new WithdrawalFeesRepository(AzureTableStorage<WithdrawalFeeEntity>.Create(
-                    _settings.ConnectionString(x => x.FeeCalculatorService.Db.DataConnString), "WithdrawalFees", _log))
-            ).SingleInstance();
+            builder.Register(ctx =>
+                {
+                    var logFactory = ctx.Resolve<ILogFactory>();
+                    return new WithdrawalFeesRepository(AzureTableStorage<WithdrawalFeeEntity>.Create(
+                        _settings.ConnectionString(x => x.FeeCalculatorService.Db.DataConnString), "WithdrawalFees",
+                        logFactory));
+                })
+                .As<IWithdrawalFeesRepository>()
+                .SingleInstance();
 
             builder.RegisterType<WithdrawalFeesService>()
                 .As<IWithdrawalFeesService>()
@@ -139,9 +152,13 @@ namespace Lykke.Service.FeeCalculator.Modules
                 .SingleInstance();
 
             // FeeLogsConnString
-            builder.RegisterType<FeeLogRepository>()
-                .WithParameter(TypedParameter.From(AzureTableStorage<FeeLogEntryEntity>.Create(
-                    _settings.ConnectionString(x => x.FeeCalculatorService.Db.DataConnString), "OperationsFeeLog", _log)))
+            builder.Register(ctx =>
+                {
+                    var logFactory = ctx.Resolve<ILogFactory>();
+                    return new FeeLogRepository(AzureTableStorage<FeeLogEntryEntity>.Create(
+                        _settings.ConnectionString(x => x.FeeCalculatorService.Db.DataConnString), "OperationsFeeLog",
+                        logFactory));
+                })
                 .As<IFeeLogRepository>()
                 .SingleInstance();
 

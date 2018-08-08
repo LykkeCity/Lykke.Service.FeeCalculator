@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Autofac;
+using Lykke.Common.Chaos;
 using Lykke.Common.Log;
 using Lykke.Cqrs;
 using Lykke.Cqrs.Configuration;
@@ -33,6 +34,8 @@ namespace Lykke.Service.FeeCalculator.Modules
             };
             var rabbitMqEndpoint = rabbitMqSettings.Endpoint.ToString();
 
+            builder.RegisterType<SilentChaosKitty>().As<IChaosKitty>().SingleInstance();
+
             builder.RegisterType<FeeProjection>();
 
             builder.Register(ctx =>
@@ -64,7 +67,7 @@ namespace Lykke.Service.FeeCalculator.Modules
             IMessagingEngine messagingEngine,
             ILogFactory logFactory)
         {
-            const string defaultRoute = "commands";
+            const string defaultRoute = "self";
 
             return new CqrsEngine(
                 logFactory,
@@ -80,7 +83,7 @@ namespace Lykke.Service.FeeCalculator.Modules
                 Register.BoundedContext(BoundedContext.Name)
                     .ListeningEvents(typeof(FeeChargedEvent))
                         .From(PostProcessingBoundedContext.Name).On(defaultRoute)
-                    .WithProjection(typeof(FeeProjection), BoundedContext.Name),
+                    .WithProjection(typeof(FeeProjection), PostProcessingBoundedContext.Name),
 
                 Register.DefaultRouting);
         }

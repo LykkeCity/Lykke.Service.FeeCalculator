@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Common;
 using Common.Log;
 using JetBrains.Annotations;
+using Lykke.Common.Log;
 using Lykke.Service.Assets.Client;
 using Lykke.Service.Assets.Client.Models;
 using Lykke.Service.FeeCalculator.Core.Services;
@@ -28,9 +29,9 @@ namespace Lykke.Service.FeeCalculator.Services.PeriodicalHandlers
             ITradeVolumesCacheService tradeVolumesCacheService,
             TimeSpan updateInterval,
             int tradeVolumeToGetInDays,
-            ILog log
+            ILogFactory logFactory
         ) :
-            base(nameof(CacheUpdaterHandler), (int) updateInterval.TotalMilliseconds, log)
+            base(updateInterval, logFactory, nameof(CacheUpdaterHandler))
         {
             _assetsServiceWithCache = assetsServiceWithCache;
             _tradeVolumesClient = tradeVolumesClient;

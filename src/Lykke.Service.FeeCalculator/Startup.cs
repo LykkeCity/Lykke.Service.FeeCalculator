@@ -77,7 +77,9 @@ namespace Lykke.Service.FeeCalculator
                 Log = CreateLogWithSlack(services, appSettings);
 
                 builder.Populate(services);
+                builder.RegisterModule(new ClientsModule(appSettings, Log));
                 builder.RegisterModule(new ServiceModule(appSettings, Log));
+                builder.RegisterModule(new CqrsModule(appSettings));
                 ApplicationContainer = builder.Build();
 
                 var provider = new AnnotationsBasedMetamodelProvider();

@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using AzureStorage.Tables;
-using Common.Log;
+using Lykke.Common.Log;
 using Lykke.Service.ClientAccount.Client;
 using Lykke.Service.FeeCalculator.AzureRepositories.Fee;
 using Lykke.Service.FeeCalculator.AzureRepositories.MarketOrderAssetFee;
@@ -21,8 +21,8 @@ namespace Lykke.Service.FeeCalculator.Tests.Modules
         protected override void Load(ContainerBuilder builder)
         {
             const int tradeVolumeToGetInDays = 30;
-            builder.RegisterInstance(Substitute.For<ILog>())
-                .As<ILog>()
+            builder.RegisterInstance(Substitute.For<ILogFactory>())
+                .As<ILogFactory>()
                 .SingleInstance();
 
             builder.RegisterType<TradeVolumesCacheService>()

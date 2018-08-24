@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Common.Log;
 using JetBrains.Annotations;
+using Lykke.Common.Log;
+using Lykke.Sdk;
 using Lykke.Service.FeeCalculator.Core.Services;
 using Lykke.Service.FeeCalculator.Services.PeriodicalHandlers;
 
@@ -26,14 +28,14 @@ namespace Lykke.Service.FeeCalculator.Services
             CacheUpdaterHandler cacheUpdater,
             ICashoutFeesService cashoutFeesService,
             IMarketOrderAssetFeeService marketOrderAssetFeeService,
-            IStaticFeeService staticFeeService,
-            ILog log)
+            IStaticFeeService staticFeeService, 
+            ILogFactory logFactory)
         {
             _cacheUpdater = cacheUpdater;
             _cashoutFeesService = cashoutFeesService;
             _marketOrderAssetFeeService = marketOrderAssetFeeService;
             _staticFeeService = staticFeeService;
-            _log = log;
+            _log = logFactory.CreateLog(this);
         }
 
         public async Task StartAsync()

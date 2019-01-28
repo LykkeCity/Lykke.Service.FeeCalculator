@@ -4,6 +4,7 @@ using Lykke.Service.Assets.Client;
 using Lykke.Service.ClientAccount.Client;
 using Lykke.Service.FeeCalculator.Settings;
 using Lykke.Service.TradeVolumes.Client;
+using Lykke.SettingsReader;
 
 namespace Lykke.Service.FeeCalculator.Modules
 {
@@ -11,9 +12,9 @@ namespace Lykke.Service.FeeCalculator.Modules
     {
         private readonly AppSettings _settings;
 
-        public ClientsModule(AppSettings settings)
+        public ClientsModule(IReloadingManager<AppSettings> settings)
         {
-            _settings = settings;
+            _settings = settings.CurrentValue;
         }
 
         protected override void Load(ContainerBuilder builder)

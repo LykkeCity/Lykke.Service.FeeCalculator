@@ -1,5 +1,4 @@
-﻿using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace Lykke.Service.FeeCalculator.Core.Domain.Fees

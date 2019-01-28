@@ -1,6 +1,4 @@
-﻿using Lykke.Service.FeeCalculator.Models;
-using Microsoft.AspNetCore.Mvc;    
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -9,6 +7,8 @@ using Common;
 using Lykke.Common.ApiLibrary.Extensions;
 using Lykke.Service.Assets.Client;
 using Lykke.Service.FeeCalculator.Core.Services;
+using Lykke.Service.FeeCalculator.Models;
+using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using CashoutFee = Lykke.Service.FeeCalculator.Models.CashoutFee;
 
@@ -36,14 +36,14 @@ namespace Lykke.Service.FeeCalculator.Controllers
         public async Task<IActionResult> GetCashoutFees(string assetId = null)
         {
             var fees = await _cashoutFeesService.GetAllAsync();
-            
+
             if (!string.IsNullOrEmpty(assetId))
                 fees = fees.Where(item => item.AssetId == assetId).ToArray();
-            
+
             var result = Mapper.Map<List<CashoutFee>>(fees);
             return Ok(result);
         }
-        
+
         [HttpPost]
         [SwaggerOperation("AddCashoutFee")]
         [ProducesResponseType(typeof(void), (int) HttpStatusCode.OK)]
@@ -52,14 +52,9 @@ namespace Lykke.Service.FeeCalculator.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ErrorResponse.Create(ModelState.GetErrorMessage()));
-            
+
             if (!string.IsNullOrEmpty(model.Id) && !model.Id.IsValidPartitionOrRowKey())
                 return BadRequest(ErrorResponse.Create($"Invalid {nameof(model.Id)} value"));
-            
-            var asset = await _assetsServiceWithCache.TryGetAssetAsync(model.AssetId);
-
-            if (asset == null)
-                return NotFound(ErrorResponse.Create($"asset '{model.AssetId}' not found"));
 
             var fees = await _cashoutFeesService.GetAllAsync();
 
@@ -76,7 +71,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
 
             return Ok();
         }
-        
+
         [HttpDelete("{id}")]
         [SwaggerOperation("DeleteCashoutFee")]
         [ProducesResponseType(typeof(void), (int) HttpStatusCode.OK)]
@@ -85,7 +80,7 @@ namespace Lykke.Service.FeeCalculator.Controllers
         {
             if (!id.IsValidPartitionOrRowKey())
                 return BadRequest(ErrorResponse.Create($"Invalid {nameof(id)} value"));
-            
+
             await _cashoutFeesService.DeleteAsync(id);
 
             return Ok();

@@ -1,20 +1,17 @@
-﻿using Lykke.Service.FeeCalculator.Core.Settings;
-
-namespace Lykke.Service.FeeCalculator.Services.DummySettingsHolder
+﻿namespace Lykke.Service.FeeCalculator.Services.DummySettingsHolder
 {
     public class DummySettingsHolder : IDummySettingsHolder
     {
-        private readonly BankCardSettings _bankCardSettings;
+        private readonly double _percentageFeeSize;
 
-        public DummySettingsHolder(
-            BankCardSettings bankCardSettings)
+        public DummySettingsHolder(double percentageFeeSize)
         {
-            _bankCardSettings = bankCardSettings;
+            _percentageFeeSize = percentageFeeSize;
         }
 
-        public BankCardSettings GetBankCardSettings()
+        public double GetPercentageFeeSize()
         {
-            return _bankCardSettings;
+            return _percentageFeeSize;
         }
     }
 }

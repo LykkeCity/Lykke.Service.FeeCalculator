@@ -2,25 +2,20 @@
 using Common.Log;
 using JetBrains.Annotations;
 using Lykke.Common.Log;
+using Lykke.Cqrs;
 using Lykke.Sdk;
 using Lykke.Service.FeeCalculator.Core.Services;
 using Lykke.Service.FeeCalculator.Services.PeriodicalHandlers;
 
 namespace Lykke.Service.FeeCalculator.Services
 {
-    // NOTE: Sometimes, startup process which is expressed explicitly is not just better, 
-    // but the only way. If this is your case, use this class to manage startup.
-    // For example, sometimes some state should be restored before any periodical handler will be started, 
-    // or any incoming message will be processed and so on.
-    // Do not forget to remove As<IStartable>() and AutoActivate() from DI registartions of services, 
-    // which you want to startup explicitly.
-
     public class StartupManager : IStartupManager
     {
         private readonly CacheUpdaterHandler _cacheUpdater;
         private readonly ICashoutFeesService _cashoutFeesService;
         private readonly IMarketOrderAssetFeeService _marketOrderAssetFeeService;
         private readonly IStaticFeeService _staticFeeService;
+        private readonly ICqrsEngine _cqrsEngine;
         private readonly ILog _log;
 
         [UsedImplicitly]
@@ -28,13 +23,15 @@ namespace Lykke.Service.FeeCalculator.Services
             CacheUpdaterHandler cacheUpdater,
             ICashoutFeesService cashoutFeesService,
             IMarketOrderAssetFeeService marketOrderAssetFeeService,
-            IStaticFeeService staticFeeService, 
+            IStaticFeeService staticFeeService,
+            ICqrsEngine cqrsEngine,
             ILogFactory logFactory)
         {
             _cacheUpdater = cacheUpdater;
             _cashoutFeesService = cashoutFeesService;
             _marketOrderAssetFeeService = marketOrderAssetFeeService;
             _staticFeeService = staticFeeService;
+            _cqrsEngine = cqrsEngine;
             _log = logFactory.CreateLog(this);
         }
 
@@ -46,15 +43,17 @@ namespace Lykke.Service.FeeCalculator.Services
             _cacheUpdater.Start();
 
             _log.WriteInfo(nameof(StartAsync), null, "Trade volumes cache is initialized");
-            
+
             //TODO: remove in next release
             _log.WriteInfo(nameof(StartAsync), null, "Init fees (cashout and market order asset fees) from settings and static fees from db...");
-            
+
             await _cashoutFeesService.InitAsync();
             await _marketOrderAssetFeeService.InitAsync();
             await _staticFeeService.InitAsync();
-            
+
             _log.WriteInfo(nameof(StartAsync), null, "Init fees done");
+
+            _cqrsEngine.StartSubscribers();
         }
     }
 }

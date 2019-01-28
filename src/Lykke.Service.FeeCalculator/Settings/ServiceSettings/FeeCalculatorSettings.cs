@@ -3,7 +3,7 @@ using Lykke.Service.FeeCalculator.Core.Domain.CashoutFee;
 using Lykke.Service.FeeCalculator.Core.Domain.MarketOrderAssetFee;
 using Lykke.SettingsReader.Attributes;
 
-namespace Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings
+namespace Lykke.Service.FeeCalculator.Settings.ServiceSettings
 {
     public class FeeCalculatorSettings
     {

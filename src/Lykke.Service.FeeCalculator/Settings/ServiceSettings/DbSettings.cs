@@ -1,6 +1,6 @@
-using Lykke.SettingsReader.Attributes;
+﻿using Lykke.SettingsReader.Attributes;
 
-namespace Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings
+namespace Lykke.Service.FeeCalculator.Settings.ServiceSettings
 {
     public class DbSettings
     {

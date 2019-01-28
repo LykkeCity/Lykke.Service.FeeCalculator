@@ -79,7 +79,7 @@ namespace Lykke.Service.FeeCalculator.Services
         {
             var fees = await GetAllAsync();
 
-            if (!fees.Any() && _feesSettings.Any())
+            if (!fees.Any() && _feesSettings != null && _feesSettings.Any())
             {
                 foreach (var fee in _feesSettings)
                 {

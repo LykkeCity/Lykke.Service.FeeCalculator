@@ -14,10 +14,10 @@ using Lykke.Service.FeeCalculator.Core.Domain.Fees;
 using Lykke.Service.FeeCalculator.Core.Domain.MarketOrderAssetFee;
 using Lykke.Service.FeeCalculator.Core.Domain.WithdrawalFee;
 using Lykke.Service.FeeCalculator.Core.Services;
-using Lykke.Service.FeeCalculator.Core.Settings;
 using Lykke.Service.FeeCalculator.Services;
 using Lykke.Service.FeeCalculator.Services.DummySettingsHolder;
 using Lykke.Service.FeeCalculator.Services.PeriodicalHandlers;
+using Lykke.Service.FeeCalculator.Settings;
 using Lykke.SettingsReader;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Redis;
@@ -37,12 +37,12 @@ namespace Lykke.Service.FeeCalculator.Modules
         protected override void Load(ContainerBuilder builder)
         {
             var feeSettings = _settings.CurrentValue.FeeCalculatorService;
-            
+
             builder.RegisterType<StartupManager>()
                 .As<IStartupManager>();
-            
+
             //TODO: remove
-            builder.RegisterInstance(new DummySettingsHolder(feeSettings.BankCard))
+            builder.RegisterInstance(new DummySettingsHolder(feeSettings.BankCard.PercentageFeeSize))
                 .As<IDummySettingsHolder>()
                 .SingleInstance();
 

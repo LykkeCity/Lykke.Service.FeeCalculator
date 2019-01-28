@@ -1,6 +1,4 @@
-﻿using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
-
-namespace Lykke.Service.FeeCalculator.Core.Domain.Fees
+﻿namespace Lykke.Service.FeeCalculator.Core.Domain.Fees
 {
     public class BaseFee : IBaseFee
     {

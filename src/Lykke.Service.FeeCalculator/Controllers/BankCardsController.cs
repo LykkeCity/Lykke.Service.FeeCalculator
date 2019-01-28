@@ -25,7 +25,9 @@ namespace Lykke.Service.FeeCalculator.Controllers
         public IActionResult GetPercentage()
         {
             return Ok(new BankCardsFeeResponseModel
-                {Percentage = _dummySettingsHolder.GetBankCardSettings().PercentageFeeSize});
+            {
+                Percentage = _dummySettingsHolder.GetPercentageFeeSize()
+            });
         }
     }
 }

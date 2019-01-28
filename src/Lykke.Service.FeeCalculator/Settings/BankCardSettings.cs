@@ -1,4 +1,4 @@
-﻿namespace Lykke.Service.FeeCalculator.Core.Settings
+﻿namespace Lykke.Service.FeeCalculator.Settings
 {
     public class BankCardSettings
     {

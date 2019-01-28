@@ -1,8 +1,8 @@
 ﻿using Lykke.Sdk.Settings;
-using Lykke.Service.FeeCalculator.Core.Settings.ClientSettings;
-using Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings;
+using Lykke.Service.FeeCalculator.Settings.ClientSettings;
+using Lykke.Service.FeeCalculator.Settings.ServiceSettings;
 
-namespace Lykke.Service.FeeCalculator.Core.Settings
+namespace Lykke.Service.FeeCalculator.Settings
 {
     public class AppSettings : BaseAppSettings
     {

@@ -7,7 +7,7 @@ using Lykke.Cqrs.Configuration;
 using Lykke.Messaging;
 using Lykke.Messaging.Contract;
 using Lykke.Messaging.RabbitMq;
-using Lykke.Service.FeeCalculator.Core.Settings;
+using Lykke.Service.FeeCalculator.Settings;
 using Lykke.Service.FeeCalculator.Workflow.Projections;
 using Lykke.Service.PostProcessing.Contracts.Cqrs;
 using Lykke.Service.PostProcessing.Contracts.Cqrs.Events;
@@ -69,7 +69,7 @@ namespace Lykke.Service.FeeCalculator.Modules
         {
             const string defaultRoute = "self";
 
-            return new CqrsEngine(
+            var engine = new CqrsEngine(
                 logFactory,
                 ctx.Resolve<IDependencyResolver>(),
                 messagingEngine,
@@ -86,6 +86,10 @@ namespace Lykke.Service.FeeCalculator.Modules
                     .WithProjection(typeof(FeeProjection), PostProcessingBoundedContext.Name),
 
                 Register.DefaultRouting);
+
+            engine.StartPublishers();
+
+            return engine;
         }
     }
 }

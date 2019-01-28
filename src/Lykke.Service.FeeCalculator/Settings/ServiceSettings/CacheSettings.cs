@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lykke.Service.FeeCalculator.Core.Settings.ServiceSettings
+namespace Lykke.Service.FeeCalculator.Settings.ServiceSettings
 {
     public class CacheSettings
     {

@@ -11,8 +11,8 @@ using System;
 using AutoMapper;
 using Lykke.AzureStorage.Tables.Entity.Metamodel;
 using Lykke.AzureStorage.Tables.Entity.Metamodel.Providers;
-using Lykke.Service.FeeCalculator.Core.Settings;
 using Lykke.Service.FeeCalculator.Profiles;
+using Lykke.Service.FeeCalculator.Settings;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Lykke.Service.FeeCalculator

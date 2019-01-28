@@ -1,6 +1,6 @@
 ﻿using Lykke.SettingsReader.Attributes;
 
-namespace Lykke.Service.FeeCalculator.Core.Settings
+namespace Lykke.Service.FeeCalculator.Settings
 {
     public class CqrsSettings
     {

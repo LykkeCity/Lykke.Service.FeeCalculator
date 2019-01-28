@@ -1,8 +1,8 @@
 ﻿using Lykke.SettingsReader.Attributes;
 
-namespace Lykke.Service.FeeCalculator.Core.Settings.ClientSettings
+namespace Lykke.Service.FeeCalculator.Settings.ClientSettings
 {
-    public class AssetsServiceSettings
+    public class ClientAccountServiceSettings
     {
         [HttpCheck("/api/isalive")]
         public string ServiceUrl { get; set; }
